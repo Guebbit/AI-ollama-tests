@@ -1,0 +1,25 @@
+services:
+  ollama:
+    image: ollama/ollama
+    restart: unless-stopped
+    ports:
+      - "9191:11434" # host:container
+    environment:
+      OLLAMA_MAX_LOADED_MODELS: 1
+      OLLAMA_NUM_PARALLEL: 1
+      OLLAMA_MODELS: /root/.ollama/models
+    volumes:
+      - ~/ollama:/root/.ollama
+#    # More fine grained control over GPU access
+#    devices:
+#      - "/dev/nvidia0:/dev/nvidia0"
+#      - "/dev/nvidiactl:/dev/nvidiactl"
+#      - "/dev/nvidia-uvm:/dev/nvidia-uvm"
+#      - "/dev/nvidia-modeset:/dev/nvidia-modeset"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
