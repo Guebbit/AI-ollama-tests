@@ -1,2 +1,7 @@
+This docker will take the models (read only) from /home/${LINUX_USERNAME}/.ollama, the default location in Linux.
+Put the models there (downloaded from ollama pull or other means) otherwise no models will be available and there is no way to download them from here.
+
+These models will be used to create slightly modified versions of the models through parameters
+
 https://ollama.com/library
 https://huggingface.co/
