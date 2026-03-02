@@ -1,25 +1,142 @@
+# https://codekaizer.com/ai/local_llm.html
+# https://dev.to/chainiz/running-deepseek-r1-ollama-open-webui-with-podman-compose-4ggn
+
+
 services:
+
+  # Ollama service (LLM server)
   ollama:
-    image: ollama/ollama
-    restart: unless-stopped
+    # Ready to use official image
+    image: ollama/ollama:latest
     ports:
-      - "9191:11434" # host:container
+      # Check if models are loaded through http://localhost:11434/api/tags
+      - "11434:11434" # Default ollama API port
     environment:
-      OLLAMA_MAX_LOADED_MODELS: 1
-      OLLAMA_NUM_PARALLEL: 1
-      OLLAMA_MODELS: /root/.ollama/models
+      # Make all GPUs visible inside container. NVIDIA_VISIBLE_DEVICES=0 would mean "only GPU 0 is visible"
+      - NVIDIA_VISIBLE_DEVICES=all
+      # Minimum/Required capabilities needed for Ollama to run on GPU.
+      #    - compute → allow CUDA kernels / model execution
+      #    - utility → allow monitoring (nvidia-smi, NVML)
+      #    - graphics, video → optional for rendering/video apps
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      # If we want to change ollama API port
+      # - OLLAMA_HOST=0.0.0.0:11434
+      # Prevent multiple models in memory (save RAM and VRAM)
+      - OLLAMA_NUM_THREAD=1
+      # GLOBAL context limiter. Number of tokens in a single conversation. Larger = slower computation and more VRAM usage for better reasoning
+      # - OLLAMA_CONTEXT_LENGTH=4096
+      # Put back on cold storage after this time, so it frees VRAM (1d1h1m1s)
+      - OLLAMA_KEEP_ALIVE=5m
     volumes:
-      - ~/ollama:/root/.ollama
-#    # More fine grained control over GPU access
-#    devices:
-#      - "/dev/nvidia0:/dev/nvidia0"
-#      - "/dev/nvidiactl:/dev/nvidiactl"
-#      - "/dev/nvidia-uvm:/dev/nvidia-uvm"
-#      - "/dev/nvidia-modeset:/dev/nvidia-modeset"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+      # Generic options
+      #   rw: read write
+      #   Z: SELinux relabel, ensures container can access the volume
+      #   rprivate: don't propagate to parent mounts, prevent unexpected side effects
+      # Security options:
+      #   nosuid: Ignore setuid/setgid bits inside this volume
+      #   nodev: Don’t interpret device files inside this mount
+      #   rbind: rRecursive bind mount: if the source has submounts, mount them too.
+      - ollama-data:/root/.ollama:rw,Z,rprivate,nosuid,nodev,rbind
+    restart: unless-stopped
+    # Healthcheck: If `ollama list` fails, container is unhealthy
+    healthcheck:
+      # test: ["CMD-SHELL", "ollama list || exit 1"]
+      test: ["CMD-SHELL", "nvidia-smi || exit 1"]
+      # test: ["CMD", "bash", "-c", "command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Memory limits
+    # Hard limit: Kills the container if exceeded
+    mem_limit: 16g # I have 32
+    # Shared memory (/dev/shm) for memory-mapped tensor operations; must be large for 14B models
+    # The lesser, the safer, but could take longer. 4g - 8g is good, 12g for heavier models
+    shm_size: 8g
+    # CPU limits if you want to restrict CPU usage (number of cores)
+    cpus: "8.0" # I have 16
+    devices:
+      - nvidia.com/gpu=all
+    # Disables SELinux labeling for this container. No risk if you trust the container
+    security_opt:
+      - label=disable
+    # GPU accelleration
+# This part is for swarm mode or the use of an orchestrator
+# Orchestrator: A system that manages multiple containers accross hosts. Examples: Docker Swarm, Kubernetes, etc
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: 1
+#              capabilities: [gpu]
+#        # Same as above, but for SWARM MODE
+#        limits:
+#          cpus: '8.0'
+#          memory: 20G
+
+  # Ready-made frontend. Default browser UI that talks to Ollama
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    depends_on:
+      - ollama
+    ports:
+      - "3000:8080"
+    environment:
+      # Internal container URL to Ollama
+      - OLLAMA_BASE_URL=http://ollama:11434
+      # cap token length
+      - MAX_RESPONSE_TOKENS=1024
+      # Session/auth secret
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-secret-key-change-me-in-production}
+      # Prevents runaway requests
+      - REQUEST_TIMEOUT=120
+      # Allow new user registration (otherwise just create 1 premade and use that)
+      - ENABLE_SIGNUP=${ENABLE_SIGNUP:-true}
+      # TODO NOT WORKING:
+      # - DEFAULT_USER_EMAIL=${DEFAULT_USER_EMAIL:-user@example.com}
+      # - DEFAULT_USER_NAME=${DEFAULT_USER_NAME:-root}
+      # - DEFAULT_USER_PASSWORD=${DEFAULT_USER_PASSWORD:-secret}
+    volumes:
+      # Stores users, chats, settings
+      - open-webui-data:/app/backend/data:Z
+    restart: unless-stopped
+
+  # Oneshot service, temporary container that preloads a model into Ollama
+  model-loader:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    # Mount the model files into the container (it's not automatic)
+    volumes:
+      - ./modelfiles:/modelfiles:rw
+      - ./create-models.sh:/create-models.sh:rw
+    # Replace default entrypoint, run ollama pull command
+    entrypoint: ["bash", "-c"]
+    # qwen3-4b-fast is a custom qwen3:4b with Modelfile.md, the others are preloaded by pulling the original images
+    # command: ["ollama create qwen3-4b-balanced -f modelfiles/Modelfile.md-qwen3-balanced && ollama pull deepseek-r1:14b && ollama pull qwen3-coder:30b"]
+    command: ['/create-models.sh']
+    # Retry only if pull fails for some reason
+    restart: on-failure
+
+  # Hot loading of models into Ollama through a fake query (WARNING: will use VRAM even when idle)
+  model-preloader:
+    image: curlimages/curl:latest
+    depends_on:
+      - model-loader
+    # Preload the fastest model (qwen3-4b-fast), can preload more by adding more curl commands
+    entrypoint: >
+      sh -c "
+        curl -s -X POST http://ollama:11434/api/chat \
+        -H 'Content-Type: application/json' \
+        -d '{\"model\":\"qwen3-4b-fast\",\"messages\":[{\"role\":\"system\",\"content\":\"preload\"}]}';
+      "
+    restart: "no"
+
+volumes:
+  ollama-data:
+    driver: local
+  open-webui-data:
+    driver: local
