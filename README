@@ -3,5 +3,8 @@ Put the models there (downloaded from ollama pull or other means) otherwise no m
 
 These models will be used to create slightly modified versions of the models through parameters
 
+WARNING: For creating the modified models, the original models, I can't put /home/${LINUX_USERNAME}/.ollama as Read-Only, so BE CAREFUL and treat as such.
+Ollama doesn't allow to customize paths yet.
+
 https://ollama.com/library
 https://huggingface.co/

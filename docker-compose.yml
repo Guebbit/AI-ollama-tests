@@ -1,6 +1,4 @@
 services:
-
-  # Ollama service (LLM server)
   ollama:
     image: ollama/ollama:latest
     ports:
@@ -8,10 +6,13 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
-      - OLLAMA_NUM_THREAD=4
+      - OLLAMA_NUM_THREAD=1
       - OLLAMA_KEEP_ALIVE=5m
     volumes:
-      - ollama-data:/root/.ollama:rw,Z,rprivate,nosuid,nodev,rbind
+      # To correctly create and pull models in this common directory I can't put "Read-only", but treat like it, BE CAREFUL
+      - /home/${LINUX_USERNAME}/.ollama:/root/.ollama:z,rw
+      # Writable data for container-specific temp/cache
+      - ollama-data:/root/.ollama-data:rw,Z,rprivate
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "nvidia-smi || exit 1"]
