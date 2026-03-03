@@ -1,7 +1,8 @@
 This docker will take the models (read only) from /home/${LINUX_USERNAME}/.ollama, the default location in Linux.
 Put the models there (downloaded from ollama pull or other means) otherwise no models will be available and there is no way to download them from here.
 
-These models will be used to create slightly modified versions of the models through parameters
+These models will be used to create slightly modified versions of the models through parameters.
+Check the modelfiles directory, the structure is [model-name] > [customization-name]. The modelfiles within will customize the target model
 
 WARNING: For creating the modified models, the original models, I can't put /home/${LINUX_USERNAME}/.ollama as Read-Only, so BE CAREFUL and treat as such.
 Ollama doesn't allow to customize paths yet.

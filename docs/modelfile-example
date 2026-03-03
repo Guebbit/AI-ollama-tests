@@ -1,45 +1,48 @@
+# https://oneuptime.com/blog/post/2026-02-02-ollama-custom-modelfiles/view
+
+
 # Base model to derive from
 FROM qwen3:4b
 
 
 # ===== RANDOMNESS / CREATIVITY =====
 
-# Controls randomness of output, lower temperature = less rambling
+# Controls randomness of output, lower temperature = less rambling (0 - 1.5)
 # Lower = deterministic, precise
 # Higher = creative, varied
 # Does NOT affect speed
 # Typical:
 #   coding → 0.2–0.4
 #   chat → 0.6–0.8
-#   creative → 0.9–1.1
+#   creative → 0.9–1.5
 PARAMETER temperature 0.7
 
-# Alternative randomness control (nucleus sampling)
+# Alternative randomness control (nucleus sampling) (0 - 1)
 # Model considers tokens whose cumulative probability ≤ top_p
 #   Lower = safer answers
 #   Usually keep near 0.9
 PARAMETER top_p 0.9
 
-# Limits selection to top K most likely tokens
+# Limits selection to top K most likely tokens (0 - 200)
 #   Lower = more deterministic
 #   Higher = more diverse
 #   Often 40–100
 PARAMETER top_k 50
 
-# Filter out very unlikely tokens
+# Filter out very unlikely tokens (0 - 1)
 # Lower = more diverse
 # Higher = more deterministic
 PARAMETER min_p 0.05
 
 # ===== REPETITION CONTROL =====
 
-# Discourages repeating repeating the same phrases
+# Discourages repeating repeating the same phrases (0 - 2)
 # >1.0 reduces repetition
 # Too high → strange wording
 # Useful for long outputs
 PARAMETER repeat_penalty 1.2
 
-# Encourages introducing new topics
+# Encourages introducing new topics (-2 - 2)
 PARAMETER presence_penalty 0.3
 
 # If set, control the random numer generator used in sampling.
