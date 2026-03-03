@@ -7,6 +7,8 @@ import argparse
 import json
 # Import os to inspect repository paths and build file snapshots.
 import os
+# Import sys to return a proper shell exit code from the CLI entrypoint.
+import sys
 # Import textwrap to format long prompts in a readable way.
 import textwrap
 # Import urllib modules from the standard library to avoid extra dependencies.
@@ -97,14 +99,22 @@ def build_repo_snapshot(repo_path: str, max_files: int) -> str:
             files.append(relative_path)
             # Stop collecting once we hit the requested cap.
             if len(files) >= max_files:
-                # Return immediately to keep prompt size bounded.
-                return "\n".join(sorted(files))
+                break
+        # Exit the outer loop too when the requested cap is reached.
+        if len(files) >= max_files:
+            break
     # Return all collected file paths sorted for deterministic output.
     return "\n".join(sorted(files))
 
 
 # Send one non-streaming chat request to Ollama and return the assistant content.
-def chat_once(endpoint: str, model: str, system_prompt: str, user_prompt: str) -> str:
+def chat_once(
+    endpoint: str,
+    model: str,
+    system_prompt: str,
+    user_prompt: str,
+    request_timeout: int,
+) -> str:
     """Call /api/chat once and return model text content."""
     # Build the chat API URL using the configured endpoint.
     url = f"{endpoint.rstrip('/')}/api/chat"
@@ -127,7 +137,7 @@ def chat_once(endpoint: str, model: str, system_prompt: str, user_prompt: str) -
         method="POST",
     )
     # Execute the request and parse the returned message content.
-    with request.urlopen(http_request, timeout=120) as response:
+    with request.urlopen(http_request, timeout=request_timeout) as response:
         # Decode the full response body as JSON.
         payload = json.loads(response.read().decode("utf-8"))
     # Extract and return assistant text, defaulting safely to an empty string.
@@ -168,6 +178,7 @@ def run_session(args: argparse.Namespace) -> str:
         planner_model,
         SYSTEM_PROMPTS["planner"],
         shared_context + "\n\nReturn an execution plan with validations and rollback considerations.",
+        args.request_timeout,
     )
 
     # Ask the coder to draft concrete changes based on the planner output.
@@ -179,6 +190,7 @@ def run_session(args: argparse.Namespace) -> str:
         + "\n\nPlanner output:\n"
         + planner_output
         + "\n\nReturn concrete file-level changes and command-level validation steps.",
+        args.request_timeout,
     )
 
     # Ask the reviewer to identify risks and propose focused corrections.
@@ -192,6 +204,7 @@ def run_session(args: argparse.Namespace) -> str:
         + "\n\nCoder output:\n"
         + coder_output
         + "\n\nReturn prioritized review comments and fixes.",
+        args.request_timeout,
     )
 
     # Ask the coder for a final revised implementation brief after review feedback.
@@ -205,6 +218,7 @@ def run_session(args: argparse.Namespace) -> str:
         + "\n\nReviewer feedback:\n"
         + reviewer_output
         + "\n\nProduce a final actionable implementation brief with exact steps and commands.",
+        args.request_timeout,
     )
 
     # Build a markdown report that preserves each role turn for transparency and customization.
@@ -255,7 +269,22 @@ def build_argument_parser() -> argparse.ArgumentParser:
     # Add optional explicit reviewer model override.
     parser.add_argument("--reviewer-model", default=None, help="Optional explicit reviewer model.")
     # Add a snapshot size cap to avoid oversized prompts.
-    parser.add_argument("--max-files", type=int, default=300, help="Max repository files to include.")
+    parser.add_argument(
+        "--max-files",
+        type=int,
+        default=300,
+        help=(
+            "Max repository files to include in snapshot (processing stops at limit on first discovered files, "
+            "which can reduce context quality for very large repositories)."
+        ),
+    )
+    # Add an HTTP timeout override for slower hardware or larger model responses.
+    parser.add_argument(
+        "--request-timeout",
+        type=int,
+        default=120,
+        help="HTTP timeout in seconds for each model request.",
+    )
     # Add output markdown file path for saved session transcripts.
     parser.add_argument(
         "--output",
@@ -299,4 +328,4 @@ def main() -> int:
 # Run the CLI only when this script is executed directly.
 if __name__ == "__main__":
     # Exit with the main function status code for shell compatibility.
-    raise SystemExit(main())
+    sys.exit(main())
