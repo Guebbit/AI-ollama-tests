@@ -1,2 +1,15 @@
 https://ollama.com/library
 https://huggingface.co/
+
+## Multi-model pair-programming agent
+
+Run a local multi-model coding session (planner + coder + reviewer) against your Ollama instance:
+
+```bash
+python3 /home/runner/work/boilerplate-local-AI/boilerplate-local-AI/tools/multi_model_pair_programmer_agent.py \
+  --repo-path /home/runner/work/boilerplate-local-AI/boilerplate-local-AI \
+  --goal "Create a minimal REST API with tests" \
+  --output /home/runner/work/boilerplate-local-AI/boilerplate-local-AI/multi-model-pair-programming-session.md
+```
+
+You can force models with `--planner-model`, `--coder-model`, and `--reviewer-model` if needed.
