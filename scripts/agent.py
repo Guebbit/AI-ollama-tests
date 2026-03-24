@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Allow built-in generics (list[dict]) as type hints on Python 3.8 and 3.9.
+from __future__ import annotations
 """
 agent.py — Multi-step AI agent powered by Ollama
 =================================================
