@@ -1,40 +1,49 @@
-# 🖊️ Editor AI — Autocomplete + Chat in VS Code
+# 🖊️ Editor AI — Autocomplete + Chat in Your IDE
 
 Your IDE becomes your coding partner. This guide sets up **Continue.dev** to
 use your local Ollama models for autocomplete and chat — no cloud, no API keys,
 no subscription.
 
+Continue.dev supports **VS Code**, **WebStorm**, **PhpStorm**, **IntelliJ IDEA**,
+**PyCharm**, **GoLand**, and all other JetBrains IDEs using the same config file.
+
 ---
 
 ## What You Get
 
-| Feature | Shortcut | Model Used |
-|---------|----------|-----------|
-| Inline autocomplete | `Tab` to accept | `qwen3-coder-30b-editor` |
-| Chat panel (ask anything) | `Ctrl+L` / `Cmd+L` | `qwen3-coder-30b-safe` |
-| Edit selected code | `Ctrl+I` / `Cmd+I` | `qwen3-coder-30b-safe` |
-| Codebase search | `@Codebase` in chat | `nomic-embed-text` |
-| Quick question | Chat with 4B model | `qwen3-4b-balanced` |
+| Feature | Model Used |
+|---------|-----------|
+| Inline autocomplete (Tab to accept) | `qwen3-coder-30b-editor` |
+| Chat panel (ask anything) | `qwen3-coder-30b-safe` |
+| Edit selected code in place | `qwen3-coder-30b-safe` |
+| Codebase semantic search | `nomic-embed-text` |
+| Quick questions (fast) | `qwen3-4b-balanced` |
 
 ---
 
-## Step 1 — Install the Extension
+## Step 1 — Make Sure the Models Are Running
 
-1. Open VS Code
-2. Press `Ctrl+Shift+X` (Extensions)
-3. Search for **Continue**
-4. Click **Install**
+Before configuring your IDE, start the Docker stack and wait for the models to load:
 
-Or install via CLI:
 ```bash
-code --install-extension continue.continue
+docker-compose up -d
+
+# Wait for model-loader to finish (check logs)
+docker-compose logs -f model-loader
+```
+
+Verify the models are available:
+```bash
+curl http://localhost:11434/api/tags | jq '.models[].name'
+# Should include: qwen3-coder-30b-editor, qwen3-coder-30b-safe, qwen3-4b-balanced
 ```
 
 ---
 
-## Step 2 — Copy the Config
+## Step 2 — Copy the Config (All IDEs)
 
-Continue stores its config at `~/.continue/config.json` on your system.
+Continue stores its config at `~/.continue/config.json`. This single file is
+shared by **all IDEs** — set it up once, and it works everywhere.
 
 ```bash
 # Copy the project config to your home directory
@@ -49,39 +58,57 @@ ln -sf "$(pwd)/.continue/config.json" ~/.continue/config.json
 
 ---
 
-## Step 3 — Make Sure the Models Are Running
+## Step 3 — Install Continue in Your IDE
 
-The Docker stack must be running, and the custom models must be created:
+### VS Code
 
+1. Open VS Code
+2. Press `Ctrl+Shift+X` (Extensions panel)
+3. Search for **Continue**
+4. Click **Install**
+
+Or install via the command line:
 ```bash
-docker-compose up -d
-
-# Wait for model-loader to finish (check logs)
-docker-compose logs -f model-loader
+code --install-extension continue.continue
 ```
 
-Verify the models exist:
-```bash
-curl http://localhost:11434/api/tags | jq '.models[].name'
-# Should include: qwen3-coder-30b-editor, qwen3-coder-30b-safe, qwen3-4b-balanced
-```
+After installing, reload VS Code. The Continue icon appears in the left sidebar.
+
+---
+
+### WebStorm / PhpStorm / IntelliJ IDEA / PyCharm / GoLand
+
+All JetBrains IDEs use the same plugin from the JetBrains Marketplace.
+
+**Method A — From inside the IDE:**
+
+1. Open **Settings** (`Ctrl+Alt+S` / `Cmd+,` on macOS)
+2. Go to **Plugins** → **Marketplace** tab
+3. Search for **Continue**
+4. Click **Install**, then **Restart IDE**
+
+**Method B — From the browser:**
+
+1. Open [plugins.jetbrains.com](https://plugins.jetbrains.com/plugin/22707-continue)
+2. Click **Install to IDE**
+3. Select your running JetBrains IDE from the popup
+
+After restarting, the **Continue** panel appears in the right sidebar (or via
+**View → Tool Windows → Continue**).
 
 ---
 
 ## Step 4 — (Optional) Set Up Codebase Search
 
-To use `@Codebase` in chat (semantic search over your whole project):
+To use `@Codebase` in chat (semantic search over your whole project), pull the
+embedding model:
 
 ```bash
-# Pull the embedding model
-docker exec -it <ollama-container> ollama pull nomic-embed-text
+docker exec -it $(docker-compose ps -q ollama) ollama pull nomic-embed-text
 ```
 
-Then in VS Code:
-1. Open Continue sidebar (`Ctrl+Shift+L`)
-2. Click the settings icon
-3. Enable "Use embeddings"
-4. Type `@Codebase` in chat to index and search your project
+Then in your IDE's Continue panel, type `@Codebase` in chat to index and search
+your project semantically.
 
 ---
 
@@ -89,7 +116,7 @@ Then in VS Code:
 
 ### Autocomplete
 
-Just start typing — Continue shows a grey ghost suggestion inline.
+Just start typing — Continue shows a ghost suggestion inline.
 
 ```javascript
 // Type this:
@@ -103,11 +130,13 @@ function calculateTax(price, rate) {
 
 - **Accept:** `Tab`
 - **Dismiss:** `Escape`
-- **Next suggestion:** `Alt+]`
+- **Next suggestion:** `Alt+]` (VS Code) / `Alt+[` or `Alt+]` (JetBrains)
 
-### Chat (Ctrl+L)
+---
 
-Select code, press `Ctrl+L`, and ask:
+### Chat
+
+Select code, open the chat panel, and ask:
 
 ```
 > What does this function do?
@@ -116,9 +145,11 @@ Select code, press `Ctrl+L`, and ask:
 > Write unit tests for this
 ```
 
-### Edit in Place (Ctrl+I)
+---
 
-Select code → `Ctrl+I` → describe the change:
+### Edit in Place
+
+Select code → use the inline edit shortcut → describe the change:
 
 ```
 > Extract this into a separate function
@@ -126,29 +157,47 @@ Select code → `Ctrl+I` → describe the change:
 > Add JSDoc comments
 ```
 
+---
+
 ### Context References
 
 In chat, prefix with `@` to attach context:
 
 ```
-@file src/auth.ts  — explain how authentication works
-@folder src/api    — what endpoints are exposed?
-@terminal          — explain this error
-@problems          — fix these TypeScript errors
+@file src/auth.ts   — explain how authentication works
+@folder src/api     — what endpoints are exposed?
+@terminal           — explain this error
+@problems           — fix these TypeScript errors
+@codebase           — search the whole repo semantically
 ```
 
 ---
 
-## Keyboard Shortcuts Cheat Sheet
+## Keyboard Shortcuts
 
-```
-Ctrl+L       Open chat panel
-Ctrl+Shift+L Open Continue sidebar
-Ctrl+I       Edit selected code inline
-Tab          Accept autocomplete suggestion
-Escape       Dismiss autocomplete / Close chat
-Alt+]        Cycle to next autocomplete suggestion
-```
+### VS Code
+
+| Action | Windows / Linux | macOS |
+|--------|-----------------|-------|
+| Open chat panel | `Ctrl+L` | `Cmd+L` |
+| Open Continue sidebar | `Ctrl+Shift+L` | `Cmd+Shift+L` |
+| Edit selected code inline | `Ctrl+I` | `Cmd+I` |
+| Accept autocomplete | `Tab` | `Tab` |
+| Dismiss autocomplete | `Escape` | `Escape` |
+| Next autocomplete suggestion | `Alt+]` | `Option+]` |
+
+### JetBrains IDEs (WebStorm, PhpStorm, IntelliJ, etc.)
+
+| Action | Windows / Linux | macOS |
+|--------|-----------------|-------|
+| Open chat panel | `Alt+Shift+J` | `Option+Shift+J` |
+| Edit selected code inline | `Ctrl+I` | `Cmd+I` |
+| Accept autocomplete | `Tab` | `Tab` |
+| Dismiss autocomplete | `Escape` | `Escape` |
+| Toggle Continue panel | **View → Tool Windows → Continue** | same |
+
+> **Note:** JetBrains shortcuts can be customized in **Settings → Keymap →
+> search "Continue"**.
 
 ---
 
@@ -168,12 +217,22 @@ Key settings:
 
 **Autocomplete is slow or not appearing**
 - Check Ollama is running: `curl http://localhost:11434/api/tags`
-- The 30B model needs a GPU with enough VRAM. Try swapping to `qwen3-4b-cli`
-  in the `tabAutocompleteModel` section of `~/.continue/config.json`
+- The 30B model needs a GPU with enough VRAM. Swap to the lighter model by
+  editing `~/.continue/config.json` and changing `tabAutocompleteModel.model`
+  to `qwen3-4b-balanced`
 
 **"Model not found" error**
 - Run `docker-compose up -d` and wait for `model-loader` to finish
 - Check: `docker-compose logs model-loader`
 
-**Chat is showing the wrong model**
+**Continue panel not visible in JetBrains**
+- Go to **View → Tool Windows → Continue**
+- Or check **Settings → Plugins** to confirm the plugin is enabled
+
+**Chat shows wrong model**
 - Click the model picker at the bottom of the Continue panel to switch
+
+**Config not loading in JetBrains**
+- Confirm `~/.continue/config.json` exists and is valid JSON (comments with
+  `//` are supported by Continue but not standard JSON parsers)
+- Restart the IDE after editing the config

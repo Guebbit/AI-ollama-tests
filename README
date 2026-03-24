@@ -16,11 +16,12 @@ https://huggingface.co/
 
 Three ready-to-use tools that connect your local models to your daily workflow.
 
-## 1. Editor AI — Autocomplete + Chat in VS Code
+## 1. Editor AI — Autocomplete + Chat in VS Code / JetBrains
 
-VS Code extension (Continue.dev) configured to use your local Ollama models.
+Continue.dev extension configured to use your local Ollama models.
+Works with **VS Code**, **WebStorm**, **PhpStorm**, **IntelliJ IDEA**, and all other JetBrains IDEs.
 - Inline autocomplete as you type (Tab to accept)
-- Chat panel for questions, refactoring, explanations (Ctrl+L)
+- Chat panel for questions, refactoring, explanations (Ctrl+L / Alt+Shift+J)
 - Edit selected code in place (Ctrl+I)
 - Semantic codebase search (@Codebase)
 
@@ -65,8 +66,15 @@ Guide: docs/cli-ai.md
     sudo ln -sf "$(pwd)/scripts/ai.sh"     /usr/local/bin/ai
     sudo ln -sf "$(pwd)/scripts/git-ai.sh" /usr/local/bin/git-ai
 
-    # 3. Set up VS Code editor
+    # 3. Set up your editor (choose one)
+
+    # VS Code
     code --install-extension continue.continue
+
+    # JetBrains (WebStorm, PhpStorm, IntelliJ IDEA, etc.)
+    # Install "Continue" from JetBrains Marketplace (Settings → Plugins → Marketplace)
+
+    # Copy the config (same for all IDEs)
     cp .continue/config.json ~/.continue/config.json
 
     # 4. Try it
