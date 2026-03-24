@@ -1,0 +1,26 @@
+FROM qwen3-coder:30b
+
+# Large context window so the model can see surrounding file content
+PARAMETER num_ctx 16384
+
+# Very low temperature = deterministic, consistent completions
+# (autocomplete should be predictable, not creative)
+PARAMETER temperature 0.1
+PARAMETER top_p 0.9
+PARAMETER top_k 20
+
+# Mild repetition penalty to avoid duplicating existing code
+PARAMETER repeat_penalty 1.1
+
+SYSTEM """
+You are a code completion assistant embedded in an IDE.
+
+Rules:
+- Complete code exactly where indicated, nothing more
+- Match the existing code style, indentation, and patterns
+- Output ONLY raw code — no markdown, no backticks, no explanations
+- If asked a question about code, answer in the shortest possible way
+- Preserve existing variable names, conventions, and architecture
+- Never add imports unless the user explicitly asks
+- When completing a function, stop after the closing brace/return
+"""

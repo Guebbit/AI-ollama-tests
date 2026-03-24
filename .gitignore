@@ -3,6 +3,8 @@ node_modules
 .idea
 dist
 *.log
+__pycache__
+*.pyc
 
 
 stable-diffusion/data

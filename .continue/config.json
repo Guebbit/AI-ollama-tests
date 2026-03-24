@@ -1,0 +1,87 @@
+{
+  "$schema": "https://raw.githubusercontent.com/continuedev/continue/main/extensions/vscode/config_schema.json",
+
+  // ── Chat Models ─────────────────────────────────────────────────────────────
+  // These appear in the Continue sidebar and the Cmd+L / Ctrl+L chat panel.
+  // Swap between them with the model picker at the bottom of the panel.
+  "models": [
+    {
+      // Primary coding assistant — use for chat, refactoring, explanations
+      // Model: qwen3-coder-30b-safe (concise, ADHD-friendly, code-first)
+      "title": "Coder — Safe (30B)",
+      "provider": "ollama",
+      "model": "qwen3-coder-30b-safe",
+      "apiBase": "http://localhost:11434"
+    },
+    {
+      // Agent-mode model — use for complex multi-step tasks
+      // Model: qwen3-coder-30b-agent (structured planner + executor)
+      "title": "Coder — Agent (30B)",
+      "provider": "ollama",
+      "model": "qwen3-coder-30b-agent",
+      "apiBase": "http://localhost:11434"
+    },
+    {
+      // Lightweight quick chat — fast responses for simple questions
+      // Model: qwen3-4b-balanced (fast, balanced, low VRAM)
+      "title": "Quick — Balanced (4B)",
+      "provider": "ollama",
+      "model": "qwen3-4b-balanced",
+      "apiBase": "http://localhost:11434"
+    }
+  ],
+
+  // ── Autocomplete Model ──────────────────────────────────────────────────────
+  // This model runs on every keystroke to suggest code completions inline.
+  // It MUST be fast — use the dedicated editor modelfile (low temp, large ctx).
+  //
+  // Trigger: enabled automatically as you type.
+  // Accept: Tab
+  // Dismiss: Escape
+  "tabAutocompleteModel": {
+    "title": "Editor Autocomplete (30B)",
+    "provider": "ollama",
+    "model": "qwen3-coder-30b-editor",
+    "apiBase": "http://localhost:11434"
+  },
+
+  // ── Embeddings (for @Codebase context) ─────────────────────────────────────
+  // Used when you type @Codebase in chat to search your repo semantically.
+  // nomic-embed-text is a small, fast, high-quality embedding model from Ollama.
+  //
+  // To enable: ollama pull nomic-embed-text
+  "embeddingsProvider": {
+    "provider": "ollama",
+    "model": "nomic-embed-text",
+    "apiBase": "http://localhost:11434"
+  },
+
+  // ── Slash Commands ──────────────────────────────────────────────────────────
+  // Type these in the chat panel to trigger specific behaviors.
+  // /edit   — Apply a code change directly to your selection
+  // /comment — Add comments to selected code
+  "slashCommands": [
+    { "name": "edit",    "description": "Edit code in the current file" },
+    { "name": "comment", "description": "Add comments to selected code" },
+    { "name": "share",   "description": "Export conversation as markdown" },
+    { "name": "cmd",     "description": "Generate a terminal command" }
+  ],
+
+  // ── Context Providers ───────────────────────────────────────────────────────
+  // These let you reference external context in the chat with @ mentions.
+  //
+  // @file       — Reference a specific file
+  // @folder     — Reference a folder's contents
+  // @codebase   — Search the entire codebase semantically (needs embeddings)
+  // @terminal   — Include the last terminal output
+  // @problems   — Include VS Code diagnostic errors
+  "contextProviders": [
+    { "name": "file" },
+    { "name": "folder" },
+    { "name": "codebase" },
+    { "name": "terminal" },
+    { "name": "problems" },
+    { "name": "diff", "params": {} },
+    { "name": "open", "params": {} }
+  ]
+}

@@ -9,3 +9,66 @@ Ollama doesn't allow to customize paths yet.
 
 https://ollama.com/library
 https://huggingface.co/
+
+---
+
+# AI Tools — Second Brain for Developers
+
+Three ready-to-use tools that connect your local models to your daily workflow.
+
+## 1. Editor AI — Autocomplete + Chat in VS Code
+
+VS Code extension (Continue.dev) configured to use your local Ollama models.
+- Inline autocomplete as you type (Tab to accept)
+- Chat panel for questions, refactoring, explanations (Ctrl+L)
+- Edit selected code in place (Ctrl+I)
+- Semantic codebase search (@Codebase)
+
+Model: qwen3-coder-30b-editor (autocomplete) + qwen3-coder-30b-safe (chat)
+Config: .continue/config.json
+Guide:  docs/editor-ai.md
+
+## 2. Agent AI — Multi-Step Task Automation
+
+Python script that breaks a high-level task into a numbered plan, then
+executes each step with full context — like a project manager in your terminal.
+
+    python3 scripts/agent.py "add input validation to the Express API"
+    python3 scripts/agent.py "write tests for the auth module"
+    python3 scripts/agent.py  # interactive mode
+
+Model: qwen3-coder-30b-agent
+Guide: docs/agent-ai.md
+
+## 3. CLI AI — Quick Commands, Scripts & Git Help
+
+Two bash scripts for fast AI assistance from the terminal.
+
+    ai "write a one-liner to find all TODO comments in .ts files"
+    echo "SyntaxError: unexpected token" | ai "explain this error"
+
+    git add -A && git-ai commit   # Generate commit message
+    git-ai review                 # Code review before committing
+    git-ai pr main                # Draft PR description
+    git-ai explain HEAD~2         # Explain a past commit
+
+Model: qwen3-4b-cli (fast, concise, terminal-friendly)
+Guide: docs/cli-ai.md
+
+## Quick Start
+
+    # 1. Start Docker services
+    docker-compose up -d
+
+    # 2. Set up CLI tools
+    chmod +x scripts/ai.sh scripts/git-ai.sh
+    sudo ln -sf "$(pwd)/scripts/ai.sh"     /usr/local/bin/ai
+    sudo ln -sf "$(pwd)/scripts/git-ai.sh" /usr/local/bin/git-ai
+
+    # 3. Set up VS Code editor
+    code --install-extension continue.continue
+    cp .continue/config.json ~/.continue/config.json
+
+    # 4. Try it
+    ai "hello, are you there?"
+    git-ai log
