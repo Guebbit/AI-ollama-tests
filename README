@@ -1,11 +1,228 @@
-This docker will take the models (read only) from /home/${LINUX_USERNAME}/.ollama, the default location in Linux.
-Put the models there (downloaded from ollama pull or other means) otherwise no models will be available and there is no way to download them from here.
+Ollama Docker Setup — Models & Customization Guide
 
-These models will be used to create slightly modified versions of the models through parameters.
-Check the modelfiles directory, the structure is [model-name] > [customization-name]. The modelfiles within will customize the target model
+---
 
-WARNING: For creating the modified models, the original models, I can't put /home/${LINUX_USERNAME}/.ollama as Read-Only, so BE CAREFUL and treat as such.
-Ollama doesn't allow to customize paths yet.
+OVERVIEW
 
+This setup runs a local Ollama inference server with a Web UI and an automated model builder.
+
+It does NOT download models automatically.
+
+Instead:
+
+* You provide base models manually
+* The system generates customized variants from them
+
+---
+
+MODEL STORAGE (IMPORTANT)
+
+Base models are read from:
+
+/home/${LINUX_USERNAME}/.ollama
+
+This is the default Ollama directory on Linux.
+
+Key points:
+
+* This directory is shared with the container
+* It is expected to already contain models
+* If empty → NO models will be available
+* The system cannot download models by itself
+
+How to add models:
+
+Option 1 (recommended):
+
+* Run locally:
+  ollama pull llama3:8b
+
+Option 2:
+
+* Manually place models into ~/.ollama
+
+---
+
+CUSTOM MODELS (MODFILES)
+
+Custom models are generated from base models using Modelfiles.
+
+Location:
+
+./modelfiles/
+
+Structure:
+
+modelfiles/
+└── <base_model[:tag]>/
+├── Modelfile-<custom_name>
+└── ...
+
+Example:
+
+modelfiles/
+└── llama3:8b/
+├── Modelfile-assistant
+├── Modelfile-coder
+
+Each Modelfile defines how to modify the base model:
+
+* system prompt
+* parameters
+* behavior tuning
+
+---
+
+NAMING
+
+Each generated model follows:
+
+<base_name>-<tag>-<custom_name>
+
+Example:
+
+llama3-8b-assistant
+llama3-8b-coder
+
+---
+
+MODEL BUILD PROCESS
+
+Handled by: model-loader container
+
+At startup:
+
+1. Scan /modelfiles
+2. For each base model:
+
+   * Check if it exists
+   * If missing → attempt to pull
+3. For each Modelfile:
+
+   * Create derived model via:
+     ollama create
+
+This runs automatically on container start.
+
+---
+
+INFERENCE FLOW
+
+Once running:
+
+open-webui → sends prompt → ollama → model generates response
+
+* ollama = inference server
+* models = used at runtime
+* custom variants behave according to Modelfiles
+
+---
+
+DOCKER SERVICES
+
+ollama:
+
+* Core inference engine
+* Uses GPU if available
+* Stores models in ~/.ollama
+
+open-webui:
+
+* Accessible UI (port 3000)
+* Connects to ollama
+
+model-loader:
+
+* One-shot setup container
+* Builds all custom models
+
+---
+
+⚠️ CRITICAL WARNING
+
+The directory:
+
+/home/${LINUX_USERNAME}/.ollama
+
+CANNOT be mounted as read-only.
+
+Reason:
+
+* Ollama requires write access to create derived models
+
+Implication:
+
+* The container CAN modify your local models
+* Treat this directory as sensitive
+
+Recommendation:
+
+* Do NOT manually edit files inside
+* Do NOT run untrusted Modelfiles
+* Consider backups if important
+
+---
+
+LIMITATION
+
+Ollama currently:
+
+* Does NOT allow custom model storage paths
+* Forces use of ~/.ollama
+
+This is why the setup must use that directory.
+
+---
+
+ADDING A NEW CUSTOM MODEL
+
+1. Ensure base model exists:
+   ollama pull mistral:7b
+
+2. Create directory:
+   modelfiles/mistral:7b/
+
+3. Add file:
+   Modelfile-chat
+
+4. Restart:
+   docker compose up -d
+
+5. Use:
+   mistral-7b-chat
+
+---
+
+DEBUGGING
+
+List models:
+ollama list
+
+Check builder logs:
+docker logs model-loader
+
+Rebuild manually:
+ollama create <name> -f <Modelfile>
+
+---
+
+MODEL SOURCES
+
+Official library:
 https://ollama.com/library
+
+Alternative models:
 https://huggingface.co/
+
+(Compatibility may vary)
+
+---
+
+SUMMARY
+
+* You provide base models manually
+* The system generates custom variants automatically
+* Everything runs locally
+* ~/.ollama is the single source of truth
+
+---
