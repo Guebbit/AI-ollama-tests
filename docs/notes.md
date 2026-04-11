@@ -1,189 +1,137 @@
-# 🧩 Model Weights
+# Ollama Notes — Brief but Complete
 
-## What is a Weight?
-
-A neural network = giant math function
-
-- **Input:** tokens (text, code, etc.)
-- **Output:** predictions (next token)
-
-Network structure:
-
-- Neurons connected in layers
-- Each connection has:
-
-**Weight** → strength of connection
-**Bias** → baseline offset
-
-➡️ All weights together = what the model learned
-
-For LLMs: **billions of numbers stored in memory**
-
-
-
-## Why Weights Matter
-
-Weights = the model’s knowledge
-
-- Change weights → change knowledge (fine-tuning)
-- Quantization → store weights in fewer bits
-  → less VRAM
-  → slightly less precision
-
-
-
-### Example Sizes
-
-| Model | # Weights | VRAM FP16 |
-|------|-----------|-----------|
-Llama 7B | ~7B | ~14 GB
-Llama 13B | ~13B | ~26 GB
-Llama 30B | ~30B | ~60 GB
-
-
-
-## Analogy
-
-Neural network = system of springs & levers
-
-- Each weight = spring tension
-- Springs control how input becomes output
-- You only change springs when training
-
-
+This file is a compact reference for running Ollama locally, understanding key LLM concepts, and avoiding common setup mistakes.
 
 ---
 
-# 📦 LLM Sizes & Quantization
+## 1) Core concepts in plain words
 
-## VRAM Usage (Approx.)
+### Weights
+- Weights are the learned numbers inside the model.
+- They store what the model has learned during training.
+- Changing weights means retraining or fine-tuning.
 
-| Model | FP16 VRAM | Quantized | Safe on 24 GB |
-|------|------------|-----------|----------------|
-7B | ~6–8 GB | Q4_0 / Q4_1 | ✅ 2–3 models
-8B | ~8–10 GB | Q4_0 | ✅ 2 models
-13B | ~13–15 GB | Q4 | ✅ 1 model
-30B | ~30–35 GB | Q4–Q6 | ⚠ Tight fit
-70B | ~70 GB | Q4–Q8 | ❌ Needs multi-GPU
+### Quantization
+- Quantization compresses weights (for example Q4, Q5, Q6).
+- Benefit: much lower VRAM usage and faster loading.
+- Tradeoff: slight quality loss at lower bit precision.
 
-
-
-## Quantization Explained
-
-Reduces memory by using fewer bits per weight:
-
-- **Q4** → 4-bit
-  - Fast
-  - Low VRAM
-  - Slight accuracy loss
-
-- **Q5 / Q6** → better accuracy, more VRAM
-
-
-
-### Rule of Thumb (24 GB GPU)
-
-**Safe**
-- 7B–13B Q4
-
-**Risky**
-- 30B Q4 (near VRAM limit)
-
-**Max**
-- One 13B–30B model at a time
-
-
+### Tokens
+- Models process text as tokens (word pieces, not full words).
+- Context window = max input + output tokens per request.
+- Large prompts + large responses increase memory usage.
 
 ---
 
-# 🔤 Tokens
+## 2) VRAM expectations (quick reference)
 
-## What is a Token?
+Approximate ranges depend on model family and quantization:
 
-- ≈ 1 word (or 0.75 words)
-- Rare words split into parts
+| Model class | Typical VRAM need (quantized) | Notes |
+|---|---:|---|
+| 1B–4B | Low | Good for first tests and weak hardware |
+| 7B–8B | Medium | Strong default for daily local usage |
+| 13B | Medium-high | Usually one model loaded at a time on 24 GB |
+| 30B+ | High | Can become unstable on consumer single-GPU setups |
+| 70B | Very high | Usually requires multi-GPU or remote infrastructure |
 
-LLMs have a **context window**
-= max tokens per request
-
-
-
-### Context Examples
-
-| Model | Context | Words |
-|------|---------|-------|
-13B models | 32k | ~24k words
-70B models | 32k–64k | ~24k–48k words
-
-
-
-### `max_tokens`
-
-Controls how much the model generates
-
-👉 Keep around **512–1024**
-to avoid VRAM spikes
-
-
+Practical rule on 24 GB VRAM:
+- Safe: one 7B–13B quantized model
+- Risky: 30B quantized
+- Usually unrealistic locally: 70B
 
 ---
 
-# 🛠️ Training Locally
+## 3) Setup prerequisites
 
-## Levels of “Training”
+- Linux + NVIDIA driver
+- Container runtime (Podman or Docker)
+- NVIDIA container toolkit (for GPU passthrough)
 
-### 1) Fine-tuning / LoRA
+Validate GPU visibility:
 
-- Adjust behavior without retraining
-- Adds small adapter layers
-
-Good for:
-- Custom style
-- Custom knowledge
-
-Low GPU usage
-
-
-
-### 2) RAG (Retrieval-Augmented Generation)
-
-- No weight changes
-- Inject documents at query time
-
-Best for:
-- Private data
-- Local files
-- Knowledge bases
-
-
-
-### 3) Full Training
-
-- Requires massive compute
-- Not realistic on a single consumer GPU
-
-
-
-
-### 4) 📁 Files
-
-#### Modelfile
-- Defines **model behavior**
-- Like **BIOS settings for an AI**
-
-#### Makefile
-- Automates commands
-- Used by the `make` tool
-
-
-
-
+```bash
+nvidia-smi
+```
 
 ---
 
-# ⚡ TL;DR
+## 4) Start Ollama container (Podman example)
 
-**Weights = knowledge**
-**Quantization = compression**
-**Tokens = text units**
-**LoRA/RAG = practical customization**
+```bash
+podman run -d \
+  --name ollama \
+  --gpus=all \
+  -v ~/path/to/ollama:/root/.ollama \
+  -p 9191:11434 \
+  -e OLLAMA_MAX_LOADED_MODELS=1 \
+  -e OLLAMA_NUM_PARALLEL=1 \
+  ollama/ollama
+```
+
+What matters:
+- `--gpus=all`: enables CUDA acceleration
+- persistent volume: keeps downloaded models
+- `OLLAMA_MAX_LOADED_MODELS=1`: avoids VRAM overload
+- `OLLAMA_NUM_PARALLEL=1`: safer for constrained systems
+
+The repository also includes `/docker-compose.yml` with GPU-oriented settings.
+
+---
+
+## 5) Day-to-day Ollama usage
+
+```bash
+ollama pull <model>
+ollama list
+ollama run <model>
+```
+
+Inside a chat session:
+- Ask prompts normally
+- `/bye` to exit
+
+For first validation, use a small model first, then scale up.
+
+---
+
+## 6) Customization options (what is realistic locally)
+
+### LoRA / Fine-tuning
+- Modifies behavior with adapter layers
+- Useful for style/domain adaptation
+- More practical than full retraining
+
+### RAG (Retrieval-Augmented Generation)
+- Does not change weights
+- Injects your own documents at query time
+- Best for private knowledge and frequently updated data
+
+### Full training from scratch
+- Usually not realistic on single consumer GPUs
+
+---
+
+## 7) Troubleshooting
+
+### GPU not used
+- Check `nvidia-smi`
+- Check container has GPU access
+- Inspect container logs for CUDA detection
+
+### Out-of-memory (OOM)
+- Use smaller model or lower quantization footprint
+- Keep `OLLAMA_MAX_LOADED_MODELS=1`
+- Reduce context size and output tokens
+
+### Slow response
+- Confirm not falling back to CPU
+- Reduce model size
+- Reduce concurrent workloads on host
+
+---
+
+## 8) Useful links
+
+- Ollama model library: https://ollama.com/library
+- Hugging Face model pages: https://huggingface.co/
