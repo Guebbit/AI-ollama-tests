@@ -1,0 +1,409 @@
+{
+  "name": "Daily News Summary (Merged + AI + Email + File)",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 9
+            },
+            {
+              "hour": 22
+            }
+          ]
+        }
+      },
+      "id": "d3fdab04-f651-410b-bc7b-47f280bbb361",
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        3680,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
+        "options": {}
+      },
+      "id": "8fb245f9-3f8b-4c18-8b2e-b534d1a8d158",
+      "name": "Repubblica RSS",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        3888,
+        -272
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://www.ilsole24ore.com/rss/italia.xml",
+        "options": {}
+      },
+      "id": "ae417ebc-928e-4a3b-b6ef-25e0bee0e02b",
+      "name": "Sole24Ore RSS",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        3888,
+        -96
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  model: \"deepseek-r1:14b\",\n  prompt: `\nYou are an expert news editor writing for ADHD readers.\n\nSummarize this article:\n\n${$json.article}\n\nReturn:\n- What happened\n- Why it matters\n- Key detail\n- Quick Take (max 3 bullets)\n`,\n  stream: false\n}",
+        "options": {}
+      },
+      "id": "734046fb-e56d-45d0-9bdf-94558cef9e47",
+      "name": "Ollama Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        4448,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const first = items[0];\n\nconst summary =\n  first.json.response ||\n  first.json.message?.content ||\n  first.json.message ||\n  first.json.body?.response ||\n  first.json.body?.message?.content ||\n  JSON.stringify(first.json, null, 2);\n\nconst now = new Date();\nconst pad = (n) => String(n).padStart(2, '0');\nconst filename = `/data/news-summaries/news-summary-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}.md`;\n\nreturn [\n  {\n    json: {\n      summary,\n      filename,\n      subject: `Daily News Summary - ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`\n    }\n  }\n];"
+      },
+      "id": "4c109b59-cc76-49f2-8594-76dc323aa7a3",
+      "name": "Prepare Output",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5008,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "summary",
+        "options": {
+          "fileName": "={{ $json.filename }}"
+        }
+      },
+      "id": "236f798a-88b6-401a-8123-abda4e8dba9f",
+      "name": "Write Summary File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        5184,
+        -416
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $json.filename }}",
+        "options": {}
+      },
+      "id": "4f8f7e4f-7a54-4fb0-a53c-d92683197704",
+      "name": "Save File",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        5456,
+        -416
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@guebbit.com",
+        "toEmail": "guerzoni.andrea91@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "text": "={{ $json.summary }}",
+        "options": {}
+      },
+      "id": "de746394-40ef-4fd6-8f55-a4bcb8023c35",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        5184,
+        -192
+      ],
+      "webhookId": "25b82f9d-e1c6-4114-b2a6-b0bd65e6db54",
+      "credentials": {
+        "smtp": {
+          "id": "1fzHvSewIk4Cw3XO",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "n5zhFCk0JgGEPm1y",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/n5zhFCk0JgGEPm1y",
+          "cachedResultName": "fn_add_articles()"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        4224,
+        -272
+      ],
+      "id": "dfd05958-1b4d-4ef0-9402-ea0324820550",
+      "name": "Call 'fn_add_articles()'"
+    },
+    {
+      "parameters": {
+        "url": "https://www.ansa.it/sito/ansait_rss.xml",
+        "options": {}
+      },
+      "id": "31346a5b-f50d-4e82-8c43-74964f6047cc",
+      "name": "Ansa RSS",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        3888,
+        -448
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'ANSA',\n    selector: \"div[itemprop='articleBody']\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4032,
+        -448
+      ],
+      "id": "420b9111-60f1-4725-a381-2f05e83b8efa",
+      "name": "Ansa Prepare"
+    },
+    {
+      "parameters": {
+        "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Repubblica',\n    selector: \"div[itemprop='articleBody']\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
+      },
+      "id": "ef34c57d-47d8-4d6b-87cc-9b262b81a15a",
+      "name": "Repubblica Prepare",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4032,
+        -272
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "return items.map(item => ({\n    source: 'Sole24Ore',\n    ...item.json\n}));"
+      },
+      "id": "5dffab29-9aa6-473e-9d2b-b0d5a6354706",
+      "name": "Sole24Ore Prepare",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4032,
+        -96
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4656,
+        -288
+      ],
+      "id": "287b6414-cab2-4a4d-90d3-1590c9604c94",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Repubblica RSS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sole24Ore RSS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ansa RSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Repubblica RSS": {
+      "main": [
+        [
+          {
+            "node": "Repubblica Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sole24Ore RSS": {
+      "main": [
+        [
+          {
+            "node": "Sole24Ore Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Summary": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Output": {
+      "main": [
+        [
+          {
+            "node": "Write Summary File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Summary File": {
+      "main": [
+        [
+          {
+            "node": "Save File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'fn_add_articles()'": {
+      "main": [
+        [
+          {
+            "node": "Ollama Summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Ansa RSS": {
+      "main": [
+        [
+          {
+            "node": "Ansa Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ansa Prepare": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_add_articles()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sole24Ore Prepare": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_add_articles()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Repubblica Prepare": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_add_articles()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Prepare Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "dfbe0f23-77e1-406c-81ae-9e511fa91949",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5720c69cfc8f9ed2309fe27deae0720126a72939a7f333820eaa7b972f81f929"
+  },
+  "id": "Sm3or80dXztmj1C7",
+  "tags": []
+}
