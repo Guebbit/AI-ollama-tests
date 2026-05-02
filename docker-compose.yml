@@ -40,7 +40,7 @@ services:
       - GENERIC_TIMEZONE=Europe/Rome
     volumes:
       - n8n-data:/home/node/.n8n
-      - ./n8n-output:/data:rw,Z
+      - ./n8n-output:/data:rw,Z,U
     restart: unless-stopped
 
   open-webui:

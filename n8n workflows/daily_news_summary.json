@@ -57,7 +57,7 @@
         "url": "http://ollama:11434/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: \"qwen3.5:2b\",\n  prompt: `You are a news editor writing a daily overview.\n\nBelow are today's article summaries:\n\n${$json.summary}\n\n---\n\nWrite a quick summary capturing the most important themes and developments of the day. Be direct, factual, and clear. No fluff.\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
+        "jsonBody": "={{ {\n  model: \"qwen3.6:35b\",\n  prompt: `You are a news editor writing a daily overview.\n\nBelow are today's article summaries:\n\n${$json.summary}\n\n---\n\nWrite a quick summary capturing the most important themes and developments of the day. Be direct, factual, and clear. No fluff.\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
         "options": {
           "timeout": 600000
         }
@@ -73,7 +73,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// ──────────────────────────────────────────────────────────────\n// PREPARE OUTPUT\n// ──────────────────────────────────────────────────────────────\n// PURPOSE: Assemble the final Markdown document that will be\n//          emailed AND saved to disk.\n//\n// INPUT comes from 'Merge Overview with Articles', which combined:\n//   - port 0: Aggregate output → has .articles (array of all articles)\n//   - port 1: Ollama Overview  → has .response (the overview text)\n//   After merging, $json has BOTH .articles AND .response.\n//\n// OUTPUT: one item with everything needed downstream:\n//   text/summaryText → the full Markdown (same value, two field names)\n//   filename         → e.g. \"news-summary-2025-05-01.md\"\n//   subject          → the email subject line\n// ──────────────────────────────────────────────────────────────\n\nconst overviewResponse = $json.response || '';\nconst articles = $json.articles || [];\n\n// Build today's date string (YYYY-MM-DD) for the filename and document header\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\n// Build the '## Articles' section: one Markdown block per article,\n// separated by horizontal rules (---)\nconst articlesSection = articles.map(a => {\n  const dateLine = a.pubDate ? `\\n*${a.pubDate}*` : '';\n  return [\n    `### ${a.title}`,\n    `**Source:** ${a.source}${dateLine} | [Read more](${a.link || a.url})`,\n    '',\n    a.summary\n  ].join('\\n');\n}).join('\\n\\n---\\n\\n');\n\n// Stitch together the full Markdown document:\n// header → AI overview → divider → all articles\nconst text = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Overview',\n  overviewResponse,\n  '',\n  '---',\n  '',\n  '## Articles',\n  '',\n  articlesSection\n].join('\\n');\n\nreturn [{\n  json: {\n    text,\n    summaryText: text,\n    filename: `news-summary-${date}.md`,\n    subject: `Daily News Summary - ${date}`,\n    overview: overviewResponse,\n    articles\n  }\n}];"
+        "jsCode": "const overviewResponse = $json.response || '';\nconst articles = $json.articles || [];\n\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\nconst articlesSection = articles.map(a => {\n  const dateLine = a.pubDate ? `\\n*${a.pubDate}*` : '';\n  return [\n    `### ${a.title}`,\n    `**Source:** ${a.source}${dateLine} | [Read more](${a.link || a.url})`,\n    '',\n    a.summary\n  ].join('\\n');\n}).join('\\n\\n---\\n\\n');\n\nconst text = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Overview',\n  overviewResponse,\n  '',\n  '---',\n  '',\n  '## Articles',\n  '',\n  articlesSection\n].join('\\n');\n\nreturn [{\n  json: {\n    text,\n    summaryText: text,\n    filename: `news-summary-${date}.md`,\n    subject: `Daily News Summary - ${date}`,\n    overview: overviewResponse,\n    articles\n  }\n}];"
       },
       "id": "8117c269-0fa8-4397-93b2-b6fa8dd90758",
       "name": "Prepare Output",
@@ -169,7 +169,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// ──────────────────────────────────────────────────────────────\n// ANSA PREPARE\n// ──────────────────────────────────────────────────────────────\n// PURPOSE: Shape the raw RSS items from ANSA into the standard\n//          format expected by 'fn_add_articles()'.\n//\n// We add two fields:\n//   source:   'ANSA'  → displayed in the final report\n//   selector: CSS selector to find the article body on ANSA's site\n//             (fn_add_articles will visit the URL and scrape this)\n//\n// 'mapped' tells fn_add_articles() which RSS field names to read\n//   (some feeds use 'pubDate', others use 'isoDate' — we check both)\n// 'required' filters out items that are missing critical fields\n// ──────────────────────────────────────────────────────────────\nreturn {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'ANSA',\n    selector: \"div[itemprop='articleBody']\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
+        "jsCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'ANSA',\n    selector: \"div[itemprop='articleBody']\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -182,7 +182,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// ──────────────────────────────────────────────────────────────\n// REPUBBLICA PREPARE\n// ──────────────────────────────────────────────────────────────\n// Same as Ansa Prepare, but for la Repubblica's RSS feed.\n// '#article-body' is the CSS selector for the article content div.\n// ──────────────────────────────────────────────────────────────\nreturn {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Repubblica',\n    selector: \"#article-body\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
+        "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Repubblica',\n    selector: \"#article-body\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
       },
       "id": "f84fcc4b-c2fc-4df6-8c8e-534974c278b8",
       "name": "Repubblica Prepare",
@@ -195,7 +195,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// ──────────────────────────────────────────────────────────────\n// SOLE24ORE PREPARE\n// ──────────────────────────────────────────────────────────────\n// Same as Ansa Prepare, but for Il Sole 24 Ore's RSS feed.\n// '.aentry' is the CSS class for the article body on their site.\n// ──────────────────────────────────────────────────────────────\nreturn {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Sole24Ore',\n    selector: \".aentry\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n}"
+        "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Sole24Ore',\n    selector: \".aentry\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n}"
       },
       "id": "0387db53-3ecb-4786-ac02-7d858b4456c6",
       "name": "Sole24Ore Prepare",
@@ -212,7 +212,7 @@
         "url": "http://ollama:11434/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: \"qwen3.5:9b\",\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nSource: ${$json.source}\n\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- ADHD friendly\n- Significant or complex news: use **bold** for key names, numbers, dates\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs, source names, or the title — only the summary text\n- Write in English regardless of the article's original language\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
+        "jsonBody": "={{ {\n  model: \"qwen3.6:35b\",\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nSource: ${$json.source}\n\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- ADHD friendly\n- Significant or complex news: use **bold** for key names, numbers, dates\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs, source names, or the title — only the summary text\n- Write in English regardless of the article's original language\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
         "options": {
           "timeout": 600000
         }
@@ -222,8 +222,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        10848,
-        -384
+        10736,
+        -352
       ]
     },
     {
@@ -259,7 +259,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// ──────────────────────────────────────────────────────────────\n// AGGREGATE FOR OVERVIEW\n// ──────────────────────────────────────────────────────────────\n// PURPOSE: Collect ALL enriched articles and build the numbered\n//          text block that Ollama will use to write the overview.\n//\n// THE BUG (now fixed): $input.all() would only return 1 article\n// here — the last one the loop processed. That's because\n// splitInBatches 'done' port only fires with the final item.\n//\n// THE FIX: We read from the static data scratchpad where\n// 'Enrich with Summary' saved every article, one per iteration.\n// ──────────────────────────────────────────────────────────────\n\n// Read ALL accumulated articles from the global scratchpad\nconst staticData = $getWorkflowStaticData('global');\nconst articles = staticData.enrichedArticles || [];\n\n// IMPORTANT: Reset the accumulator right now so the next\n// scheduled run starts clean. Without this, articles from\n// a previous run would bleed into the next one!\nstaticData.enrichedArticles = [];\n\n// Build a numbered summary text for the Ollama overview prompt:\n// \"1. **Article Title** (Source)\\nThe summary text...\"\nconst summary = articles\n  .map((a, i) => `${i + 1}. **${a.title}** (${a.source})\\n${a.summary}`)\n  .join('\\n\\n');\n\n// Output ONE item with ALL articles + the combined summary.\n// This single item flows into both 'Ollama Overview' (for the AI prompt)\n// and 'Merge Overview with Articles' (to carry the articles array forward).\nreturn [{ json: { articles, summary } }];"
+        "jsCode": "const articles = $input.all().map(item => item.json);\n\nconst summary = articles\n  .map((a, i) => `${i + 1}. **${a.title}** (${a.source})\\n${a.summary}`)\n  .join('\\n\\n');\n\nreturn [{ json: { articles, summary } }];"
       },
       "id": "c513069d-d250-437f-a57b-05cb3ca71c61",
       "name": "Aggregate for Overview",
@@ -279,87 +279,35 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        10432,
-        -368
+        10320,
+        -336
       ]
     },
     {
       "parameters": {
-        "jsCode": "// ──────────────────────────────────────────────────────────────\n// ARTICLE CHECKPOINT\n// ──────────────────────────────────────────────────────────────\n// PURPOSE: Save a snapshot of the article BEFORE sending it to Ollama.\n//\n// WHY: Ollama's response only contains { response: '...' }.\n// It forgets everything else (title, source, link, pubDate...).\n// By saving the full article here, 'Enrich with Summary' can\n// retrieve it with: $('Article Checkpoint').item.json\n//\n// pairedItem: 0 tells n8n that this output maps to input item #0.\n// ──────────────────────────────────────────────────────────────\nreturn { json: $json, pairedItem: 0 };"
+        "jsCode": "return { json: $json, pairedItem: 0 };"
       },
       "id": "4334dd94-0510-4293-97fc-ea7036cc0f9f",
       "name": "Article Checkpoint",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10672,
-        -384
+        10560,
+        -352
       ]
     },
     {
       "parameters": {
-        "jsCode": "// ──────────────────────────────────────────────────────────────\n// ENRICH WITH SUMMARY\n// ──────────────────────────────────────────────────────────────\n// PURPOSE: Merge Ollama's AI summary back into the original\n//          article data, then SAVE it to a persistent scratchpad.\n//\n// WHY A SCRATCHPAD? The loop (splitInBatches) processes ONE article\n// at a time. When ALL articles are done, its 'done' output (port 1)\n// only carries the LAST item — not all of them. So we manually\n// accumulate every article using $getWorkflowStaticData('global').\n// ──────────────────────────────────────────────────────────────\n\n// $getWorkflowStaticData('global') = a sticky note that survives\n// across all loop iterations within the same workflow run.\nconst staticData = $getWorkflowStaticData('global');\n\n// Initialize the accumulator array on the very first article\nif (!Array.isArray(staticData.enrichedArticles)) {\n  staticData.enrichedArticles = [];\n}\n\n// Grab the original article fields saved by 'Article Checkpoint'\n// (Ollama's response only has .response — we need title, link, etc.)\nconst original = $('Article Checkpoint').item.json;\n\n// Build the enriched article: original data + AI-generated summary\nconst article = {\n  ...original,\n  summary: $json.response || ''\n};\n\n// Save this article to the accumulator so we can collect all of them later\nstaticData.enrichedArticles.push(article);\n\n// Return the article so the loop can continue to the next iteration\nreturn { json: article };"
+        "jsCode": "const original = $('Article Checkpoint').item.json;\nreturn {\n  json: {\n    ...original,\n    summary: $json.response || ''\n  }\n};"
       },
       "id": "6a994a0e-3ceb-4a1e-ac70-2e2524b200f2",
       "name": "Enrich with Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        11024,
-        -384
+        10912,
+        -352
       ]
-    },
-    {
-      "parameters": {
-        "content": "## 📰 Daily News Summary — Workflow Overview\n\n**What this workflow does (runs at 9:00 and 22:00):**\n\n1. **Fetch** RSS feeds from ANSA, Repubblica, Sole24Ore in parallel\n2. **Normalize** each feed into a standard article shape\n3. **Merge** all articles into one list → pass to `fn_add_articles()`\n4. **Scrape** each article's full text from its URL (done inside the sub-workflow)\n5. **Loop** over each article → **Ollama** translates & summarizes it (Italian → English, ADHD-friendly)\n6. **Aggregate** all summaries → **Ollama** writes a daily overview paragraph\n7. **Send email** + **save Markdown file** with the full briefing\n\n---\n⚠️ **Key n8n concept:** items flow between nodes as arrays. Each node receives N items and outputs M items. When you connect one output to multiple inputs, n8n sends a COPY to each branch (parallel execution).",
-        "height": 340,
-        "width": 600,
-        "color": 5
-      },
-      "id": "sticky-001",
-      "name": "Sticky Note - Workflow Overview",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [9120, -560]
-    },
-    {
-      "parameters": {
-        "content": "## 🔄 The Loop Pattern\n\n**`splitInBatches`** (Loop Over Articles) works like a for-loop:\n\n- **Port 0** → processes ONE article at a time (sends it to Article Checkpoint → Ollama → Enrich with Summary)\n- **Port 1** → fires ONCE when ALL articles are done\n\n⚠️ **The bug this was:** Port 1 only carried the LAST item. So `Aggregate for Overview` was only seeing 1 article!\n\n**The fix:** `Enrich with Summary` saves each article to `$getWorkflowStaticData('global')` (a persistent scratchpad). `Aggregate for Overview` reads from that instead of `$input.all()`.",
-        "height": 260,
-        "width": 520,
-        "color": 3
-      },
-      "id": "sticky-002",
-      "name": "Sticky Note - Loop Pattern",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [10200, -620]
-    },
-    {
-      "parameters": {
-        "content": "## 🤖 AI Summarization (per article)\n\n`Ollama Translate & Summarize` calls a local Ollama instance.\n\n- **Model:** `qwen3.5:9b` (bigger = better quality)\n- **Task:** read the Italian article, write an English ADHD-friendly summary\n- **Timeout:** 10 min (LLMs are slow per article!)\n\n`Article Checkpoint` → saves the original article\n`Ollama Translate & Summarize` → generates `.response`\n`Enrich with Summary` → merges both back together",
-        "height": 220,
-        "width": 420,
-        "color": 4
-      },
-      "id": "sticky-003",
-      "name": "Sticky Note - AI Summarization",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [10432, -620]
-    },
-    {
-      "parameters": {
-        "content": "## 📋 Overview Generation\n\n`Aggregate for Overview` collects ALL articles + summaries into one item, then:\n\n1. Sends to **`Ollama Overview`** → generates one overview paragraph covering all articles\n2. Sends to **`Merge Overview with Articles`** → combines the overview with the articles array\n\n`combineByPosition` merge = joins both inputs row-by-row. Since both have exactly 1 item, the result is 1 item with ALL fields from both.",
-        "height": 200,
-        "width": 440,
-        "color": 4
-      },
-      "id": "sticky-004",
-      "name": "Sticky Note - Overview Generation",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [10432, 240]
     },
     {
       "parameters": {
@@ -557,14 +505,14 @@
       "main": [
         [
           {
-            "node": "Article Checkpoint",
+            "node": "Aggregate for Overview",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Aggregate for Overview",
+            "node": "Article Checkpoint",
             "type": "main",
             "index": 0
           }
@@ -610,7 +558,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "06e73bef-4db3-478c-9dc2-f925fa178acf",
+  "versionId": "e3e54b65-a857-4567-a04f-30f99fddf19c",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },
