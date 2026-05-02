@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        4496,
-        -864
+        784,
+        304
       ],
-      "id": "aa737846-8a30-45e0-ad35-1949cc707662",
+      "id": "09131d73-e923-446e-b51a-e4c315936f64",
       "name": "Merge"
     },
     {
@@ -24,23 +24,25 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        4016,
-        -1168
+        0,
+        0
       ],
-      "id": "cf7d1fdb-1320-42f7-8dda-a2ebd0ae0f85",
-      "name": "HTTP Request"
+      "id": "32f5d65f-66fd-4f1e-8b20-e6d1e5b2be7a",
+      "name": "HTTP Request",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "fc0b69fa-48fb-4220-9a74-ef93d3e2b5fc",
+      "id": "d3d70454-229d-4782-b213-db5bed1f6889",
       "typeVersion": 1.1,
       "name": "Start",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        3520,
-        -848
+        -528,
+        320
       ]
     },
     {
@@ -50,10 +52,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3680,
-        -848
+        -368,
+        320
       ],
-      "id": "da91285e-c510-4fb1-8ff6-d7804d14d147",
+      "id": "998ef9cf-45ab-4291-a285-d18bc3f190d9",
       "name": "NormalizeData"
     },
     {
@@ -74,10 +76,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        4320,
-        -1072
+        496,
+        96
       ],
-      "id": "542653c1-1461-4995-9785-396cbd612a3c",
+      "id": "363dd78e-2ef5-4861-9294-be0a1d91bfd0",
       "name": "Extract article"
     },
     {
@@ -89,10 +91,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        4176,
-        -1072
+        160,
+        96
       ],
-      "id": "451f694f-d155-4520-9a28-b6a3bb0bd404",
+      "id": "2dde9161-1d11-4827-87b5-7d21282735f8",
       "name": "Merge HTML page and selector needed"
     },
     {
@@ -102,11 +104,45 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3856,
-        -1056
+        -160,
+        112
       ],
-      "id": "462694e3-1137-47bd-b65a-ce7376680083",
+      "id": "e30ed236-fc56-4c9e-9856-45d28ba1b2fd",
       "name": "Give link and selector"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2fed91c7-e65f-422d-985d-18866d9a6d0b",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        320,
+        96
+      ],
+      "id": "156adf7c-fe95-48b8-9091-aeff26c0c88f",
+      "name": "Filter"
     }
   ],
   "pinData": {},
@@ -160,16 +196,11 @@
         ]
       ]
     },
-    "Merge": {
-      "main": [
-        []
-      ]
-    },
     "Merge HTML page and selector needed": {
       "main": [
         [
           {
-            "node": "Extract article",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
@@ -191,18 +222,33 @@
           }
         ]
       ]
+    },
+    "Merge": {
+      "main": [
+        []
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Extract article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "binaryMode": "separate"
   },
-  "versionId": "c3ef30d5-9ed1-4827-92b9-8c0a17c24a18",
+  "versionId": "4cc806a5-67f8-493c-b298-af74410c51bd",
   "meta": {
-    "instanceId": "5720c69cfc8f9ed2309fe27deae0720126a72939a7f333820eaa7b972f81f929"
+    "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },
-  "id": "n5zhFCk0JgGEPm1y",
+  "id": "idRZ2wjOcbIB0Qnv",
   "tags": []
 }

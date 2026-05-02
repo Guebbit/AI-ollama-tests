@@ -40,6 +40,7 @@ services:
       - GENERIC_TIMEZONE=Europe/Rome
     volumes:
       - n8n-data:/home/node/.n8n
+      - ./n8n-output:/data:rw,Z
     restart: unless-stopped
 
   open-webui:
@@ -57,19 +58,6 @@ services:
     volumes:
       - open-webui-data:/app/backend/data:Z
     restart: unless-stopped
-
-  model-loader:
-    image: ollama/ollama:latest
-    depends_on:
-      - ollama
-    environment:
-      - OLLAMA_HOST=http://ollama:11434
-    volumes:
-      - ./modelfiles:/modelfiles:rw
-      - ./create-models.sh:/create-models.sh:rw
-    entrypoint: ["bash", "-c"]
-    command: ['/create-models.sh']
-    restart: on-failure
 
 volumes:
   ollama-data:
