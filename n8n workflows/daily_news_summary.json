@@ -435,7 +435,7 @@
     },
     {
       "parameters": {
-        "url": "https://www.voce.it/it/home/",
+        "url": "={{ $json.url }}",
         "options": {}
       },
       "id": "954682a9-cdcf-4bca-b638-312c5e4ec6bb",
@@ -456,19 +456,19 @@
           "values": [
             {
               "key": "titles",
-              "cssSelector": ".apertura .apertura-text > a > h2, article h2, article .entry-title, .post-title, main h2",
+              "cssSelector": ".cat-art-tit",
               "returnArray": true
             },
             {
               "key": "links",
-              "cssSelector": ".apertura .apertura-text > a, article h2 a, article .entry-title a, .post-title a, main h2 a",
+              "cssSelector": ".cat-art-tit",
               "returnValue": "attribute",
               "attribute": "href",
               "returnArray": true
             },
             {
               "key": "dates",
-              "cssSelector": "article time, .post time, .entry-date, .date, .published",
+              "cssSelector": ".cat-art-data",
               "returnArray": true
             }
           ]
@@ -488,7 +488,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const scraped = $input.first()?.json || {};\nconst { titles = [], links = [], dates = [] } = scraped;\n\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\nconst toLocalDateString = (value) => {\n  const d = new Date(value);\n  if (Number.isNaN(d.getTime())) return '';\n  const y = d.getFullYear();\n  const m = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n  return `${y}-${m}-${day}`;\n};\n\nconst titleList = toArray(titles).map(normalizeText);\nconst linkList = toArray(links).map(normalizeText);\nconst dateList = toArray(dates).map(normalizeText);\n\nconst toAbsoluteUrl = (href) => {\n  if (!href) return '';\n  try {\n    return new URL(href, 'https://www.voce.it').toString();\n  } catch {\n    return '';\n  }\n};\n\nconst toIsoDate = (rawDate) => {\n  if (!rawDate) return '';\n  const normalized = rawDate\n    .replace(/\\./g, '-')\n    .replace(/\\//g, '-')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n  const parsed = new Date(normalized);\n  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString();\n};\n\nconst seen = new Set();\nconst articles = [];\nconst maxLen = Math.max(titleList.length, linkList.length);\n\nfor (let i = 0; i < maxLen; i++) {\n  const title = titleList[i] || '';\n  const link = toAbsoluteUrl(linkList[i] || '');\n\n  if (!title && !link) continue;\n\n  const dedupeKey = `${link.toLowerCase()}|${title.toLowerCase()}`;\n  if (seen.has(dedupeKey)) continue;\n  seen.add(dedupeKey);\n\n  articles.push({\n    title,\n    link,\n    pubDate: toIsoDate(dateList[i] || ''),\n    source: 'La Voce',\n    selector: \"article, .entry-content, [itemprop='articleBody']\",\n    place: 'Carpi'\n  });\n}\n\nconst today = toLocalDateString(new Date());\nconst isToday = (pubDate) => pubDate ? toLocalDateString(pubDate) === today : false;\n\nconst todays = articles.filter(a => isToday(a.pubDate));\nconst fallback = articles.filter(a => !isToday(a.pubDate));\nconst ordered = [...todays, ...fallback].slice(0, 20);\n\nreturn [{\n  json: {\n    articles: ordered,\n    required: ['title', 'link'],\n    mapped: {\n      title: 'title',\n      link: 'link',\n      pubDate: 'pubDate'\n    }\n  }\n}];"
+        "jsCode": "const scrapedItems = $input.all().map(item => item.json || {});\n\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\nconst toDateKey = (value) => {\n  const d = new Date(value);\n  if (Number.isNaN(d.getTime())) return '';\n  const y = d.getFullYear();\n  const m = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n  return `${y}-${m}-${day}`;\n};\n\nconst toAbsoluteUrl = (href) => {\n  if (!href) return '';\n  try {\n    return new URL(href, 'https://www.voce.it').toString();\n  } catch {\n    return '';\n  }\n};\n\nconst monthMap = {\n  gennaio: 1,\n  febbraio: 2,\n  marzo: 3,\n  aprile: 4,\n  maggio: 5,\n  giugno: 6,\n  luglio: 7,\n  agosto: 8,\n  settembre: 9,\n  ottobre: 10,\n  novembre: 11,\n  dicembre: 12\n};\n\nconst normalizeDate = (rawDate) => {\n  const text = normalizeText(rawDate);\n  if (!text) return '';\n\n  const numeric = text.match(/(\\d{1,2})[\\/.\\-](\\d{1,2})[\\/.\\-](\\d{2,4})/);\n  if (numeric) {\n    const day = Number(numeric[1]);\n    const month = Number(numeric[2]);\n    const year = Number(numeric[3].length === 2 ? `20${numeric[3]}` : numeric[3]);\n    if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  const monthText = text.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n  const textDate = monthText.match(/(\\d{1,2})\\s+([a-z]+)\\s+(\\d{4})/);\n  if (textDate) {\n    const day = Number(textDate[1]);\n    const month = monthMap[textDate[2]];\n    const year = Number(textDate[3]);\n    if (month && day >= 1 && day <= 31) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  return toDateKey(text);\n};\n\nconst seen = new Set();\nconst articles = [];\n\nfor (const scraped of scrapedItems) {\n  const titleList = toArray(scraped.titles).map(normalizeText);\n  const linkList = toArray(scraped.links).map(normalizeText);\n  const dateList = toArray(scraped.dates).map(normalizeText);\n  const maxLen = Math.max(titleList.length, linkList.length, dateList.length);\n\n  for (let i = 0; i < maxLen; i++) {\n    const title = titleList[i] || '';\n    const link = toAbsoluteUrl(linkList[i] || '');\n    const pubDate = normalizeDate(dateList[i] || '');\n\n    if (!title || !link || !pubDate) continue;\n\n    const dedupeKey = `${link.toLowerCase()}|${title.toLowerCase()}`;\n    if (seen.has(dedupeKey)) continue;\n    seen.add(dedupeKey);\n\n    articles.push({\n      title,\n      link,\n      pubDate,\n      source: 'La Voce',\n      selector: '[itemprop=\"articleBody\"]',\n      place: 'Carpi'\n    });\n  }\n}\n\nconst today = toDateKey(new Date());\nconst todays = articles.filter(article => article.pubDate === today);\n\nreturn [{\n  json: {\n    articles: todays,\n    required: ['title', 'link'],\n    mapped: {\n      title: 'title',\n      link: 'link',\n      pubDate: 'pubDate'\n    }\n  }\n}];"
       },
       "id": "4c9028bc-dee5-4845-bf3b-ff0ac2a717e0",
       "name": "VoceIt Prepare",
@@ -556,6 +556,19 @@
       "typeVersion": 1,
       "id": "bf3c4d9e-4d7a-4462-8572-e9b9c0bd9827",
       "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const categoryUrls = [\n  'https://www.voce.it/it/categoria/scuola',\n  'https://www.voce.it/it/categoria/sanita',\n  'https://www.voce.it/it/categoria/economia',\n  'https://www.voce.it/it/categoria/attualita',\n  'https://www.voce.it/it/categoria/cultura',\n  'https://www.voce.it/it/categoria/ambiente',\n  'https://www.voce.it/it/categoria/moda',\n  'https://www.voce.it/it/categoria/sociale',\n  'https://www.voce.it/it/categoria/sport',\n  'https://www.voce.it/it/categoria/territorio'\n];\n\nreturn categoryUrls.map(url => ({ json: { url } }));"
+      },
+      "id": "f80e4c8c-d75b-4db7-a7cc-a6b0a8d76952",
+      "name": "VoceIt Categories",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10016,
+        608
+      ]
     }
   ],
   "pinData": {},
@@ -793,7 +806,7 @@
             "index": 0
           },
           {
-            "node": "VoceIt Scrape",
+            "node": "VoceIt Categories",
             "type": "main",
             "index": 0
           }
@@ -860,6 +873,17 @@
         [
           {
             "node": "Call 'fn_add_articles()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VoceIt Categories": {
+      "main": [
+        [
+          {
+            "node": "VoceIt Scrape",
             "type": "main",
             "index": 0
           }
