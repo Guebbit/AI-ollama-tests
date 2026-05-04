@@ -456,14 +456,19 @@
           "values": [
             {
               "key": "titles",
-              "cssSelector": ".apertura .apertura-text > a > h2",
+              "cssSelector": ".apertura .apertura-text > a, article h2 a, article .entry-title a, .post-title a, main h2 a",
               "returnArray": true
             },
             {
               "key": "links",
-              "cssSelector": ".apertura .apertura-text > a",
+              "cssSelector": ".apertura .apertura-text > a, article h2 a, article .entry-title a, .post-title a, main h2 a",
               "returnValue": "attribute",
               "attribute": "href",
+              "returnArray": true
+            },
+            {
+              "key": "dates",
+              "cssSelector": "article time, .post time, .entry-date, .date, .published",
               "returnArray": true
             }
           ]
@@ -483,7 +488,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const { titles = [], links = [] } = $input.first().json;\nreturn [{\n  json: {\n    articles: titles.map((title, i) => {\n      const href = links[i] || '';\n      return {\n        title,\n        link: href.startsWith('http') ? href : 'https://www.voce.it' + href,\n        source:   'La Voce',\n        selector: 'article',\n        place:    'Carpi'\n      };\n    }),\n    required: ['title', 'link'],\n    mapped: {\n      title: 'title',\n      link:  'link'\n    }\n  }\n}];"
+        "jsCode": "const scraped = $input.first()?.json || {};\nconst { titles = [], links = [], dates = [] } = scraped;\n\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\n\nconst titleList = toArray(titles).map(normalizeText);\nconst linkList = toArray(links).map(normalizeText);\nconst dateList = toArray(dates).map(normalizeText);\n\nconst toAbsoluteUrl = (href) => {\n  if (!href) return '';\n  try {\n    return new URL(href, 'https://www.voce.it').toString();\n  } catch {\n    return '';\n  }\n};\n\nconst toIsoDate = (rawDate) => {\n  if (!rawDate) return '';\n  const normalized = rawDate\n    .replace(/\\./g, '-')\n    .replace(/\\//g, '-')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n  const parsed = new Date(normalized);\n  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString();\n};\n\nconst seen = new Set();\nconst articles = [];\nconst maxLen = Math.max(titleList.length, linkList.length);\n\nfor (let i = 0; i < maxLen; i++) {\n  const title = titleList[i] || '';\n  const link = toAbsoluteUrl(linkList[i] || '');\n\n  if (!title && !link) continue;\n\n  const dedupeKey = (link || title).toLowerCase();\n  if (seen.has(dedupeKey)) continue;\n  seen.add(dedupeKey);\n\n  articles.push({\n    title,\n    link,\n    pubDate: toIsoDate(dateList[i] || ''),\n    source: 'La Voce',\n    selector: \"article, .entry-content, [itemprop='articleBody']\",\n    place: 'Carpi'\n  });\n}\n\nconst today = new Date().toISOString().slice(0, 10);\nconst todays = articles.filter(a => a.pubDate && a.pubDate.startsWith(today));\nconst fallback = articles.filter(a => !a.pubDate || !a.pubDate.startsWith(today));\nconst ordered = [...todays, ...fallback].slice(0, 20);\n\nreturn [{\n  json: {\n    articles: ordered,\n    required: ['title', 'link'],\n    mapped: {\n      title: 'title',\n      link: 'link',\n      pubDate: 'pubDate'\n    }\n  }\n}];"
       },
       "id": "4c9028bc-dee5-4845-bf3b-ff0ac2a717e0",
       "name": "VoceIt Prepare",
