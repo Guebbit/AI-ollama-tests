@@ -1,0 +1,745 @@
+{
+  "name": "fn_filter_article()",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "0468c5f6-47c4-46db-9e31-838c31cb5532",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1024,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  input: [\n    ($json.title || '') + '. ' + ($json.snippet || $json.article || '').slice(0, 500),\n    $env.N8N_NEWS_INTERESTS\n  ]\n} }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "19784d1e-3680-4968-8b94-0d74f085dd09",
+      "name": "Embed Article+Interests",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -816,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "698cb0d3-7954-4509-a6ed-6712b2380829",
+      "name": "Merge Embeddings+Article",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -608,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Calculates cosine similarity between 2 embedding vectors.\n *\n * Result:\n * - 1   = very similar / same direction\n * - 0   = unrelated\n * - -1  = opposite meaning (rare for embeddings)\n */\nfunction cosineSimilarity(a, b) {\n  // Dot product = how much the vectors point in the same direction\n  let dot = 0;\n  // Magnitude (length) of the vectors\n  let magA = 0;\n  let magB = 0;\n  \n  for (let i = 0; i < a.length; i++) {\n    // Multiply matching dimensions and sum them\n    dot += a[i] * b[i];\n\n    // Sum squared values to calculate vector length later\n    magA += a[i] * a[i];\n    magB += b[i] * b[i];\n  }\n\n  /**\n   * Final cosine similarity formula:\n   *\n   *            dot product\n   * --------------------------------\n   * magnitude(A) × magnitude(B)\n   *\n   * Why:\n   * This normalizes the score so it reflects direction similarity,\n   * not just vector size.\n   */\n  const denom = Math.sqrt(magA) * Math.sqrt(magB);\n\n  /**\n   * Prevent division by zero.\n   *\n   * If one vector is empty or invalid, magnitude becomes 0,\n   * and cosine similarity would break.\n   *\n   * In that case, return 0 (no similarity).\n   */\n  return denom === 0 ? 0 : dot / denom;\n}\n\n\n\n\n/**\n * No meaningful content — skip calculation and force similarity to 0\n */\nif (!((($json.title || '') + ($json.snippet || $json.article || '')).trim()))\n  return {\n    json: {\n      ...article,\n      similarityScore: 0 \n    } \n  };\n\n/**\n * Get embeddings from incoming n8n JSON.\n *\n * embeddings[0] = article embedding\n * embeddings[1] = user interest embedding\n */\nconst embeddings = $json.embeddings || [];\n\n/**\n * Extract vectors safely.\n *\n * Fallback to [] so the workflow doesn't crash\n * if one embedding is missing.\n */\nconst articleEmb = embeddings[0] || [];\nconst interestEmb = embeddings[1] || [];\n\n/**\n * Calculate semantic similarity score\n * between article and user interest.\n */\nconst score = cosineSimilarity(articleEmb, interestEmb);\n\n/**\n * Remove large/unnecessary metadata fields\n * from the original payload before returning.\n *\n * - keeps output clean\n * - avoids storing heavy embedding arrays\n * - keeps only useful article data + final score\n */\nconst {\n  embeddings: _e,\n  model: _m,\n  total_duration: _td,\n  load_duration: _ld,\n  prompt_eval_count: _pc,\n  created_at: _ca,\n  done: _d,\n  done_reason: _dr,\n  // destructuring like this means \"put in the articles constant all attributes that were not listed yet\"\n  ...article\n} = $json;\n\n\n/**\n * Return cleaned article object\n * with the new similarity score attached.\n */\nreturn {\n  json: {\n    ...article,\n    similarityScore: score\n  }\n};"
+      },
+      "id": "19f47de5-8162-412c-be39-962fad73c172",
+      "name": "Cosine Similarity",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n    json: {...$json,\n        isRelevant: true,\n        filterMethod: 'embedding_high'\n    }\n};"
+      },
+      "id": "9fcc3842-4673-4b82-8489-32740bb57d4e",
+      "name": "Output Accepted",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n    json: {...$json,\n        isRelevant: false,\n        filterMethod: 'embedding_low'\n    }\n};"
+      },
+      "id": "f5c6f618-da0b-4fe7-bde0-e48639a4ca38",
+      "name": "Output Rejected",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Remove any <think>...</think> sections from the LLM response\nconst cleanedResponse = ($json.response || '')\n  .replace(/<think>[\\s\\S]*?<\\/think>/g, '')\n  .trim();\n\n// Check if the LLM marked the article as relevant\n// (assumes \"YES\" appears in the response when relevant)\nconst isRelevant = cleanedResponse.toUpperCase().includes('YES');\n\n// Destructure to exclude unnecessary metadata fields\nconst {\n  response: _response,\n  model: _model,\n  total_duration: _totalDuration,\n  load_duration: _loadDuration,\n  prompt_eval_count: _promptEvalCount,\n  created_at: _createdAt,\n  done: _done,\n  done_reason: _doneReason,\n  context: _context,\n  ...articleData // remaining fields = actual article content\n} = $json;\n\n// Return cleaned article with relevance flag\nreturn {\n  json: {\n    ...articleData,\n    isRelevant,          // boolean from LLM classification\n    filterMethod: 'llm'  // indicates filtering source\n  }\n};"
+      },
+      "id": "4a5f2b98-4ea5-4aff-98dd-42a6de1b7e58",
+      "name": "LLM Fallback Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### cosine similarity > 0.7 = auto accept\n### cosine similarity < 0.5 = auto reject",
+        "height": 80,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "81a927d9-13ad-4e14-b48f-70a4db463c21",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Embeddings + Similarity\n\nWe use **Ollama** with **mxbai-embed-large** to create embeddings for:\n\n1. Article content  \n2. User interests\n\nThis helps compare semantic meaning, not just exact words.\n\nExample:\n\n- Article: \"Artificial Intelligence\"\n- Interest: \"Machine Learning\"\n\nEven with different words, they can be highly related.\n\n- `1` = very similar  \n- `0` = unrelated\n- `-1` = opposites (very rare) ",
+        "height": 320,
+        "width": 592
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        288
+      ],
+      "typeVersion": 1,
+      "id": "02ce7353-d0d5-499b-93e6-e3f3f864d05c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Embeddings\n\nNumerical representations of text (articles, interests, etc)",
+        "height": 112
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "b42f08f1-e556-4bf4-8059-70cb83e31d59",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Cosine Similarity\n\nHelps measure how \"close\" or semantically similar 2 embeddigs are (by comparing the angle between their vectors)",
+        "height": 128,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -464,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "70c548f1-c915-40d8-bb72-fc330045dd85",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### LLM Validation Layer\n\n`0.5 < cosine similarity < 0.8` \nmeans the score is uncertain, so we use an LLM for a final relevance check\n\nThe LLM receives:\n\n- User interests\n- Article title\n- Article snippet\n\nand answers only: `YES` or `NO`",
+        "height": 240,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "a6c62d84-727c-47f7-b069-19f086dd5019",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.similarityScore }}",
+                    "rightValue": 0.8,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    },
+                    "id": "5c081659-6213-4128-ba73-fc61823478f5"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "42911e37-a248-482f-a339-f3c6dea55a8f",
+                    "leftValue": "={{ $json.similarityScore }}",
+                    "rightValue": 0.5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "86f86629-eee5-4400-8eee-968d512ef214",
+                    "leftValue": false,
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        96
+      ],
+      "id": "a5d47180-4fdc-43f9-91f7-65945d9d5c26",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_FAST_MODEL,\n  prompt: `You are a news relevance classifier.\\n\\nInterests:\\n${$env.N8N_NEWS_INTERESTS}\\n\\nArticle Title:\\n${$json.title}\\n\\nSnippet:\\n${$json.snippet || $json.article || ''}\\n\\nAnswer only YES or NO.`,\n  stream: false,\n  keep_alive: \"0\"\n} }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "f9f1773a-16a6-4434-ba33-5ee449c2613a",
+      "name": "Output decided by LLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        16,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        928
+      ],
+      "id": "2bc9e606-7646-4cdf-8d0c-b5d628aad0e3",
+      "name": "Merge LLM+Article"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  input: [\n    ($json.title || '') + '. ' + ($json.snippet || $json.article || '').slice(0, 500),\n    $env.N8N_NEWS_INTERESTS\n  ]\n} }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "abeb2656-9dfc-4285-9241-54551e01747a",
+      "name": "Embed Article+Interests1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -192,
+        768
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "f4f03ec5-7c02-4434-9aeb-d904c5ff5f90",
+      "name": "Merge Embeddings+Article1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        16,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Calculates cosine similarity between 2 embedding vectors.\n *\n * Result:\n * - 1   = very similar / same direction\n * - 0   = unrelated\n * - -1  = opposite meaning (rare for embeddings)\n */\nfunction cosineSimilarity(a, b) {\n  // Dot product = how much the vectors point in the same direction\n  let dot = 0;\n  // Magnitude (length) of the vectors\n  let magA = 0;\n  let magB = 0;\n  \n  for (let i = 0; i < a.length; i++) {\n    // Multiply matching dimensions and sum them\n    dot += a[i] * b[i];\n\n    // Sum squared values to calculate vector length later\n    magA += a[i] * a[i];\n    magB += b[i] * b[i];\n  }\n\n  /**\n   * Final cosine similarity formula:\n   *\n   *            dot product\n   * --------------------------------\n   * magnitude(A) × magnitude(B)\n   *\n   * Why:\n   * This normalizes the score so it reflects direction similarity,\n   * not just vector size.\n   */\n  const denom = Math.sqrt(magA) * Math.sqrt(magB);\n\n  /**\n   * Prevent division by zero.\n   *\n   * If one vector is empty or invalid, magnitude becomes 0,\n   * and cosine similarity would break.\n   *\n   * In that case, return 0 (no similarity).\n   */\n  return denom === 0 ? 0 : dot / denom;\n}\n\n/**\n * Get embeddings from incoming n8n JSON.\n *\n * embeddings[0] = article embedding\n * embeddings[1] = user interest embedding\n */\nconst embeddings = $json.embeddings || [];\n\n/**\n * Extract vectors safely.\n *\n * Fallback to [] so the workflow doesn't crash\n * if one embedding is missing.\n */\nconst articleEmb = embeddings[0] || [];\nconst interestEmb = embeddings[1] || [];\n\n/**\n * Calculate semantic similarity score\n * between article and user interest.\n */\nconst score = cosineSimilarity(articleEmb, interestEmb);\n\n/**\n * Remove large/unnecessary metadata fields\n * from the original payload before returning.\n *\n * - keeps output clean\n * - avoids storing heavy embedding arrays\n * - keeps only useful article data + final score\n */\nconst {\n  embeddings: _e,\n  model: _m,\n  total_duration: _td,\n  load_duration: _ld,\n  prompt_eval_count: _pc,\n  created_at: _ca,\n  done: _d,\n  done_reason: _dr,\n  // destructuring like this means \"put in the articles constant all attributes that were not listed yet\"\n  ...article\n} = $json;\n\n/**\n * Return cleaned article object\n * with the new similarity score attached.\n */\nreturn {\n  json: {\n    ...article,\n    similarityScore: score\n  }\n};"
+      },
+      "id": "745c32b7-0180-4c6d-9f74-cec459345362",
+      "name": "Cosine Similarity1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n    json: {...$json,\n        isRelevant: true,\n        filterMethod: 'embedding_high'\n    }\n};"
+      },
+      "id": "68920e65-015d-45b5-9c02-d3f49a51cc00",
+      "name": "Output Accepted1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        672
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n    json: {...$json,\n        isRelevant: false,\n        filterMethod: 'embedding_low'\n    }\n};"
+      },
+      "id": "2cf994c7-ebed-4bfa-991d-4d6f10ead3fd",
+      "name": "Output Rejected1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        816
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Remove any <think>...</think> sections from the LLM response\nconst cleanedResponse = ($json.response || '')\n  .replace(/<think>[\\s\\S]*?<\\/think>/g, '')\n  .trim();\n\n// Check if the LLM marked the article as relevant\n// (assumes \"YES\" appears in the response when relevant)\nconst isRelevant = cleanedResponse.toUpperCase().includes('YES');\n\n// Destructure to exclude all Ollama response metadata fields.\n// $json here is the merged result of the Ollama response (input 0)\n// and the original article data (input 1), so article fields are preserved.\nconst {\n  response: _response,\n  model: _model,\n  total_duration: _totalDuration,\n  load_duration: _loadDuration,\n  prompt_eval_count: _promptEvalCount,\n  prompt_eval_duration: _promptEvalDuration,\n  eval_count: _evalCount,\n  eval_duration: _evalDuration,\n  created_at: _createdAt,\n  done: _done,\n  done_reason: _doneReason,\n  context: _context,\n  thinking: _thinking,\n  ...articleData // remaining fields = actual article content\n} = $json;\n\n// Return cleaned article with relevance flag\nreturn {\n  json: {\n    ...articleData,\n    isRelevant,          // boolean from LLM classification\n    filterMethod: 'llm'  // indicates filtering source\n  }\n};"
+      },
+      "id": "0abfe73a-e7eb-436b-ad55-c43efbb364b3",
+      "name": "LLM Fallback Check1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        928
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### cosine similarity > 0.7 = auto accept\n### cosine similarity < 0.5 = auto reject",
+        "height": 80,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        528,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "4ce79443-8349-4e48-9a4c-2e1315a63096",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "### Embeddings + Similarity\n\nWe use **Ollama** with **mxbai-embed-large** to create embeddings for:\n\n1. Article content  \n2. User interests\n\nThis helps compare semantic meaning, not just exact words.\n\nExample:\n\n- Article: \"Artificial Intelligence\"\n- Interest: \"Machine Learning\"\n\nEven with different words, they can be highly related.\n\n- `1` = very similar  \n- `0` = unrelated\n- `-1` = opposites (very rare) ",
+        "height": 320,
+        "width": 592
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -416,
+        1056
+      ],
+      "typeVersion": 1,
+      "id": "f2db9dc0-8391-4399-a9ff-4c1adb17a16f",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Embeddings\n\nNumerical representations of text (articles, interests, etc)",
+        "height": 112
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        624
+      ],
+      "typeVersion": 1,
+      "id": "7dfec1bf-f64a-48e8-ae51-e6b406d285bd",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Cosine Similarity\n\nHelps measure how \"close\" or semantically similar 2 embeddigs are (by comparing the angle between their vectors)",
+        "height": 128,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        720
+      ],
+      "typeVersion": 1,
+      "id": "cc988e7f-d6e0-48e3-9b2e-b39dc917b317",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "### LLM Validation Layer\n\n`0.5 < cosine similarity < 0.8` \nmeans the score is uncertain, so we use an LLM for a final relevance check\n\nThe LLM receives:\n\n- User interests\n- Article title\n- Article snippet\n\nand answers only: `YES` or `NO`",
+        "height": 240,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        912,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "e4882b7a-395e-4eae-9a3c-a9269049b5dc",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.similarityScore }}",
+                    "rightValue": 0.8,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    },
+                    "id": "5c081659-6213-4128-ba73-fc61823478f5"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "42911e37-a248-482f-a339-f3c6dea55a8f",
+                    "leftValue": "={{ $json.similarityScore }}",
+                    "rightValue": 0.5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "86f86629-eee5-4400-8eee-968d512ef214",
+                    "leftValue": false,
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        864
+      ],
+      "id": "378a6ba8-ccd6-49bc-891f-389187ba6376",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_FAST_MODEL,\n  prompt: `You are a news relevance classifier.\\n\\nInterests:\\n${$env.N8N_NEWS_INTERESTS}\\n\\nArticle Title:\\n${$json.title}\\n\\nSnippet:\\n${$json.snippet || $json.article || ''}\\n\\nAnswer only YES or NO.`,\n  stream: false,\n  keep_alive: \"0\"\n} }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "c899db3e-6784-4c75-9f86-e41796c2f1b9",
+      "name": "Output decided by LLM1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        640,
+        992
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Embed Article+Interests",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Embeddings+Article",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Embed Article+Interests": {
+      "main": [
+        [
+          {
+            "node": "Merge Embeddings+Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Embeddings+Article": {
+      "main": [
+        [
+          {
+            "node": "Cosine Similarity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cosine Similarity": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Output Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Output Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Output decided by LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output decided by LLM": {
+      "main": [
+        [
+          {
+            "node": "LLM Fallback Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge LLM+Article": {
+      "main": [
+        [
+          {
+            "node": "LLM Fallback Check1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed Article+Interests1": {
+      "main": [
+        [
+          {
+            "node": "Merge Embeddings+Article1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Embeddings+Article1": {
+      "main": [
+        [
+          {
+            "node": "Cosine Similarity1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cosine Similarity1": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Output Accepted1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Output Rejected1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Output decided by LLM1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge LLM+Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output decided by LLM1": {
+      "main": [
+        [
+          {
+            "node": "Merge LLM+Article",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "feab6fa2-9d37-4360-a4ec-fe9de7dc009b",
+  "meta": {
+    "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
+  },
+  "id": "wmJ76asR2FwreSDM",
+  "tags": []
+}

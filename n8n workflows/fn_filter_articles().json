@@ -1,0 +1,184 @@
+{
+  "name": "fn_filter_articles()",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "cd1c32ce-142e-4398-9d1e-0a616cb1991a",
+      "name": "Loop Over Articles",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1264,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fixes n8n pairedItem tracking across the loop boundary.\n// Without this, downstream merge nodes lose the link to the original loop iteration.\nreturn { json: $json, pairedItem: 0 };"
+      },
+      "id": "985ecb29-6d34-4ac0-9137-8e41c9199846",
+      "name": "Article Checkpoint",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        464
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "a01134c8-91fc-43e0-ba13-d59b417e73aa",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## fn_filter_articles()\n\nAccepts a list of articles and returns only those deemed relevant by `fn_filter_article()`.\n\n**Per article (loop):**\n1. `fn_filter_article()` scores relevance via embedding similarity + optional LLM fallback\n2. Result is fed back into the loop with `isRelevant` set\n\n**After all articles are processed:**\n3. `Filter: Keep Relevant` keeps only `isRelevant = true`\n\nThe caller receives a clean list of relevant articles only.",
+        "height": 256,
+        "width": 656
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1024,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "7ab670ea-d3a6-4f4f-a2a6-97e54c4a656a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "wmJ76asR2FwreSDM",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/wmJ76asR2FwreSDM",
+          "cachedResultName": "fn_filter_article()"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1680,
+        464
+      ],
+      "id": "7fa9ed90-4c6b-4759-9724-81a796653c3c",
+      "name": "Call 'fn_filter_article()'"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c966afe8-fb7f-4e88-830c-61b59326f1f4",
+              "leftValue": "={{$json.isRelevant}}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1472,
+        304
+      ],
+      "id": "5c1671d6-88af-411a-908c-93755f6bdbfc",
+      "name": "Is Relevant = true"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Articles": {
+      "main": [
+        [
+          {
+            "node": "Is Relevant = true",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Article Checkpoint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Checkpoint": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_filter_article()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'fn_filter_article()'": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b6e475d1-bfaf-4600-ad95-6f04113a228e",
+  "meta": {
+    "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
+  },
+  "id": "F04NTe2IAGkVjo3a",
+  "tags": []
+}
