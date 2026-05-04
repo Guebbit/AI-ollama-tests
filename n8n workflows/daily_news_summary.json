@@ -6,28 +6,30 @@
         "url": "https://www.ansa.it/sito/ansait_rss.xml",
         "options": {}
       },
-      "id": "345eb6f4-1312-4689-ba2b-191f7c70009e",
+      "id": "27d33840-cd46-48e1-a7c2-aba04d591c1c",
       "name": "Ansa RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        7936,
-        -528
-      ]
+        10160,
+        -400
+      ],
+      "disabled": true
     },
     {
       "parameters": {
         "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
         "options": {}
       },
-      "id": "4d3c0c3d-9b1b-4dfe-8fbf-2fec9b76b6a2",
+      "id": "76035870-5219-4502-a9e9-4a1918dbe65c",
       "name": "Repubblica RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        7936,
-        -352
-      ]
+        10160,
+        -224
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -36,36 +38,36 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        8080,
-        -528
+        10304,
+        -400
       ],
-      "id": "6e4babfc-d483-4b6b-9a73-5cdf0877383e",
+      "id": "75690454-5a76-4f95-a1d0-927a06d3e0c0",
       "name": "Ansa Prepare"
     },
     {
       "parameters": {
         "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Repubblica',\n    selector: \"#article-body\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
       },
-      "id": "818ce7f7-19cf-4e72-9a34-b33321deeed5",
+      "id": "bacba050-4d37-42c1-b675-b11a23ef3b09",
       "name": "Repubblica Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        8080,
-        -352
+        10304,
+        -224
       ]
     },
     {
       "parameters": {
         "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Sole24Ore',\n    selector: \".aentry\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n}"
       },
-      "id": "15c2ccf0-7941-4948-acc5-a0206f0ac356",
+      "id": "629706c8-b65d-4346-b4c7-01418f59be43",
       "name": "Sole24Ore Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        8080,
-        -176
+        10304,
+        -48
       ]
     },
     {
@@ -90,10 +92,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        8432,
-        -352
+        10880,
+        32
       ],
-      "id": "2713676c-6e0d-4be5-8c98-f5e769471481",
+      "id": "68e0076e-2f49-4a54-8a2b-255e65620ad4",
       "name": "Call 'fn_add_articles()'"
     },
     {
@@ -101,14 +103,15 @@
         "url": "https://www.ilsole24ore.com/rss/italia.xml",
         "options": {}
       },
-      "id": "f7c8e7c9-0e7c-42c6-b0c1-4581bc290184",
+      "id": "4fc09c8f-b4b2-4f7f-b7c8-92e21fcdd602",
       "name": "Sole24Ore RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        7936,
-        -176
-      ]
+        10160,
+        -48
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -118,11 +121,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        8896,
-        -768
+        10864,
+        -336
       ],
       "typeVersion": 1,
-      "id": "6fc60142-f69a-4764-b4d1-3addd94f6cfb",
+      "id": "b8d724ac-52f3-4858-8caa-d76e29d2bae5",
       "name": "Sticky Note"
     },
     {
@@ -133,26 +136,25 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        7792,
-        -864
+        10768,
+        352
       ],
       "typeVersion": 1,
-      "id": "a23b135a-f8f4-4679-a14c-b203fd19e71e",
+      "id": "c09d88fb-ce81-4f2c-a482-33bf08c3a6a2",
       "name": "Sticky Note1"
     },
     {
       "parameters": {
         "content": "### Translate & Summarize loop\n1 article per iteration.\n\nThe LLM receives the full article text (or snippet) and produces an **ADHD-friendly English summary** regardless of the original language.\n\n`<think>` blocks from reasoning models are stripped before the summary is attached to the article.",
-        "height": 144,
         "width": 512
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        9744,
-        352
+        11664,
+        512
       ],
       "typeVersion": 1,
-      "id": "6b9f4df6-860f-4ec6-8f62-68728c97e088",
+      "id": "541d05f5-a790-49a1-bebd-2352fb69835c",
       "name": "Sticky Note3"
     },
     {
@@ -163,11 +165,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        9760,
-        -576
+        11936,
+        -448
       ],
       "typeVersion": 1,
-      "id": "80bc480a-a3a1-4c33-ba1f-acf0c097a94b",
+      "id": "1434a640-b5e1-4ba1-9bbc-c7358da62e27",
       "name": "Sticky Note4"
     },
     {
@@ -192,23 +194,23 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        9088,
-        -96
+        11088,
+        32
       ],
-      "id": "b56b059e-7adb-4be1-baa6-cece346827d5",
+      "id": "cd9eb11a-070f-40a3-8fac-72835d83d79a",
       "name": "Call 'fn_filter_articles()'"
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "a13e1b69-64b0-4fc6-a79f-91d7fe51c6f4",
+      "id": "bc6ff8e1-3f15-4658-9018-1e343179c93a",
       "name": "Loop Over Articles1",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        9712,
-        -128
+        11632,
+        32
       ]
     },
     {
@@ -217,18 +219,18 @@
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nSource: ${$json.source}\n\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- ADHD friendly\n- Significant or complex news: use **bold** for key names, numbers, dates\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs, source names, or the title — only the summary text\n- Write in English regardless of the article's original language\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nSource: ${$json.source}\n\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- ADHD friendly\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs, source names, or the title — only the summary text\n- Write in English regardless of the article's original language\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "fdda9699-1d83-4954-9f81-5b9cfbe16e51",
+      "id": "c41a651c-a0f4-4aac-abae-08060d38ed46",
       "name": "Ollama Translate & Summarize",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        9760,
-        128
+        11680,
+        288
       ]
     },
     {
@@ -237,39 +239,39 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "4c352edb-6376-474c-9f83-abe33c8d1792",
+      "id": "88b7ca98-8bc2-4ed6-a53c-bf4593da9703",
       "name": "Merge Summary Results",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        10032,
-        112
+        11952,
+        272
       ]
     },
     {
       "parameters": {
         "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nreturn {\n  json: {\n    ...$json,\n    summary: raw\n  }\n};"
       },
-      "id": "49fd689c-762d-4491-a3fb-83c9cf8734e1",
+      "id": "20e47393-e850-4d18-889c-0d711bf73394",
       "name": "Enrich with Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10224,
-        112
+        12144,
+        272
       ]
     },
     {
       "parameters": {
         "jsCode": "const articles = $input.all().map(item => item.json);\n\nconst summary = articles\n  .map((a, i) => `${i + 1}. **${a.title}** (${a.source})\\n${a.summary}`)\n  .join('\\n\\n');\n\nreturn [{ json: { articles, summary } }];"
       },
-      "id": "c726d747-4f10-4b0e-ad55-818fd9f5ca51",
+      "id": "ca10b17c-92b4-4100-a006-456a7a20b642",
       "name": "Aggregate for Overview",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10032,
-        -272
+        11952,
+        -112
       ]
     },
     {
@@ -283,13 +285,13 @@
           "timeout": 600000
         }
       },
-      "id": "9a330bb6-5be8-4ab1-ac65-a03129a792cf",
+      "id": "437ed075-3be5-474b-8a72-d9193509b226",
       "name": "Ollama Overview",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        10240,
-        -144
+        12160,
+        16
       ]
     },
     {
@@ -298,26 +300,26 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "0af2fe87-2dfc-4ffc-adbf-97059f2b2a0d",
+      "id": "729c14bd-6461-4b15-a079-c13e850ecca1",
       "name": "Merge Overview with Articles",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        10416,
-        -256
+        12336,
+        -96
       ]
     },
     {
       "parameters": {
         "jsCode": "const overviewResponse = $json.response || '';\nconst articles = $json.articles || [];\n\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\nconst articlesSection = articles.map(a => {\n  const dateLine = a.pubDate ? `\\n*${a.pubDate}*` : '';\n  return [\n    `### ${a.title}`,\n    `**Source:** ${a.source}${dateLine} | [Read more](${a.link || a.url})`,\n    '',\n    a.summary\n  ].join('\\n');\n}).join('\\n\\n---\\n\\n');\n\nconst text = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Overview',\n  overviewResponse,\n  '',\n  '---',\n  '',\n  '## Articles',\n  '',\n  articlesSection\n].join('\\n');\n\nreturn [{\n  json: {\n    text,\n    summaryText: text,\n    filename: `news-summary-${date}.md`,\n    subject: `Daily News Summary - ${date}`,\n    overview: overviewResponse,\n    articles\n  }\n}];"
       },
-      "id": "7a2bdd89-aa4d-4d91-be3e-8dbb380003ab",
+      "id": "ede4c2cd-e673-4cd0-a59d-1d3d26775c4e",
       "name": "Prepare Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10576,
-        -256
+        12496,
+        -96
       ]
     },
     {
@@ -328,13 +330,13 @@
         "text": "={{ $json.summaryText }}",
         "options": {}
       },
-      "id": "a5c6f8b9-f8ce-4202-8679-a7ce866dc08e",
+      "id": "1a3a804c-4c05-4d35-8bbc-f50cae27d59a",
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
-        10784,
-        -384
+        12704,
+        -224
       ],
       "webhookId": "25b82f9d-e1c6-4114-b2a6-b0bd65e6db54",
       "credentials": {
@@ -353,13 +355,13 @@
           "fileName": "={{ $json.filename }}"
         }
       },
-      "id": "c9de94ec-d2a0-4606-88ce-157b38077bf1",
+      "id": "2617fe2b-647d-41a6-bcb8-0277117df0fb",
       "name": "Write file",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        10784,
-        -128
+        12704,
+        32
       ]
     },
     {
@@ -370,38 +372,14 @@
           "append": false
         }
       },
-      "id": "05addfef-a5c6-47a2-8aac-27de967de778",
+      "id": "7ae50593-9455-4336-824f-288c4784e6ee",
       "name": "Save File",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        10944,
-        -128
+        12864,
+        32
       ]
-    },
-    {
-      "parameters": {
-        "numberInputs": 3
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        8272,
-        -368
-      ],
-      "id": "7f2dcf2a-6454-4863-9925-9de79b8c91ff",
-      "name": "Merge RSS"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        8896,
-        -96
-      ],
-      "id": "5e981efa-2e27-45f2-9efa-a3930cb19e49",
-      "name": "Merge sources"
     },
     {
       "parameters": {
@@ -416,14 +394,163 @@
           ]
         }
       },
-      "id": "6b20b802-21c6-4e6b-a621-019f2859e740",
+      "id": "025688dc-e70d-46ed-bfae-ad4d2aea317b",
       "name": "Cron",
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        7728,
-        -352
+        9920,
+        16
       ]
+    },
+    {
+      "parameters": {
+        "url": "https://temponews.it/wp-json/wp/v2/posts?per_page=20&_fields=title,excerpt,link,date",
+        "options": {}
+      },
+      "id": "a6a14665-8d84-44e8-981a-f4243338d4d8",
+      "name": "TempoNews WP API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        10160,
+        272
+      ],
+      "alwaysOutputData": true,
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      .filter(post => post.date && post.date.startsWith(today))\n      .map(post => ({\n        title:    (post.title?.rendered  || '').replace(/<[^>]+>/g, '').trim(),\n        link:     post.link,\n        snippet:  (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate:  post.date,\n        source:   'Tempo News',\n        selector: '.entry-content',\n        place:    'Italy'\n      })),\n    required: ['title', 'link'],\n    mapped: {\n      title:   'title',\n      link:    'link',\n      pubDate: 'pubDate',\n      snippet: 'snippet'\n    }\n  }\n}];"
+      },
+      "id": "01c0d82b-cebb-440c-943f-92e98ae07255",
+      "name": "TempoNews Prepare",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10304,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.voce.it/it/home/",
+        "options": {}
+      },
+      "id": "954682a9-cdcf-4bca-b638-312c5e4ec6bb",
+      "name": "VoceIt Scrape",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        10160,
+        608
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "titles",
+              "cssSelector": ".apertura .apertura-text > a > h2",
+              "returnArray": true
+            },
+            {
+              "key": "links",
+              "cssSelector": ".apertura .apertura-text > a",
+              "returnValue": "attribute",
+              "attribute": "href",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {
+          "cleanUpText": true
+        }
+      },
+      "id": "7f125f96-07a3-46c4-b2c3-7607e756b5c1",
+      "name": "VoceIt Extract",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        10304,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const { titles = [], links = [] } = $input.first().json;\nreturn [{\n  json: {\n    articles: titles.map((title, i) => {\n      const href = links[i] || '';\n      return {\n        title,\n        link: href.startsWith('http') ? href : 'https://www.voce.it' + href,\n        source:   'La Voce',\n        selector: 'article',\n        place:    'Carpi'\n      };\n    }),\n    required: ['title', 'link'],\n    mapped: {\n      title: 'title',\n      link:  'link'\n    }\n  }\n}];"
+      },
+      "id": "4c9028bc-dee5-4845-bf3b-ff0ac2a717e0",
+      "name": "VoceIt Prepare",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10448,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        10672,
+        -32
+      ],
+      "id": "7099483c-b11a-4d2a-b5e5-e0f11c9749e7",
+      "name": "Merge sources1"
+    },
+    {
+      "parameters": {
+        "content": "## RSS",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        10208,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "1c86b7fa-9ea3-4662-b67b-d0f0155bb036",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Wordpress\n",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        10192,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "98af6c7e-bbb0-4d71-a8f3-aaadd012a60e",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Other\n",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        10160,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "bf3c4d9e-4d7a-4462-8572-e9b9c0bd9827",
+      "name": "Sticky Note6"
     }
   ],
   "pinData": {},
@@ -454,7 +581,7 @@
       "main": [
         [
           {
-            "node": "Merge RSS",
+            "node": "Merge sources1",
             "type": "main",
             "index": 0
           }
@@ -465,7 +592,7 @@
       "main": [
         [
           {
-            "node": "Merge RSS",
+            "node": "Merge sources1",
             "type": "main",
             "index": 1
           }
@@ -476,7 +603,7 @@
       "main": [
         [
           {
-            "node": "Merge RSS",
+            "node": "Merge sources1",
             "type": "main",
             "index": 2
           }
@@ -487,7 +614,7 @@
       "main": [
         [
           {
-            "node": "Merge sources",
+            "node": "Call 'fn_filter_articles()'",
             "type": "main",
             "index": 0
           }
@@ -637,28 +764,6 @@
         ]
       ]
     },
-    "Merge RSS": {
-      "main": [
-        [
-          {
-            "node": "Call 'fn_add_articles()'",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge sources": {
-      "main": [
-        [
-          {
-            "node": "Call 'fn_filter_articles()'",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Cron": {
       "main": [
         [
@@ -676,6 +781,82 @@
             "node": "Sole24Ore RSS",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "TempoNews WP API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "VoceIt Scrape",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TempoNews WP API": {
+      "main": [
+        [
+          {
+            "node": "TempoNews Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TempoNews Prepare": {
+      "main": [
+        [
+          {
+            "node": "Merge sources1",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "VoceIt Scrape": {
+      "main": [
+        [
+          {
+            "node": "VoceIt Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VoceIt Extract": {
+      "main": [
+        [
+          {
+            "node": "VoceIt Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VoceIt Prepare": {
+      "main": [
+        [
+          {
+            "node": "Merge sources1",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Merge sources1": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_add_articles()'",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -686,7 +867,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "a924a610-1997-43bf-974a-3e910d02b425",
+  "versionId": "83724887-ddbb-4937-950b-5eea879c2c4b",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },

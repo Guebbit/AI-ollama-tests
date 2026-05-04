@@ -1,56 +1,56 @@
 {
-  "name": "fn_filter_articles()",
+  "name": "fn_articles_filter()",
   "nodes": [
     {
       "parameters": {
         "options": {}
       },
-      "id": "cd1c32ce-142e-4398-9d1e-0a616cb1991a",
+      "id": "9fad351a-bac0-4736-9c84-29af4819a5a1",
       "name": "Loop Over Articles",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1264,
-        448
+        1760,
+        624
       ]
     },
     {
       "parameters": {
         "jsCode": "// Fixes n8n pairedItem tracking across the loop boundary.\n// Without this, downstream merge nodes lose the link to the original loop iteration.\nreturn { json: $json, pairedItem: 0 };"
       },
-      "id": "985ecb29-6d34-4ac0-9137-8e41c9199846",
+      "id": "126559cc-69e7-4230-b19b-f06ddc63953f",
       "name": "Article Checkpoint",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1472,
-        464
+        1968,
+        640
       ]
     },
     {
       "parameters": {},
-      "id": "a01134c8-91fc-43e0-ba13-d59b417e73aa",
+      "id": "0e507adb-3605-4560-b141-363b977bbcbc",
       "name": "Execute Workflow Trigger",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
       "position": [
-        1040,
-        448
+        1536,
+        624
       ]
     },
     {
       "parameters": {
-        "content": "## fn_filter_articles()\n\nAccepts a list of articles and returns only those deemed relevant by `fn_filter_article()`.\n\n**Per article (loop):**\n1. `fn_filter_article()` scores relevance via embedding similarity + optional LLM fallback\n2. Result is fed back into the loop with `isRelevant` set\n\n**After all articles are processed:**\n3. `Filter: Keep Relevant` keeps only `isRelevant = true`\n\nThe caller receives a clean list of relevant articles only.",
+        "content": "## fn_articles_filter()\n\nAccepts a list of articles and returns only those deemed relevant by `fn_filter_article()`.\n\n**Per article (loop):**\n1. `fn_filter_article()` scores relevance via embedding similarity + optional LLM fallback\n2. Result is fed back into the loop with `isRelevant` set\n\n**After all articles are processed:**\n3. `Filter: Keep Relevant` keeps only `isRelevant = true`\n\nThe caller receives a clean list of relevant articles only.",
         "height": 256,
         "width": 656
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1024,
-        -16
+        1520,
+        160
       ],
       "typeVersion": 1,
-      "id": "7ab670ea-d3a6-4f4f-a2a6-97e54c4a656a",
+      "id": "5f7ea267-a417-4206-bd95-60953642b9db",
       "name": "Sticky Note"
     },
     {
@@ -75,10 +75,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1680,
-        464
+        2176,
+        640
       ],
-      "id": "7fa9ed90-4c6b-4759-9724-81a796653c3c",
+      "id": "ac7cc63f-1c9e-4640-9e67-d994d82f05d8",
       "name": "Call 'fn_filter_article()'"
     },
     {
@@ -109,10 +109,10 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        1472,
-        304
+        1968,
+        480
       ],
-      "id": "5c1671d6-88af-411a-908c-93755f6bdbfc",
+      "id": "8adc6181-7216-4f76-bf87-57a4bf81e87f",
       "name": "Is Relevant = true"
     }
   ],
@@ -175,7 +175,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "b6e475d1-bfaf-4600-ad95-6f04113a228e",
+  "versionId": "a48a79b2-3e25-4425-95cf-ab580123b026",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },
