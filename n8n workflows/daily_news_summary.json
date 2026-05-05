@@ -482,7 +482,7 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        10304,
+        10384,
         608
       ]
     },
@@ -569,6 +569,40 @@
         10016,
         608
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        10224,
+        608
+      ],
+      "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
+      "name": "VoceIt Filter Errors"
     }
   ],
   "pinData": {},
@@ -836,6 +870,17 @@
       ]
     },
     "VoceIt Scrape": {
+      "main": [
+        [
+          {
+            "node": "VoceIt Filter Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VoceIt Filter Errors": {
       "main": [
         [
           {
