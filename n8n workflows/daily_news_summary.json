@@ -6,28 +6,30 @@
         "url": "https://www.ansa.it/sito/ansait_rss.xml",
         "options": {}
       },
-      "id": "01bc3509-890e-407f-b416-f379f99973ca",
+      "id": "3de08e81-d924-40ef-92b7-3a483aedccd0",
       "name": "Ansa RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        20352,
-        272
-      ]
+        22784,
+        144
+      ],
+      "disabled": true
     },
     {
       "parameters": {
         "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
         "options": {}
       },
-      "id": "c9b47444-7792-4933-a390-146c1ce2e7a2",
+      "id": "245b2490-14c6-4298-98ba-cb89a65e84de",
       "name": "Repubblica RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        20352,
-        448
-      ]
+        22784,
+        320
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -36,36 +38,38 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20496,
-        272
+        22928,
+        144
       ],
-      "id": "41899e55-fcc8-46f1-a6a0-3d961e905207",
-      "name": "Ansa Prepare"
+      "id": "1fe28def-fcfe-457d-8542-b33cc0c56ea1",
+      "name": "Ansa Prepare",
+      "disabled": true
     },
     {
       "parameters": {
         "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    title: item.json.title || '',\n    link: item.json.link || '',\n    pubDate: item.json.pubDate || item.json.isoDate || '',\n    snippet: item.json.contentSnippet || item.json.content || '',\n    selector: \"#article-body\",\n    source: 'Repubblica',\n    place: 'World',\n  })),\n\n  required: ['title', 'link'],\n};"
       },
-      "id": "788fe085-f10e-485f-a66a-61f8bed5afc1",
+      "id": "3669c0e5-9265-45a1-b139-e453256bbb20",
       "name": "Repubblica Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        20496,
-        448
-      ]
+        22928,
+        320
+      ],
+      "disabled": true
     },
     {
       "parameters": {
         "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    title: item.json.title || '',\n    link: item.json.link || '',\n    pubDate: item.json.pubDate || item.json.isoDate || '',\n    snippet: item.json.contentSnippet || item.json.content || '',\n    selector: \".aentry\",\n    source: 'Sole24Ore',\n    place: 'World',\n  })),\n\n  required: ['title', 'link'],\n};"
       },
-      "id": "4617698a-1752-4918-9d90-c5e05e605083",
+      "id": "b183889d-8e06-4288-b079-c58aa4da8e5d",
       "name": "Sole24Ore Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        20496,
-        624
+        22928,
+        496
       ]
     },
     {
@@ -73,13 +77,13 @@
         "url": "https://www.ilsole24ore.com/rss/italia.xml",
         "options": {}
       },
-      "id": "44151ad7-b5a7-4689-8bbe-2ecb1755dec3",
+      "id": "60384a86-1d84-4f4a-aae3-3f4598aa4ad3",
       "name": "Sole24Ore RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        20352,
-        624
+        22784,
+        496
       ]
     },
     {
@@ -90,11 +94,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        21216,
-        96
+        23648,
+        -32
       ],
       "typeVersion": 1,
-      "id": "4666b4a1-7ad5-46c6-8157-46d50e914c91",
+      "id": "b324d0ee-3d8b-4341-8e24-cb756fdf7001",
       "name": "Sticky Note"
     },
     {
@@ -105,11 +109,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        21840,
-        896
+        24272,
+        768
       ],
       "typeVersion": 1,
-      "id": "48b2a628-c1dd-49cf-a8a5-ccf51cec543f",
+      "id": "18c95464-d5fa-46da-8e89-0676817baac7",
       "name": "Sticky Note1"
     },
     {
@@ -119,11 +123,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        22448,
-        1200
+        24880,
+        1072
       ],
       "typeVersion": 1,
-      "id": "9af3dafb-dc3e-4e96-ae32-99cad29d2e1e",
+      "id": "3ee43f79-024e-4a81-a0b4-f5b368101947",
       "name": "Sticky Note3"
     },
     {
@@ -134,24 +138,24 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        22720,
-        240
+        25152,
+        112
       ],
       "typeVersion": 1,
-      "id": "3cd16ae0-541a-418a-9abf-138b760282f0",
+      "id": "a2541b78-6b0c-42eb-b249-ad278bbd8bd1",
       "name": "Sticky Note4"
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "1abe47dc-f9a2-4301-a969-8495b811d07a",
+      "id": "86a850aa-9ebc-4953-9607-9150e78c38f2",
       "name": "Loop Over Articles1",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        22416,
-        720
+        24848,
+        592
       ]
     },
     {
@@ -165,13 +169,13 @@
           "timeout": 600000
         }
       },
-      "id": "8f323362-c2ff-45c9-80c9-4df9f989dba5",
+      "id": "3b03ee99-5a76-4ec0-bcbf-cbbac2a47d39",
       "name": "Ollama Translate & Summarize",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        22464,
-        976
+        24896,
+        848
       ]
     },
     {
@@ -180,39 +184,39 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "0b370af6-0051-457a-b98a-ddad7bdef18e",
+      "id": "afa2a2c3-5222-41ad-9f52-0d25486de79b",
       "name": "Merge Summary Results",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        22736,
-        960
+        25168,
+        832
       ]
     },
     {
       "parameters": {
         "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nreturn {\n  json: {\n    ...$json,\n    summary: raw\n  }\n};"
       },
-      "id": "39cfbf85-1b33-486f-a18c-2da3c5e013db",
+      "id": "cff58916-03e1-4fc5-878a-614608f0ad1a",
       "name": "Enrich with Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22928,
-        960
+        25360,
+        832
       ]
     },
     {
       "parameters": {
         "jsCode": "const articles = $input.all().map(item => item.json);\n\nconst summary = articles\n  .map((a, i) => `${i + 1}. **${a.title}** (${a.source})\\n${a.summary}`)\n  .join('\\n\\n');\n\nreturn [{ json: { articles, summary } }];"
       },
-      "id": "424f68b3-5559-4160-8441-46462b931c65",
+      "id": "d3fbe0c5-f930-40df-b26b-d1c25f406205",
       "name": "Aggregate for Overview",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22736,
-        576
+        25168,
+        448
       ]
     },
     {
@@ -226,13 +230,13 @@
           "timeout": 600000
         }
       },
-      "id": "280937c5-f4a4-40aa-bd2a-09f2273369a8",
+      "id": "fd54bf90-734e-4772-bff9-a8fea999ca33",
       "name": "Ollama Overview",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        22944,
-        704
+        25376,
+        576
       ]
     },
     {
@@ -241,26 +245,26 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "9de36478-9d52-4f0e-a91f-9b3607f4dc61",
+      "id": "2e849828-499a-40b4-a428-a15499d8da14",
       "name": "Merge Overview with Articles",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        23120,
-        592
+        25552,
+        464
       ]
     },
     {
       "parameters": {
         "jsCode": "const overviewResponse = $json.response || '';\nconst articles = $json.articles || [];\n\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\nconst articlesSection = articles.map(a => {\n  const dateLine = a.pubDate ? `\\n*${a.pubDate}*` : '';\n  return [\n    `### ${a.title}`,\n    `**Source:** ${a.source}${dateLine} | [Read more](${a.link || a.url})`,\n    '',\n    a.summary\n  ].join('\\n');\n}).join('\\n\\n---\\n\\n');\n\nconst text = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Overview',\n  overviewResponse,\n  '',\n  '---',\n  '',\n  '## Articles',\n  '',\n  articlesSection\n].join('\\n');\n\nreturn [{\n  json: {\n    text,\n    summaryText: text,\n    filename: `news-summary-${date}.md`,\n    subject: `Daily News Summary - ${date}`,\n    overview: overviewResponse,\n    articles\n  }\n}];"
       },
-      "id": "1384b2ba-947f-4c0a-ae9b-d5fd727943a6",
+      "id": "4827cbc3-039c-4a9c-957e-280e726edee6",
       "name": "Prepare Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        23280,
-        592
+        25712,
+        464
       ]
     },
     {
@@ -271,13 +275,13 @@
         "text": "={{ $json.summaryText }}",
         "options": {}
       },
-      "id": "b238e328-2af9-4253-9a28-0911ea75755a",
+      "id": "ab39ef88-4be9-48aa-ac98-ce0e5870d006",
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
-        23488,
-        464
+        25920,
+        336
       ],
       "webhookId": "25b82f9d-e1c6-4114-b2a6-b0bd65e6db54",
       "credentials": {
@@ -296,13 +300,13 @@
           "fileName": "={{ $json.filename }}"
         }
       },
-      "id": "a7ebb93a-1771-481a-89fc-5dc80309999b",
+      "id": "76bca818-429b-4a92-a2fb-79a835888e34",
       "name": "Write file",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        23488,
-        720
+        25920,
+        592
       ]
     },
     {
@@ -313,13 +317,13 @@
           "append": false
         }
       },
-      "id": "b079c509-cd87-4bf5-97b2-390546a764f7",
+      "id": "a4993d10-307c-4408-84a9-360e06590f48",
       "name": "Save File",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        23648,
-        720
+        26080,
+        592
       ]
     },
     {
@@ -335,13 +339,13 @@
           ]
         }
       },
-      "id": "7fcf3d49-e0b8-4594-bc07-335425a3020e",
+      "id": "20632ad7-4d97-4501-bda7-63fd38f6bf59",
       "name": "Cron",
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        19952,
-        720
+        22384,
+        592
       ]
     },
     {
@@ -349,44 +353,47 @@
         "url": "https://temponews.it/wp-json/wp/v2/posts?per_page=20&_fields=title,excerpt,link,date",
         "options": {}
       },
-      "id": "9585ba65-bdb0-4cad-8400-27cc46aeae7e",
+      "id": "67665da7-5f98-49bd-8de2-58fdd16cdb84",
       "name": "TempoNews WP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        20336,
-        912
+        22768,
+        784
       ],
       "alwaysOutputData": true,
+      "disabled": true,
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      .filter(post => {\n        const rawDate = post.date || post.isoDate || '';\n        return rawDate.startsWith(today);\n      })\n      .map(post => ({\n        title: (post.title?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        link: post.link || '',\n        snippet: (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate: post.date || post.isoDate || '',\n        selector: '.entry-content',\n        source: 'Tempo News',\n        place: 'Carpi'\n      })),\n    required: ['title', 'link']\n  }\n}];"
       },
-      "id": "8d8c65ac-c012-4ef4-8312-5523160f636e",
+      "id": "0e66a94d-1f06-4f34-b6ba-ebd3a92efc4b",
       "name": "TempoNews Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20480,
-        912
-      ]
+        22912,
+        784
+      ],
+      "disabled": true
     },
     {
       "parameters": {
         "url": "={{ $json.url }}",
         "options": {}
       },
-      "id": "38f09b00-0aa6-49ec-b505-8e35efd1272f",
+      "id": "bdb92484-66e0-4395-b522-9be052296dd4",
       "name": "VoceIt Scrape",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        20416,
-        1200
+        22848,
+        1072
       ],
       "alwaysOutputData": true,
+      "disabled": true,
       "onError": "continueRegularOutput"
     },
     {
@@ -429,27 +436,29 @@
           "cleanUpText": true
         }
       },
-      "id": "af5a4225-6caa-45ae-aaf3-d6f53bab3093",
+      "id": "59102e96-6408-428f-99fa-0ec521a5c444",
       "name": "VoceIt Extract",
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        20352,
-        1344
-      ]
+        22784,
+        1216
+      ],
+      "disabled": true
     },
     {
       "parameters": {
         "jsCode": "const scrapedItems = $input.all().map(item => item.json || {});\n\n/**\n * Ensure the value is always an array.\n */\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\n\n/**\n * Normalize text:\n * - convert null/undefined to ''\n * - collapse multiple spaces/newlines\n * - trim\n */\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\n\n/**\n * Convert any date-like value to YYYY-MM-DD using JS Date.\n * Returns '' if invalid.\n */\nconst toDateKey = (value) => {\n  const d = new Date(value);\n  if (Number.isNaN(d.getTime())) return '';\n\n  const y = d.getFullYear();\n  const m = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n\n  return `${y}-${m}-${day}`;\n};\n\n/**\n * Convert relative URLs to absolute URL on voce.it.\n * WARNING: URL api can't be used in n8n nodes!\n */\nconst toAbsoluteUrl = (href) => {\n  const raw = String(href || '').trim();\n  if (!raw || raw.toLowerCase() === 'null') return '';\n\n  // Already absolute\n  if (/^https?:\\/\\//i.test(raw)) return raw;\n\n  // Normalize common relative formats used by your scraper\n  let path = raw;\n\n  // remove leading ../ or ./\n  path = path.replace(/^(\\.\\.\\/)+/, '/');\n  path = path.replace(/^\\.\\//, '/');\n\n  // ensure it starts with /\n  if (!path.startsWith('/')) path = `/${path}`;\n\n  // keep only target domain\n  return `https://www.voce.it${path}`;\n};\n\n/**\n * Italian month map (short + full).\n */\nconst monthMap = {\n  gen: 1, gennaio: 1,\n  feb: 2, febbraio: 2,\n  mar: 3, marzo: 3,\n  apr: 4, aprile: 4,\n  mag: 5, maggio: 5,\n  giu: 6, giugno: 6,\n  lug: 7, luglio: 7,\n  ago: 8, agosto: 8,\n  set: 9, settembre: 9,\n  ott: 10, ottobre: 10,\n  nov: 11, novembre: 11,\n  dic: 12, dicembre: 12\n};\n\n/**\n * Normalize a raw date into YYYY-MM-DD.\n * Handles:\n * - numeric forms: 05/05/2026, 05-05-2026, 05.05.2026\n * - Italian text forms: 5 Mag 2026, 5 Maggio 2026\n * - fallback to JS Date parser\n */\nconst normalizeDate = (rawDate) => {\n  const text = normalizeText(rawDate);\n  if (!text) return '';\n\n  // 1) Numeric date\n  const numeric = text.match(/(\\d{1,2})[\\/.\\-](\\d{1,2})[\\/.\\-](\\d{2,4})/);\n  if (numeric) {\n    const day = Number(numeric[1]);\n    const month = Number(numeric[2]);\n    const year = Number(numeric[3].length === 2 ? `20${numeric[3]}` : numeric[3]);\n\n    if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 2) Italian textual date\n  const monthText = text\n    .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '');\n\n  const textDate = monthText.match(/(\\d{1,2})\\s+([a-z]+)\\s+(\\d{4})/);\n  if (textDate) {\n    const day = Number(textDate[1]);\n    const month = monthMap[textDate[2]];\n    const year = Number(textDate[3]);\n\n    if (month && day >= 1 && day <= 31) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 3) Fallback\n  return toDateKey(text);\n};\n\n/**\n * Return true if text looks like a supported date.\n */\nconst isDateLike = (value) => !!normalizeDate(value);\n\nconst seen = new Set();\nconst articles = [];\n\n/**\n * Push one article only if title/link/date are valid.\n * De-duplicates by lowercased link + title.\n */\nconst pushArticle = (title, rawLink, rawDate) => {\n  const normalizedTitle = normalizeText(title);\n  const link = toAbsoluteUrl(rawLink);\n  const pubDate = normalizeDate(rawDate);\n\n  if (!normalizedTitle || !link || !pubDate) return;\n\n  const dedupeKey = `${link.toLowerCase()}|${normalizedTitle.toLowerCase()}`;\n  if (seen.has(dedupeKey)) return;\n  seen.add(dedupeKey);\n\n  articles.push({\n    title: normalizedTitle,\n    link,\n    pubDate,\n    selector: '[itemprop=\"articleBody\"]',\n    source: 'La Voce',\n    place: 'Carpi',\n  });\n};\n\nfor (const scraped of scrapedItems) {\n  const timelineTexts = toArray(scraped.timelineTexts).map(normalizeText).filter(Boolean);\n  const rawTimelineLinks = toArray(scraped.timelineLinks);\n\n  // Keep only usable non-null/non-empty links, normalized.\n  const timelineLinks = rawTimelineLinks\n    .map(normalizeText)\n    .filter(v => v && v.toLowerCase() !== 'null');\n\n  /**\n   * TIMELINE MODE (robust):\n   * Instead of fixed index pairing (i += 2), scan text sequence.\n   * Whenever we hit a date-like text, pair it with the previous non-date text as title.\n   * Then assign the next available link.\n   */\n  if (timelineTexts.length && timelineLinks.length) {\n    let linkCursor = 0;\n    let lastNonDateText = '';\n\n    for (const text of timelineTexts) {\n      if (isDateLike(text)) {\n        const title = lastNonDateText;\n        const link = timelineLinks[linkCursor] || '';\n        const rawDate = text;\n\n        // advance link cursor only when we try to emit a timeline record\n        linkCursor++;\n\n        pushArticle(title, link, rawDate);\n      } else {\n        // Keep latest non-date candidate; when next date appears,\n        // this will be considered the related title.\n        lastNonDateText = text;\n      }\n    }\n\n    // Continue to next scraped block (fallback not needed if timeline was processed)\n    continue;\n  }\n\n  /**\n   * FALLBACK MODE:\n   * Standard parallel arrays titles/links/dates.\n   */\n  const titleList = toArray(scraped.titles).map(normalizeText);\n  const linkList = toArray(scraped.links).map(normalizeText);\n  const dateList = toArray(scraped.dates).map(normalizeText);\n  const maxLen = Math.max(titleList.length, linkList.length, dateList.length);\n\n  for (let i = 0; i < maxLen; i++) {\n    pushArticle(titleList[i] || '', linkList[i] || '', dateList[i] || '');\n  }\n}\n\n/**\n * Keep only articles of today.\n * NOTE: n8n runtime timezone can affect \"today\".\n */\nconst today = toDateKey(new Date());\nconst todays = articles.filter(article => article.pubDate === today);\n\nreturn [{\n  json: {\n    articles: todays,\n    required: ['title', 'link']\n  }\n}];"
       },
-      "id": "9fc96496-6570-4cc1-80e8-6fca8b5b1e93",
+      "id": "33fe1d77-d221-4412-b874-f169b99e44d1",
       "name": "VoceIt Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20496,
-        1344
-      ]
+        22928,
+        1216
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -458,10 +467,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        20880,
-        656
+        23312,
+        528
       ],
-      "id": "f4404c7f-108d-498d-8944-03ba1bcbc893",
+      "id": "d0aac399-39d1-4921-bb5b-56e8b007d9e8",
       "name": "Merge sources1"
     },
     {
@@ -472,11 +481,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        20400,
-        144
+        22832,
+        16
       ],
       "typeVersion": 1,
-      "id": "1dae5b35-8275-4a0d-bd09-2d94f3c3027f",
+      "id": "836a4cd8-d068-4ae4-834d-723cd0db7644",
       "name": "Sticky Note2"
     },
     {
@@ -487,11 +496,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        20384,
-        800
+        22816,
+        672
       ],
       "typeVersion": 1,
-      "id": "3e0f1c76-8cc4-4b34-8f3d-3c1bd30513e3",
+      "id": "5b3c8135-018d-46ac-8f4b-5c3e5aab889d",
       "name": "Sticky Note5"
     },
     {
@@ -502,25 +511,26 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        20384,
-        1088
+        22816,
+        960
       ],
       "typeVersion": 1,
-      "id": "98ad57a6-eec4-47ec-a40b-e490b438997f",
+      "id": "e8841f8a-bd70-4e3b-b31b-a89f6e2eb8aa",
       "name": "Sticky Note6"
     },
     {
       "parameters": {
         "jsCode": "const categoryUrls = [\n  'https://www.voce.it/it/categoria/scuola',\n  'https://www.voce.it/it/categoria/sanita',\n  'https://www.voce.it/it/categoria/economia',\n  'https://www.voce.it/it/categoria/attualita',\n  'https://www.voce.it/it/categoria/cultura',\n  'https://www.voce.it/it/categoria/ambiente',\n  'https://www.voce.it/it/categoria/moda',\n  'https://www.voce.it/it/categoria/sociale',\n  'https://www.voce.it/it/categoria/sport',\n  'https://www.voce.it/it/categoria/territorio'\n];\n\nreturn categoryUrls.map(url => ({ json: { url } }));"
       },
-      "id": "3f6716f1-6b64-45a1-b357-e884072694ef",
+      "id": "b6a93136-2d56-4420-a060-289ebc32865f",
       "name": "VoceIt Categories",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20272,
-        1200
-      ]
+        22704,
+        1072
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -550,11 +560,12 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        20560,
-        1200
+        22992,
+        1072
       ],
-      "id": "2a17ab3b-1e6b-4837-bc59-887fdab4218f",
-      "name": "VoceIt Filter Errors"
+      "id": "4ec9f04f-a78e-4013-af97-d60965e30644",
+      "name": "VoceIt Filter Errors",
+      "disabled": true
     },
     {
       "parameters": {
@@ -562,13 +573,13 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "a079b3f9-2212-4c0d-82a5-e778227aee46",
+      "id": "fc292290-9f1e-406a-881f-a5b27fb54d15",
       "name": "Merge Translation",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        21696,
-        720
+        24128,
+        592
       ]
     },
     {
@@ -593,24 +604,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        22144,
-        720
+        24576,
+        592
       ],
-      "id": "943d1cf5-2c3d-4e46-9262-8610e64c1b77",
+      "id": "6e5b3a7f-1ee7-4a0c-b285-79e1810ae5ac",
       "name": "Call 'fn_articles_filter()'"
-    },
-    {
-      "parameters": {
-        "jsCode": "const articles = $input.all().flatMap(item => item.json.articles || []);\n\nreturn [{\n  json: {\n    articles,\n    articlesToTranslate: articles.map(article => ({\n      title: article.title || '',\n      snippet: article.snippet || ''\n    }))\n  }\n}];"
-      },
-      "id": "07751896-a1b4-40c1-8aa1-0eca9e42837e",
-      "name": "Prepare Translate Input",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        21264,
-        704
-      ]
     },
     {
       "parameters": {
@@ -620,11 +618,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        21344,
-        576
+        23776,
+        448
       ],
       "typeVersion": 1,
-      "id": "4a5bb2f4-d218-4eb8-a5fa-f57c93bf6a9e",
+      "id": "eef23fa0-d590-4052-a512-94e624ef1c39",
       "name": "Sticky Note7"
     },
     {
@@ -633,18 +631,18 @@
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a translator. Translate each item's title and snippet from Italian to English.\nReturn ONLY a valid JSON array with the same length as the input, where each element has title and snippet keys.\nDo not add explanations, comments, or any text outside the JSON array.\n\nInput:\n${JSON.stringify($json.articlesToTranslate)}`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
+        "jsonBody": "={{ JSON.stringify({\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a translator. Translate each item's title and snippet from Italian to English.\nReturn ONLY a valid JSON array with the same length as the input, where each element has title and snippet keys.\nDo not add explanations, comments, or any text outside the JSON array.\n\nInput:\n${JSON.stringify(\n  $input.all()\n    .map(item => item.json)\n    .filter(x => Array.isArray(x?.articles))\n    .flatMap(x => x.articles)\n    .filter(a =>\n      typeof a?.title === 'string' &&\n      a.title.trim() !== '' &&\n      typeof a?.snippet === 'string' &&\n      a.snippet.trim() !== ''\n    )\n    .map(({ title, snippet }) => ({ title, snippet }))\n)}`,\n  stream: false,\n  keep_alive: \"30m\"\n}) }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "4384d4fe-7487-4fc6-b6a9-feefdea6012b",
+      "id": "6d3266a4-4039-4cc2-a47d-4a32728de456",
       "name": "Translate",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        21408,
-        848
+        23840,
+        736
       ]
     },
     {
@@ -654,10 +652,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        21552,
-        848
+        23984,
+        736
       ],
-      "id": "4f602fde-bb20-403d-b225-c5f0922f2cea",
+      "id": "52199e9b-cc9e-4554-b59e-ccc4b95b5274",
       "name": "Transform"
     },
     {
@@ -667,10 +665,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        21472,
-        704
+        23904,
+        576
       ],
-      "id": "08623563-2172-4b79-85f5-e2ae4eb688a9",
+      "id": "0b8f380f-056a-4065-b289-e0082029b5bc",
       "name": "Transform1"
     },
     {
@@ -695,12 +693,73 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        21952,
-        720
+        24384,
+        592
       ],
-      "id": "1896222e-d2a7-479e-98bc-46730400e3c9",
+      "id": "ed9b08e2-2549-48ab-9d4a-363d1b258058",
       "name": "Call 'fn_articles_get()'",
       "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Loop Over Articles (Translate)",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        24080,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `Translate the following title and snippet from Italian to English.\\nReturn ONLY a valid JSON object with \"title\" and \"snippet\" keys. No explanation, no extra text.\\n\\nTitle: ${$json.title}\\nSnippet: ${$json.snippet}`,\n  stream: false,\n  keep_alive: \"30m\"\n}) }}",
+        "options": {
+          "timeout": 600000
+        }
+      },
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Translate Single",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        24080,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Merge Translate Single",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        24256,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nlet translated;\ntry {\n  translated = JSON.parse(raw);\n} catch(e) {\n  translated = {};\n}\nreturn {\n  json: {\n    ...$json,\n    title: translated.title || $json.title,\n    snippet: translated.snippet || $json.snippet,\n  }\n};"
+      },
+      "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
+      "name": "Enrich with Translation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        24432,
+        800
+      ]
     }
   ],
   "pinData": {},
@@ -993,7 +1052,7 @@
       "main": [
         [
           {
-            "node": "Prepare Translate Input",
+            "node": "Transform1",
             "type": "main",
             "index": 0
           }
@@ -1011,17 +1070,6 @@
         ]
       ]
     },
-    "Merge Translation": {
-      "main": [
-        [
-          {
-            "node": "Call 'fn_articles_get()'",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Call 'fn_articles_filter()'": {
       "main": [
         [
@@ -1033,49 +1081,11 @@
         ]
       ]
     },
-    "Prepare Translate Input": {
-      "main": [
-        [
-          {
-            "node": "Translate",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Transform1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Translate": {
-      "main": [
-        [
-          {
-            "node": "Transform",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Transform": {
-      "main": [
-        [
-          {
-            "node": "Merge Translation",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
     "Transform1": {
       "main": [
         [
           {
-            "node": "Merge Translation",
+            "node": "Loop Over Articles (Translate)",
             "type": "main",
             "index": 0
           }
@@ -1092,6 +1102,62 @@
           }
         ]
       ]
+    },
+    "Loop Over Articles (Translate)": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_articles_get()'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Translate Single",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Translate Single",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translate Single": {
+      "main": [
+        [
+          {
+            "node": "Merge Translate Single",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Translate Single": {
+      "main": [
+        [
+          {
+            "node": "Enrich with Translation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich with Translation": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Articles (Translate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -1099,7 +1165,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "de9c0672-6a9f-4900-89bf-2d104f9329fe",
+  "versionId": "9056e070-7745-44d0-9291-3a839ebad125",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },
