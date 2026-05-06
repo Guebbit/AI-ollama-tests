@@ -6,112 +6,81 @@
         "url": "https://www.ansa.it/sito/ansait_rss.xml",
         "options": {}
       },
-      "id": "27d33840-cd46-48e1-a7c2-aba04d591c1c",
+      "id": "01bc3509-890e-407f-b416-f379f99973ca",
       "name": "Ansa RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        10160,
-        -400
-      ],
-      "disabled": true
+        20352,
+        272
+      ]
     },
     {
       "parameters": {
         "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
         "options": {}
       },
-      "id": "76035870-5219-4502-a9e9-4a1918dbe65c",
+      "id": "c9b47444-7792-4933-a390-146c1ce2e7a2",
       "name": "Repubblica RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        10160,
-        -224
-      ],
-      "disabled": true
+        20352,
+        448
+      ]
     },
     {
       "parameters": {
-        "jsCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'ANSA',\n    selector: \"div[itemprop='articleBody']\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
+        "jsCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    selector: \"div[itemprop='articleBody']\",\n    source: 'ANSA',\n    place: 'World',\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10304,
-        -400
+        20496,
+        272
       ],
-      "id": "75690454-5a76-4f95-a1d0-927a06d3e0c0",
+      "id": "41899e55-fcc8-46f1-a6a0-3d961e905207",
       "name": "Ansa Prepare"
     },
     {
       "parameters": {
-        "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Repubblica',\n    selector: \"#article-body\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
+        "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    selector: \"#article-body\",\n    source: 'Repubblica',\n    place: 'World',\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n};"
       },
-      "id": "bacba050-4d37-42c1-b675-b11a23ef3b09",
+      "id": "788fe085-f10e-485f-a66a-61f8bed5afc1",
       "name": "Repubblica Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        10304,
-        -224
+        20496,
+        448
       ]
     },
     {
       "parameters": {
-        "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    source: 'Sole24Ore',\n    selector: \".aentry\"\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n}"
+        "functionCode": "return {\n  articles: items.map(item => ({\n    ...item.json,\n    selector: \".aentry\",\n    source: 'Sole24Ore',\n    place: 'World',\n  })), \n\n  required: ['title', 'link'],\n\n  mapped: {\n    title: 'title',\n    link: 'link',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  },\n}"
       },
-      "id": "629706c8-b65d-4346-b4c7-01418f59be43",
+      "id": "4617698a-1752-4918-9d90-c5e05e605083",
       "name": "Sole24Ore Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        10304,
-        -48
+        20496,
+        624
       ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "idRZ2wjOcbIB0Qnv",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/idRZ2wjOcbIB0Qnv",
-          "cachedResultName": "fn_add_articles()"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        10880,
-        32
-      ],
-      "id": "68e0076e-2f49-4a54-8a2b-255e65620ad4",
-      "name": "Call 'fn_add_articles()'"
     },
     {
       "parameters": {
         "url": "https://www.ilsole24ore.com/rss/italia.xml",
         "options": {}
       },
-      "id": "4fc09c8f-b4b2-4f7f-b7c8-92e21fcdd602",
+      "id": "44151ad7-b5a7-4689-8bbe-2ecb1755dec3",
       "name": "Sole24Ore RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        10160,
-        -48
-      ],
-      "disabled": true
+        20352,
+        624
+      ]
     },
     {
       "parameters": {
@@ -121,26 +90,26 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        10864,
-        -336
+        21216,
+        96
       ],
       "typeVersion": 1,
-      "id": "b8d724ac-52f3-4858-8caa-d76e29d2bae5",
+      "id": "4666b4a1-7ad5-46c6-8157-46d50e914c91",
       "name": "Sticky Note"
     },
     {
       "parameters": {
-        "content": "### Source Preparation\n\nEach Prepare node shapes its RSS items into the `fn_add_articles()` contract:\n\n```\n{\n  articles: [...],\n  required: ['title', 'link'],\n  mapped: {\n    title: 'title',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['contentSnippet', 'content']\n  }\n}\n```\n\n`source` and `selector` (CSS) are injected per-source so the extractor knows where to find the article body.",
+        "content": "### Source Preparation\n\nEach Prepare node shapes its RSS items into the `fn_articles_get()` contract:\n\n```\n{\n  articles: [...],\n  required: ['title', 'link'],\n  mapped: {\n    title: 'title',\n    pubDate: ['pubDate', 'isoDate'],\n    snippet: ['content']\n  }\n}\n```\n\n`source` and `selector` (CSS) are injected per-source so the extractor knows where to find the article body.",
         "height": 320,
-        "width": 516
+        "width": 468
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        10768,
-        352
+        21840,
+        896
       ],
       "typeVersion": 1,
-      "id": "c09d88fb-ce81-4f2c-a482-33bf08c3a6a2",
+      "id": "48b2a628-c1dd-49cf-a8a5-ccf51cec543f",
       "name": "Sticky Note1"
     },
     {
@@ -150,11 +119,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        11664,
-        512
+        22448,
+        1200
       ],
       "typeVersion": 1,
-      "id": "541d05f5-a790-49a1-bebd-2352fb69835c",
+      "id": "9af3dafb-dc3e-4e96-ae32-99cad29d2e1e",
       "name": "Sticky Note3"
     },
     {
@@ -165,52 +134,24 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        11936,
-        -448
+        22720,
+        240
       ],
       "typeVersion": 1,
-      "id": "1434a640-b5e1-4ba1-9bbc-c7358da62e27",
+      "id": "3cd16ae0-541a-418a-9abf-138b760282f0",
       "name": "Sticky Note4"
     },
     {
       "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "F04NTe2IAGkVjo3a",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/F04NTe2IAGkVjo3a",
-          "cachedResultName": "fn_filter_articles()"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
         "options": {}
       },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        11088,
-        32
-      ],
-      "id": "cd9eb11a-070f-40a3-8fac-72835d83d79a",
-      "name": "Call 'fn_filter_articles()'"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "id": "bc6ff8e1-3f15-4658-9018-1e343179c93a",
+      "id": "1abe47dc-f9a2-4301-a969-8495b811d07a",
       "name": "Loop Over Articles1",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        11632,
-        32
+        22416,
+        720
       ]
     },
     {
@@ -224,13 +165,13 @@
           "timeout": 600000
         }
       },
-      "id": "c41a651c-a0f4-4aac-abae-08060d38ed46",
+      "id": "8f323362-c2ff-45c9-80c9-4df9f989dba5",
       "name": "Ollama Translate & Summarize",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        11680,
-        288
+        22464,
+        976
       ]
     },
     {
@@ -239,39 +180,39 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "88b7ca98-8bc2-4ed6-a53c-bf4593da9703",
+      "id": "0b370af6-0051-457a-b98a-ddad7bdef18e",
       "name": "Merge Summary Results",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        11952,
-        272
+        22736,
+        960
       ]
     },
     {
       "parameters": {
         "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nreturn {\n  json: {\n    ...$json,\n    summary: raw\n  }\n};"
       },
-      "id": "20e47393-e850-4d18-889c-0d711bf73394",
+      "id": "39cfbf85-1b33-486f-a18c-2da3c5e013db",
       "name": "Enrich with Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        12144,
-        272
+        22928,
+        960
       ]
     },
     {
       "parameters": {
         "jsCode": "const articles = $input.all().map(item => item.json);\n\nconst summary = articles\n  .map((a, i) => `${i + 1}. **${a.title}** (${a.source})\\n${a.summary}`)\n  .join('\\n\\n');\n\nreturn [{ json: { articles, summary } }];"
       },
-      "id": "ca10b17c-92b4-4100-a006-456a7a20b642",
+      "id": "424f68b3-5559-4160-8441-46462b931c65",
       "name": "Aggregate for Overview",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        11952,
-        -112
+        22736,
+        576
       ]
     },
     {
@@ -285,13 +226,13 @@
           "timeout": 600000
         }
       },
-      "id": "437ed075-3be5-474b-8a72-d9193509b226",
+      "id": "280937c5-f4a4-40aa-bd2a-09f2273369a8",
       "name": "Ollama Overview",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        12160,
-        16
+        22944,
+        704
       ]
     },
     {
@@ -300,26 +241,26 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "729c14bd-6461-4b15-a079-c13e850ecca1",
+      "id": "9de36478-9d52-4f0e-a91f-9b3607f4dc61",
       "name": "Merge Overview with Articles",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        12336,
-        -96
+        23120,
+        592
       ]
     },
     {
       "parameters": {
         "jsCode": "const overviewResponse = $json.response || '';\nconst articles = $json.articles || [];\n\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\nconst articlesSection = articles.map(a => {\n  const dateLine = a.pubDate ? `\\n*${a.pubDate}*` : '';\n  return [\n    `### ${a.title}`,\n    `**Source:** ${a.source}${dateLine} | [Read more](${a.link || a.url})`,\n    '',\n    a.summary\n  ].join('\\n');\n}).join('\\n\\n---\\n\\n');\n\nconst text = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Overview',\n  overviewResponse,\n  '',\n  '---',\n  '',\n  '## Articles',\n  '',\n  articlesSection\n].join('\\n');\n\nreturn [{\n  json: {\n    text,\n    summaryText: text,\n    filename: `news-summary-${date}.md`,\n    subject: `Daily News Summary - ${date}`,\n    overview: overviewResponse,\n    articles\n  }\n}];"
       },
-      "id": "ede4c2cd-e673-4cd0-a59d-1d3d26775c4e",
+      "id": "1384b2ba-947f-4c0a-ae9b-d5fd727943a6",
       "name": "Prepare Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        12496,
-        -96
+        23280,
+        592
       ]
     },
     {
@@ -330,13 +271,13 @@
         "text": "={{ $json.summaryText }}",
         "options": {}
       },
-      "id": "1a3a804c-4c05-4d35-8bbc-f50cae27d59a",
+      "id": "b238e328-2af9-4253-9a28-0911ea75755a",
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
-        12704,
-        -224
+        23488,
+        464
       ],
       "webhookId": "25b82f9d-e1c6-4114-b2a6-b0bd65e6db54",
       "credentials": {
@@ -355,13 +296,13 @@
           "fileName": "={{ $json.filename }}"
         }
       },
-      "id": "2617fe2b-647d-41a6-bcb8-0277117df0fb",
+      "id": "a7ebb93a-1771-481a-89fc-5dc80309999b",
       "name": "Write file",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        12704,
-        32
+        23488,
+        720
       ]
     },
     {
@@ -372,13 +313,13 @@
           "append": false
         }
       },
-      "id": "7ae50593-9455-4336-824f-288c4784e6ee",
+      "id": "b079c509-cd87-4bf5-97b2-390546a764f7",
       "name": "Save File",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        12864,
-        32
+        23648,
+        720
       ]
     },
     {
@@ -394,13 +335,13 @@
           ]
         }
       },
-      "id": "025688dc-e70d-46ed-bfae-ad4d2aea317b",
+      "id": "7fcf3d49-e0b8-4594-bc07-335425a3020e",
       "name": "Cron",
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        9920,
-        16
+        19952,
+        720
       ]
     },
     {
@@ -408,29 +349,28 @@
         "url": "https://temponews.it/wp-json/wp/v2/posts?per_page=20&_fields=title,excerpt,link,date",
         "options": {}
       },
-      "id": "a6a14665-8d84-44e8-981a-f4243338d4d8",
+      "id": "9585ba65-bdb0-4cad-8400-27cc46aeae7e",
       "name": "TempoNews WP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        10160,
-        272
+        20336,
+        912
       ],
       "alwaysOutputData": true,
-      "disabled": true,
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      .filter(post => post.date && post.date.startsWith(today))\n      .map(post => ({\n        title:    (post.title?.rendered  || '').replace(/<[^>]+>/g, '').trim(),\n        link:     post.link,\n        snippet:  (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate:  post.date,\n        source:   'Tempo News',\n        selector: '.entry-content',\n        place:    'Italy'\n      })),\n    required: ['title', 'link'],\n    mapped: {\n      title:   'title',\n      link:    'link',\n      pubDate: 'pubDate',\n      snippet: 'snippet'\n    }\n  }\n}];"
+        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      .filter(post => post.date && post.date.startsWith(today))\n      .map(post => ({\n        title:    (post.title?.rendered  || '').replace(/<[^>]+>/g, '').trim(),\n        link:     post.link,\n        snippet:  (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate:  post.date,\n        selector: '.entry-content',\n        source:   'Tempo News',\n        place:    'Carpi'\n      })),\n    required: ['title', 'link'],\n    mapped: {\n      title:   'title',\n      link:    'link',\n      pubDate: 'pubDate',\n      snippet: 'snippet'\n    }\n  }\n}];"
       },
-      "id": "01c0d82b-cebb-440c-943f-92e98ae07255",
+      "id": "8d8c65ac-c012-4ef4-8312-5523160f636e",
       "name": "TempoNews Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10304,
-        272
+        20480,
+        912
       ]
     },
     {
@@ -438,13 +378,13 @@
         "url": "={{ $json.url }}",
         "options": {}
       },
-      "id": "954682a9-cdcf-4bca-b638-312c5e4ec6bb",
+      "id": "38f09b00-0aa6-49ec-b505-8e35efd1272f",
       "name": "VoceIt Scrape",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        10160,
-        608
+        20416,
+        1200
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
@@ -489,26 +429,26 @@
           "cleanUpText": true
         }
       },
-      "id": "7f125f96-07a3-46c4-b2c3-7607e756b5c1",
+      "id": "af5a4225-6caa-45ae-aaf3-d6f53bab3093",
       "name": "VoceIt Extract",
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        10384,
-        608
+        20352,
+        1344
       ]
     },
     {
       "parameters": {
-        "jsCode": "const scrapedItems = $input.all().map(item => item.json || {});\n\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\nconst toDateKey = (value) => {\n  const d = new Date(value);\n  if (Number.isNaN(d.getTime())) return '';\n  const y = d.getFullYear();\n  const m = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n  return `${y}-${m}-${day}`;\n};\n\nconst toAbsoluteUrl = (href) => {\n  if (!href) return '';\n  try {\n    return new URL(href, 'https://www.voce.it').toString();\n  } catch {\n    return '';\n  }\n};\n\nconst monthMap = {\n  gennaio: 1,\n  febbraio: 2,\n  marzo: 3,\n  aprile: 4,\n  maggio: 5,\n  giugno: 6,\n  luglio: 7,\n  agosto: 8,\n  settembre: 9,\n  ottobre: 10,\n  novembre: 11,\n  dicembre: 12\n};\n\nconst normalizeDate = (rawDate) => {\n  const text = normalizeText(rawDate);\n  if (!text) return '';\n\n  const numeric = text.match(/(\\d{1,2})[\\/.\\-](\\d{1,2})[\\/.\\-](\\d{2,4})/);\n  if (numeric) {\n    const day = Number(numeric[1]);\n    const month = Number(numeric[2]);\n    const year = Number(numeric[3].length === 2 ? `20${numeric[3]}` : numeric[3]);\n    if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  const monthText = text.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n  const textDate = monthText.match(/(\\d{1,2})\\s+([a-z]+)\\s+(\\d{4})/);\n  if (textDate) {\n    const day = Number(textDate[1]);\n    const month = monthMap[textDate[2]];\n    const year = Number(textDate[3]);\n    if (month && day >= 1 && day <= 31) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  return toDateKey(text);\n};\n\nconst seen = new Set();\nconst articles = [];\n\nconst pushArticle = (title, rawLink, rawDate) => {\n  const normalizedTitle = normalizeText(title);\n  const link = toAbsoluteUrl(rawLink);\n  const pubDate = normalizeDate(rawDate);\n\n  if (!normalizedTitle || !link || !pubDate) return;\n\n  const dedupeKey = `${link.toLowerCase()}|${normalizedTitle.toLowerCase()}`;\n  if (seen.has(dedupeKey)) return;\n  seen.add(dedupeKey);\n\n  articles.push({\n    title: normalizedTitle,\n    link,\n    pubDate,\n    source: 'La Voce',\n    selector: '[itemprop=\\\"articleBody\\\"]',\n    place: 'Carpi'\n  });\n};\n\nfor (const scraped of scrapedItems) {\n  const timelineTexts = toArray(scraped.timelineTexts).map(normalizeText);\n  const timelineLinks = toArray(scraped.timelineLinks).map(normalizeText);\n\n  const hasTimeline = timelineTexts.length > 0 && timelineLinks.length > 0;\n\n  if (hasTimeline) {\n    const maxTimelineLen = Math.max(timelineTexts.length, timelineLinks.length);\n    let activeDate = '';\n\n    for (let i = 0; i < maxTimelineLen; i++) {\n      const text = timelineTexts[i] || '';\n      const link = timelineLinks[i] || '';\n      const parsedDate = normalizeDate(text);\n\n      if (!link && parsedDate) {\n        activeDate = parsedDate;\n        continue;\n      }\n\n      if (link) {\n        pushArticle(text, link, parsedDate || activeDate);\n      }\n    }\n\n    continue;\n  }\n\n  const titleList = toArray(scraped.titles).map(normalizeText);\n  const linkList = toArray(scraped.links).map(normalizeText);\n  const dateList = toArray(scraped.dates).map(normalizeText);\n  const maxLen = Math.max(titleList.length, linkList.length, dateList.length);\n\n  for (let i = 0; i < maxLen; i++) {\n    pushArticle(titleList[i] || '', linkList[i] || '', dateList[i] || '');\n  }\n}\n\nconst today = toDateKey(new Date());\nconst todays = articles.filter(article => article.pubDate === today);\n\nreturn [{\n  json: {\n    articles: todays,\n    required: ['title', 'link'],\n    mapped: {\n      title: 'title',\n      link: 'link',\n      pubDate: 'pubDate'\n    }\n  }\n}];"
+        "jsCode": "const scrapedItems = $input.all().map(item => item.json || {});\n\n/**\n * Ensure the value is always an array.\n */\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\n\n/**\n * Normalize text:\n * - convert null/undefined to ''\n * - collapse multiple spaces/newlines\n * - trim\n */\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\n\n/**\n * Convert any date-like value to YYYY-MM-DD using JS Date.\n * Returns '' if invalid.\n */\nconst toDateKey = (value) => {\n  const d = new Date(value);\n  if (Number.isNaN(d.getTime())) return '';\n\n  const y = d.getFullYear();\n  const m = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n\n  return `${y}-${m}-${day}`;\n};\n\n/**\n * Convert relative URLs to absolute URL on voce.it.\n * WARNING: URL api can't be used in n8n nodes!\n */\nconst toAbsoluteUrl = (href) => {\n  const raw = String(href || '').trim();\n  if (!raw || raw.toLowerCase() === 'null') return '';\n\n  // Already absolute\n  if (/^https?:\\/\\//i.test(raw)) return raw;\n\n  // Normalize common relative formats used by your scraper\n  let path = raw;\n\n  // remove leading ../ or ./\n  path = path.replace(/^(\\.\\.\\/)+/, '/');\n  path = path.replace(/^\\.\\//, '/');\n\n  // ensure it starts with /\n  if (!path.startsWith('/')) path = `/${path}`;\n\n  // keep only target domain\n  return `https://www.voce.it${path}`;\n};\n\n/**\n * Italian month map (short + full).\n */\nconst monthMap = {\n  gen: 1, gennaio: 1,\n  feb: 2, febbraio: 2,\n  mar: 3, marzo: 3,\n  apr: 4, aprile: 4,\n  mag: 5, maggio: 5,\n  giu: 6, giugno: 6,\n  lug: 7, luglio: 7,\n  ago: 8, agosto: 8,\n  set: 9, settembre: 9,\n  ott: 10, ottobre: 10,\n  nov: 11, novembre: 11,\n  dic: 12, dicembre: 12\n};\n\n/**\n * Normalize a raw date into YYYY-MM-DD.\n * Handles:\n * - numeric forms: 05/05/2026, 05-05-2026, 05.05.2026\n * - Italian text forms: 5 Mag 2026, 5 Maggio 2026\n * - fallback to JS Date parser\n */\nconst normalizeDate = (rawDate) => {\n  const text = normalizeText(rawDate);\n  if (!text) return '';\n\n  // 1) Numeric date\n  const numeric = text.match(/(\\d{1,2})[\\/.\\-](\\d{1,2})[\\/.\\-](\\d{2,4})/);\n  if (numeric) {\n    const day = Number(numeric[1]);\n    const month = Number(numeric[2]);\n    const year = Number(numeric[3].length === 2 ? `20${numeric[3]}` : numeric[3]);\n\n    if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 2) Italian textual date\n  const monthText = text\n    .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '');\n\n  const textDate = monthText.match(/(\\d{1,2})\\s+([a-z]+)\\s+(\\d{4})/);\n  if (textDate) {\n    const day = Number(textDate[1]);\n    const month = monthMap[textDate[2]];\n    const year = Number(textDate[3]);\n\n    if (month && day >= 1 && day <= 31) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 3) Fallback\n  return toDateKey(text);\n};\n\n/**\n * Return true if text looks like a supported date.\n */\nconst isDateLike = (value) => !!normalizeDate(value);\n\nconst seen = new Set();\nconst articles = [];\n\n/**\n * Push one article only if title/link/date are valid.\n * De-duplicates by lowercased link + title.\n */\nconst pushArticle = (title, rawLink, rawDate) => {\n  const normalizedTitle = normalizeText(title);\n  const link = toAbsoluteUrl(rawLink);\n  const pubDate = normalizeDate(rawDate);\n\n  if (!normalizedTitle || !link || !pubDate) return;\n\n  const dedupeKey = `${link.toLowerCase()}|${normalizedTitle.toLowerCase()}`;\n  if (seen.has(dedupeKey)) return;\n  seen.add(dedupeKey);\n\n  articles.push({\n    title: normalizedTitle,\n    link,\n    pubDate,\n    selector: '[itemprop=\"articleBody\"]',\n    source: 'La Voce',\n    place: 'Carpi',\n  });\n};\n\nfor (const scraped of scrapedItems) {\n  const timelineTexts = toArray(scraped.timelineTexts).map(normalizeText).filter(Boolean);\n  const rawTimelineLinks = toArray(scraped.timelineLinks);\n\n  // Keep only usable non-null/non-empty links, normalized.\n  const timelineLinks = rawTimelineLinks\n    .map(normalizeText)\n    .filter(v => v && v.toLowerCase() !== 'null');\n\n  /**\n   * TIMELINE MODE (robust):\n   * Instead of fixed index pairing (i += 2), scan text sequence.\n   * Whenever we hit a date-like text, pair it with the previous non-date text as title.\n   * Then assign the next available link.\n   */\n  if (timelineTexts.length && timelineLinks.length) {\n    let linkCursor = 0;\n    let lastNonDateText = '';\n\n    for (const text of timelineTexts) {\n      if (isDateLike(text)) {\n        const title = lastNonDateText;\n        const link = timelineLinks[linkCursor] || '';\n        const rawDate = text;\n\n        // advance link cursor only when we try to emit a timeline record\n        linkCursor++;\n\n        pushArticle(title, link, rawDate);\n      } else {\n        // Keep latest non-date candidate; when next date appears,\n        // this will be considered the related title.\n        lastNonDateText = text;\n      }\n    }\n\n    // Continue to next scraped block (fallback not needed if timeline was processed)\n    continue;\n  }\n\n  /**\n   * FALLBACK MODE:\n   * Standard parallel arrays titles/links/dates.\n   */\n  const titleList = toArray(scraped.titles).map(normalizeText);\n  const linkList = toArray(scraped.links).map(normalizeText);\n  const dateList = toArray(scraped.dates).map(normalizeText);\n  const maxLen = Math.max(titleList.length, linkList.length, dateList.length);\n\n  for (let i = 0; i < maxLen; i++) {\n    pushArticle(titleList[i] || '', linkList[i] || '', dateList[i] || '');\n  }\n}\n\n/**\n * Keep only articles of today.\n * NOTE: n8n runtime timezone can affect \"today\".\n */\nconst today = toDateKey(new Date());\nconst todays = articles.filter(article => article.pubDate === today);\n\nreturn [{\n  json: {\n    articles: todays,\n    required: ['title', 'link'],\n    mapped: {\n      title: 'title',\n      link: 'link',\n      pubDate: 'pubDate',\n    }\n  }\n}];"
       },
-      "id": "4c9028bc-dee5-4845-bf3b-ff0ac2a717e0",
+      "id": "9fc96496-6570-4cc1-80e8-6fca8b5b1e93",
       "name": "VoceIt Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10448,
-        608
+        20496,
+        1344
       ]
     },
     {
@@ -518,10 +458,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        10672,
-        -32
+        20880,
+        656
       ],
-      "id": "7099483c-b11a-4d2a-b5e5-e0f11c9749e7",
+      "id": "f4404c7f-108d-498d-8944-03ba1bcbc893",
       "name": "Merge sources1"
     },
     {
@@ -532,11 +472,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        10208,
-        -528
+        20400,
+        144
       ],
       "typeVersion": 1,
-      "id": "1c86b7fa-9ea3-4662-b67b-d0f0155bb036",
+      "id": "1dae5b35-8275-4a0d-bd09-2d94f3c3027f",
       "name": "Sticky Note2"
     },
     {
@@ -547,11 +487,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        10192,
-        128
+        20384,
+        800
       ],
       "typeVersion": 1,
-      "id": "98af6c7e-bbb0-4d71-a8f3-aaadd012a60e",
+      "id": "3e0f1c76-8cc4-4b34-8f3d-3c1bd30513e3",
       "name": "Sticky Note5"
     },
     {
@@ -562,24 +502,24 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        10160,
-        480
+        20384,
+        1088
       ],
       "typeVersion": 1,
-      "id": "bf3c4d9e-4d7a-4462-8572-e9b9c0bd9827",
+      "id": "98ad57a6-eec4-47ec-a40b-e490b438997f",
       "name": "Sticky Note6"
     },
     {
       "parameters": {
         "jsCode": "const categoryUrls = [\n  'https://www.voce.it/it/categoria/scuola',\n  'https://www.voce.it/it/categoria/sanita',\n  'https://www.voce.it/it/categoria/economia',\n  'https://www.voce.it/it/categoria/attualita',\n  'https://www.voce.it/it/categoria/cultura',\n  'https://www.voce.it/it/categoria/ambiente',\n  'https://www.voce.it/it/categoria/moda',\n  'https://www.voce.it/it/categoria/sociale',\n  'https://www.voce.it/it/categoria/sport',\n  'https://www.voce.it/it/categoria/territorio'\n];\n\nreturn categoryUrls.map(url => ({ json: { url } }));"
       },
-      "id": "f80e4c8c-d75b-4db7-a7cc-a6b0a8d76952",
+      "id": "3f6716f1-6b64-45a1-b357-e884072694ef",
       "name": "VoceIt Categories",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10016,
-        608
+        20272,
+        1200
       ]
     },
     {
@@ -610,11 +550,157 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        10224,
-        608
+        20560,
+        1200
       ],
-      "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
+      "id": "2a17ab3b-1e6b-4837-bc59-887fdab4218f",
       "name": "VoceIt Filter Errors"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "a079b3f9-2212-4c0d-82a5-e778227aee46",
+      "name": "Merge Translation",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        21696,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "F04NTe2IAGkVjo3a",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/F04NTe2IAGkVjo3a",
+          "cachedResultName": "fn_articles_filter()"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        22144,
+        720
+      ],
+      "id": "943d1cf5-2c3d-4e46-9262-8610e64c1b77",
+      "name": "Call 'fn_articles_filter()'"
+    },
+    {
+      "parameters": {
+        "jsCode": "const sourceData = $input.all().map(item => ({\n  articles: item.json.articles || [],\n  required: item.json.required,\n  mapped: item.json.mapped\n}));\n\nconst articlesToTranslate = [];\nsourceData.forEach(src => {\n  (src.articles || []).forEach(a => {\n    articlesToTranslate.push({\n      title: a.title || '',\n      snippet: a.snippet || ''\n    });\n  });\n});\n\nreturn [{\n  json: {\n    sourceData,\n    articlesToTranslate\n  }\n}];"
+      },
+      "id": "07751896-a1b4-40c1-8aa1-0eca9e42837e",
+      "name": "Prepare Translate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        21264,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Preliminary translation\n\nTranslate title and snippet, to better intercept interests (that are language sensitive)",
+        "height": 112,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        21344,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "4a5bb2f4-d218-4eb8-a5fa-f57c93bf6a9e",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a translator. Translate each item's title and snippet from Italian to English.\nReturn ONLY a valid JSON array with the same length as the input, where each element has title and snippet keys.\nDo not add explanations, comments, or any text outside the JSON array.\n\nInput:\n${JSON.stringify($json.articlesToTranslate)}`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
+        "options": {
+          "timeout": 600000
+        }
+      },
+      "id": "4384d4fe-7487-4fc6-b6a9-feefdea6012b",
+      "name": "Translate",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        21408,
+        848
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return JSON.parse(items[0].json.response).map(el => ({\n  json: el\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        21552,
+        848
+      ],
+      "id": "4f602fde-bb20-403d-b225-c5f0922f2cea",
+      "name": "Transform"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items[0].json.sourceData.flatMap(el => el.articles || []).map(article => ({\n  json: article\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        21472,
+        704
+      ],
+      "id": "08623563-2172-4b79-85f5-e2ae4eb688a9",
+      "name": "Transform1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "idRZ2wjOcbIB0Qnv",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/idRZ2wjOcbIB0Qnv",
+          "cachedResultName": "fn_articles_get()"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        21952,
+        720
+      ],
+      "id": "1896222e-d2a7-479e-98bc-46730400e3c9",
+      "name": "Call 'fn_articles_get()'",
+      "alwaysOutputData": false
     }
   ],
   "pinData": {},
@@ -674,33 +760,11 @@
         ]
       ]
     },
-    "Call 'fn_add_articles()'": {
-      "main": [
-        [
-          {
-            "node": "Call 'fn_filter_articles()'",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Sole24Ore RSS": {
       "main": [
         [
           {
             "node": "Sole24Ore Prepare",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call 'fn_filter_articles()'": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Articles1",
             "type": "main",
             "index": 0
           }
@@ -929,7 +993,7 @@
       "main": [
         [
           {
-            "node": "Call 'fn_add_articles()'",
+            "node": "Prepare Translate Input",
             "type": "main",
             "index": 0
           }
@@ -946,6 +1010,88 @@
           }
         ]
       ]
+    },
+    "Merge Translation": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_articles_get()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'fn_articles_filter()'": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Articles1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Translate Input": {
+      "main": [
+        [
+          {
+            "node": "Translate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Transform1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translate": {
+      "main": [
+        [
+          {
+            "node": "Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform": {
+      "main": [
+        [
+          {
+            "node": "Merge Translation",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Transform1": {
+      "main": [
+        [
+          {
+            "node": "Merge Translation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'fn_articles_get()'": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_articles_filter()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -953,7 +1099,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "83724887-ddbb-4937-950b-5eea879c2c4b",
+  "versionId": "de9c0672-6a9f-4900-89bf-2d104f9329fe",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },
