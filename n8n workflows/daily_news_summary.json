@@ -208,7 +208,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const articles = $input.all().map(item => item.json);\n\nconst summary = articles\n  .map((article, index) => {\n    const sourceLine = Array.isArray(article.sourceNames) && article.sourceNames.length\n      ? article.sourceNames.join(', ')\n      : (article.source || 'Unknown source');\n    return `${index + 1}. **${article.title}** (${sourceLine})\\n${article.summary}`;\n  })\n  .join('\\n\\n');\n\nreturn [{\n  json: {\n    articles,\n    summary\n  }\n}];"
+        "jsCode": "const articles = $input.all().map(item => item.json);\n\nconst summary = articles\n  .map((article, index) => {\n    const sourceList = Array.isArray(article.sourceNames) && article.sourceNames.length\n      ? article.sourceNames.join(', ')\n      : (article.source || 'Unknown source');\n    return `${index + 1}. **${article.title}** (${sourceList})\\n${article.summary}`;\n  })\n  .join('\\n\\n');\n\nreturn [{\n  json: {\n    articles,\n    summary\n  }\n}];"
       },
       "id": "d3fbe0c5-f930-40df-b26b-d1c25f406205",
       "name": "Aggregate for Overview",
