@@ -47,7 +47,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Input:\n// - sourceObj: original object (item.json)\n// - requiredFields: fields that must exist in output as-is (or empty string)\n// - mappedFields: { outputField: sourceField | [sourceField1, sourceField2, ...] }\n//\n// Rules:\n// - runDate is always added automatically\n// - if source field is missing => ''\n// - if source field is an array, first existing value is used\nfunction normalizeObject(sourceObj, mappedFields = {}) {\n  // non mapped fields are kept as is\n  const result = {...sourceObj};\n\n  // Mapped fields\n  for (const [targetField, sourceFields] of Object.entries(mappedFields)) {\n    const fieldsToCheck = Array.isArray(sourceFields)\n      ? sourceFields\n      : [sourceFields];\n\n    let value = '';\n\n    for (const field of fieldsToCheck) {\n      if (sourceObj[field]) {\n        value = sourceObj[field];\n        break;\n      }\n    }\n\n    result[targetField] = value;\n  }\n\n  // Auto-added fields\n  result.runDate = new Date().toISOString();\n\n  return result;\n}\n\nfunction passesFilters(obj, filters = []) {\n  if (!filters.length) return true;\n\n  return filters.every(field => !!obj[field]);\n}\n\nreturn (items.flatMap(item =>\n  (item.json.articles || [])\n    .map(article =>\n      normalizeObject(article, item.json.mapped)\n    )\n    .filter(article =>\n      passesFilters(article, item.json.required)\n    )\n));"
+        "jsCode": "// Add a run timestamp to each standardized article.\nfunction normalizeArticle(article = {}) {\n  return {\n    ...article,\n    runDate: new Date().toISOString(),\n  };\n}\n\n// Keep only articles that contain every required field.\nfunction passesFilters(obj, filters = ['title', 'link']) {\n  if (!filters.length) return true;\n\n  return filters.every(field => !!obj[field]);\n}\n\nreturn items.flatMap(item => {\n  const requiredFields = Array.isArray(item.json.required) && item.json.required.length\n    ? item.json.required\n    : ['title', 'link'];\n\n  const articles = Array.isArray(item.json.articles)\n    ? item.json.articles\n    : [item.json];\n\n  return articles\n    .map(article => normalizeArticle(article))\n    .filter(article => passesFilters(article, requiredFields));\n});"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -146,7 +146,7 @@
     },
     {
       "parameters": {
-        "content": "## fn_add_articles()\n\nAccepts a batch of raw articles from a news source and:\n\n1. **Normalizes** fields using a source-specific mapping\n2. **Filters** out articles missing required fields\n3. **Fetches** the full HTML page for each article\n4. **Extracts** the article body using a CSS selector\n5. **Merges** extracted content back into the article object",
+        "content": "## fn_articles_get()\n\nAccepts standardized articles from a news source and:\n\n1. **Validates** required fields\n2. **Fetches** the full HTML page for each article\n3. **Extracts** the article body using a CSS selector\n4. **Merges** extracted content back into the article object",
         "height": 240,
         "width": 480
       },
@@ -161,7 +161,7 @@
     },
     {
       "parameters": {
-        "content": "### Input Contract\n\nEach item passed in must have this shape:\n\n```\n{\n  articles: [...],\n  required: ['title', 'link'],\n  mapped: {\n    title: 'title',\n    pubDate: ['pubDate', 'isoDate']\n  }\n}\n```\n\nThe `mapped` arrays are priority lists — first existing field wins.",
+        "content": "### Input Contract\n\nEach item passed in can be either a single standardized article or a batch with this shape:\n\n```\n{\n  articles: [{\n    title: '...',\n    link: '...',\n    pubDate: '...',\n    snippet: '...'\n  }],\n  required: ['title', 'link']\n}\n```\n\nIf `required` is omitted, `title` and `link` are treated as mandatory by default.",
         "height": 272,
         "width": 448
       },
