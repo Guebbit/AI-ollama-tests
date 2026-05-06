@@ -47,7 +47,7 @@
     },
     {
       "parameters": {
-        "jsCode": "function normalizeArticle(article = {}) {\n  return {\n    ...article,\n    runDate: new Date().toISOString(),\n  };\n}\n\nfunction passesFilters(obj, filters = ['title', 'link']) {\n  if (!filters.length) return true;\n\n  return filters.every(field => !!obj[field]);\n}\n\nreturn items.flatMap(item => {\n  const requiredFields = Array.isArray(item.json.required) && item.json.required.length\n    ? item.json.required\n    : ['title', 'link'];\n\n  const articles = Array.isArray(item.json.articles)\n    ? item.json.articles\n    : [item.json];\n\n  return articles\n    .map(article => normalizeArticle(article))\n    .filter(article => passesFilters(article, requiredFields));\n});"
+        "jsCode": "// Add a run timestamp to each standardized article.\nfunction normalizeArticle(article = {}) {\n  return {\n    ...article,\n    runDate: new Date().toISOString(),\n  };\n}\n\n// Keep only articles that contain every required field.\nfunction passesFilters(obj, filters = ['title', 'link']) {\n  if (!filters.length) return true;\n\n  return filters.every(field => !!obj[field]);\n}\n\nreturn items.flatMap(item => {\n  const requiredFields = Array.isArray(item.json.required) && item.json.required.length\n    ? item.json.required\n    : ['title', 'link'];\n\n  const articles = Array.isArray(item.json.articles)\n    ? item.json.articles\n    : [item.json];\n\n  return articles\n    .map(article => normalizeArticle(article))\n    .filter(article => passesFilters(article, requiredFields));\n});"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
