@@ -362,7 +362,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      .filter(post => post.date && post.date.startsWith(today))\n      .map(post => ({\n        title: (post.title?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        link: post.link || '',\n        snippet: (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate: post.date || '',\n        selector: '.entry-content',\n        source: 'Tempo News',\n        place: 'Carpi'\n      })),\n    required: ['title', 'link']\n  }\n}];"
+        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      .filter(post => {\n        const rawDate = post.date || post.isoDate || '';\n        return rawDate.startsWith(today);\n      })\n      .map(post => ({\n        title: (post.title?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        link: post.link || '',\n        snippet: (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate: post.date || post.isoDate || '',\n        selector: '.entry-content',\n        source: 'Tempo News',\n        place: 'Carpi'\n      })),\n    required: ['title', 'link']\n  }\n}];"
       },
       "id": "8d8c65ac-c012-4ef4-8312-5523160f636e",
       "name": "TempoNews Prepare",
