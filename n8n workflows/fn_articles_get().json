@@ -146,7 +146,7 @@
     },
     {
       "parameters": {
-        "content": "## fn_add_articles()\n\nAccepts standardized articles from a news source and:\n\n1. **Validates** required fields\n2. **Fetches** the full HTML page for each article\n3. **Extracts** the article body using a CSS selector\n4. **Merges** extracted content back into the article object",
+        "content": "## fn_articles_get()\n\nAccepts standardized articles from a news source and:\n\n1. **Validates** required fields\n2. **Fetches** the full HTML page for each article\n3. **Extracts** the article body using a CSS selector\n4. **Merges** extracted content back into the article object",
         "height": 240,
         "width": 480
       },
