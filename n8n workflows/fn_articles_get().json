@@ -47,7 +47,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Add a run timestamp to each standardized article.\nfunction normalizeArticle(article = {}) {\n  return {\n    ...article,\n    runDate: new Date().toISOString(),\n  };\n}\n\n// Keep only articles that contain every required field.\nfunction passesFilters(obj, filters = ['title', 'link']) {\n  if (!filters.length) return true;\n\n  return filters.every(field => !!obj[field]);\n}\n\nreturn items.flatMap(item => {\n  const requiredFields = Array.isArray(item.json.required) && item.json.required.length\n    ? item.json.required\n    : ['title', 'link'];\n\n  const articles = Array.isArray(item.json.articles)\n    ? item.json.articles\n    : [item.json];\n\n  return articles\n    .map(article => normalizeArticle(article))\n    .filter(article => passesFilters(article, requiredFields));\n});"
+        "jsCode": "return items;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -56,7 +56,7 @@
         320
       ],
       "id": "998ef9cf-45ab-4291-a285-d18bc3f190d9",
-      "name": "NormalizeData"
+      "name": "Pass Through Articles"
     },
     {
       "parameters": {
@@ -146,7 +146,7 @@
     },
     {
       "parameters": {
-        "content": "## fn_articles_get()\n\nAccepts standardized articles from a news source and:\n\n1. **Validates** required fields\n2. **Fetches** the full HTML page for each article\n3. **Extracts** the article body using a CSS selector\n4. **Merges** extracted content back into the article object",
+        "content": "## fn_articles_get()\n\nAccepts article items as-is and:\n\n1. **Fetches** the full HTML page for each article\n2. **Extracts** the article body using a CSS selector\n3. **Merges** extracted content back into the article object",
         "height": 240,
         "width": 480
       },
@@ -161,7 +161,7 @@
     },
     {
       "parameters": {
-        "content": "### Input Contract\n\nEach item passed in can be either a single standardized article or a batch with this shape:\n\n```\n{\n  articles: [{\n    title: '...',\n    link: '...',\n    pubDate: '...',\n    snippet: '...'\n  }],\n  required: ['title', 'link']\n}\n```\n\nIf `required` is omitted, `title` and `link` are treated as mandatory by default.",
+        "content": "### Input Contract\n\nEach incoming item should already be a single article object, for example:\n\n```\n{\n  title: '...',\n  link: '...',\n  pubDate: '...',\n  snippet: '...',\n  selector: '...'\n}\n```\n\n`fn_articles_get()` uses the incoming fields directly without expanding or normalizing batches.",
         "height": 272,
         "width": 448
       },
@@ -196,7 +196,7 @@
       "main": [
         [
           {
-            "node": "NormalizeData",
+            "node": "Pass Through Articles",
             "type": "main",
             "index": 0
           }
@@ -208,22 +208,6 @@
         [
           {
             "node": "Merge HTML page and selector needed",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "NormalizeData": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
-          },
-          {
-            "node": "Give link and selector",
             "type": "main",
             "index": 0
           }
@@ -278,6 +262,22 @@
         [
           {
             "node": "Extract article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pass Through Articles": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Give link and selector",
             "type": "main",
             "index": 0
           }
