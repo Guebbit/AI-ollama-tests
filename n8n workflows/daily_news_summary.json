@@ -6,70 +6,66 @@
         "url": "https://www.ansa.it/sito/ansait_rss.xml",
         "options": {}
       },
-      "id": "3de08e81-d924-40ef-92b7-3a483aedccd0",
+      "id": "30612671-3334-495f-9333-f7f5193ae698",
       "name": "Ansa RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        22784,
-        144
-      ],
-      "disabled": true
+        29520,
+        3600
+      ]
     },
     {
       "parameters": {
         "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
         "options": {}
       },
-      "id": "245b2490-14c6-4298-98ba-cb89a65e84de",
+      "id": "52c5a237-a4f3-4258-83ed-dca8c38c3112",
       "name": "Repubblica RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        22784,
-        320
-      ],
-      "disabled": true
+        29520,
+        3776
+      ]
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \"div[itemprop='articleBody']\",\n      source: 'ANSA',\n      place: 'World',\n    }))\n  }\n}];"
+        "jsCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \"div[itemprop='articleBody']\",\n      source: 'ANSA',\n      place: 'Italy',\n    }))\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22928,
-        144
+        29680,
+        3600
       ],
-      "id": "1fe28def-fcfe-457d-8542-b33cc0c56ea1",
-      "name": "Ansa Prepare",
-      "disabled": true
+      "id": "3e8669be-218f-4778-a664-0e0f098f95a2",
+      "name": "Ansa Prepare"
     },
     {
       "parameters": {
-        "functionCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \"#article-body\",\n      source: 'Repubblica',\n      place: 'World',\n    }))\n  }\n}];"
+        "functionCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \"#article-body\",\n      source: 'Repubblica',\n      place: 'Italy',\n    }))\n  }\n}];"
       },
-      "id": "3669c0e5-9265-45a1-b139-e453256bbb20",
+      "id": "f7df8330-ce4a-498b-b414-4e8de0c922cf",
       "name": "Repubblica Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        22928,
-        320
-      ],
-      "disabled": true
+        29680,
+        3776
+      ]
     },
     {
       "parameters": {
-        "functionCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \".aentry\",\n      source: 'Sole24Ore',\n      place: 'World',\n    }))\n  }\n}];"
+        "functionCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \".aentry\",\n      source: 'Sole24Ore',\n      place: 'Italy',\n    }))\n  }\n}];"
       },
-      "id": "b183889d-8e06-4288-b079-c58aa4da8e5d",
+      "id": "39ae568b-a285-4700-a3b3-0f927dce36cf",
       "name": "Sole24Ore Prepare",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        22928,
-        496
+        29680,
+        3952
       ]
     },
     {
@@ -77,13 +73,13 @@
         "url": "https://www.ilsole24ore.com/rss/italia.xml",
         "options": {}
       },
-      "id": "60384a86-1d84-4f4a-aae3-3f4598aa4ad3",
+      "id": "540b8d99-026c-4ceb-bffd-518650124148",
       "name": "Sole24Ore RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        22784,
-        496
+        29520,
+        3952
       ]
     },
     {
@@ -94,27 +90,12 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        23648,
-        -32
+        30560,
+        3392
       ],
       "typeVersion": 1,
-      "id": "b324d0ee-3d8b-4341-8e24-cb756fdf7001",
+      "id": "8885762a-c195-42e4-8a0b-0af4521f5db7",
       "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "### Source Preparation\n\nEach Prepare node standardizes its source items into a single `articles` array before translation and extraction:\n\n```\n{\n  articles: [{\n    title: '...',\n    link: '...',\n    pubDate: '...',\n    snippet: '...'\n  }]\n}\n```\n\n`source` and `selector` (CSS) are injected per-source so the extractor knows where to find the article body.",
-        "height": 320,
-        "width": 468
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        24272,
-        768
-      ],
-      "typeVersion": 1,
-      "id": "18c95464-d5fa-46da-8e89-0676817baac7",
-      "name": "Sticky Note1"
     },
     {
       "parameters": {
@@ -123,59 +104,46 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        24880,
-        1072
+        32352,
+        4368
       ],
       "typeVersion": 1,
-      "id": "3ee43f79-024e-4a81-a0b4-f5b368101947",
+      "id": "8d045e8d-a753-4953-827e-34cf49a89096",
       "name": "Sticky Note3"
     },
     {
       "parameters": {
-        "content": "### Overview Generation\n\nAfter all articles are processed, a second LLM call writes a **daily overview** from all individual summaries.\n\nThe overview and article list are then assembled into a single Markdown document:\n\n```\n# Daily News Briefing — YYYY-MM-DD\n## Overview\n...\n## Articles\n### Title\n...\n```\n\nOutput: saved as a `.md` file + sent by email.",
-        "height": 288,
-        "width": 592
+        "content": "### Overview Generation\n\nAfter all articles are processed, another LLM call writes a **daily overview** from all individual summaries.\n\nThere is a \"total\" overview and an overview for all different \"places\" (es World, Italy, or local cities)",
+        "height": 128,
+        "width": 502
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        25152,
-        112
+        32544,
+        3632
       ],
       "typeVersion": 1,
-      "id": "a2541b78-6b0c-42eb-b249-ad278bbd8bd1",
+      "id": "c657ba61-f932-4dab-b39a-ae12de0acddc",
       "name": "Sticky Note4"
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "id": "86a850aa-9ebc-4953-9607-9150e78c38f2",
-      "name": "Loop Over Articles1",
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        24848,
-        592
-      ]
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nPrimary Source: ${$json.source}\nAll Sources: ${Array.isArray($json.sourceNames) && $json.sourceNames.length ? $json.sourceNames.join(', ') : $json.source}\n\nSOURCE NOTES:\n${Array.isArray($json.sources) && $json.sources.length\n  ? $json.sources\n      .map((source, index) => `${index + 1}. ${source.name}${source.title ? ` — ${source.title}` : ''}${source.snippet ? ` | ${source.snippet}` : ''}`)\n      .join('\\n')\n  : 'No extra source notes provided.'}\n\nFULL ARTICLE CONTENT:\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- ADHD friendly\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs\n- Write in English regardless of the article's original language\n- If multiple sources cover the same story, merge them into one coherent summary\n- If sources highlight different opinions or angles, mention that briefly and attribute those differences to the relevant source names\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nPrimary Source: ${$json.source}\nAll Sources: ${Array.isArray($json.sourceNames) && $json.sourceNames.length ? $json.sourceNames.join(', ') : $json.source}\n\nSOURCE NOTES:\n${Array.isArray($json.sources) && $json.sources.length\n  ? $json.sources\n      .map((source, index) => `${index + 1}. ${source.name}${source.title ? ` — ${source.title}` : ''}${source.snippet ? ` | ${source.snippet}` : ''}`)\n      .join('\\n')\n  : 'No extra source notes provided.'}\n\nFULL ARTICLE CONTENT:\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- ADHD friendly\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs\n- Write in English regardless of the article's original language\n- If multiple sources cover the same story, merge them into one coherent summary\n- If sources highlight different opinions or angles, mention that briefly and attribute those differences to the relevant source names\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  \"options\": {\n    \"num_gpu\": $env.N8N_LLM_NUM_GPU\n  },\n} }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "3b03ee99-5a76-4ec0-bcbf-cbbac2a47d39",
+      "id": "c6d883b4-4add-41a7-937c-08a9d33d20bd",
       "name": "Ollama Translate & Summarize",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        24896,
-        848
+        32288,
+        4160
       ]
     },
     {
@@ -184,39 +152,39 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "afa2a2c3-5222-41ad-9f52-0d25486de79b",
+      "id": "897ee189-e772-4ef2-870c-97785e5558f3",
       "name": "Merge Summary Results",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        25168,
-        832
+        32560,
+        4144
       ]
     },
     {
       "parameters": {
-        "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nreturn {\n  json: {\n    ...$json,\n    summary: raw\n  }\n};"
+        "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nconst { \n  thinking,\n  context,\n  selector,\n  response,\n  ...article\n} = $json;\n\nreturn {\n  json: {\n    ...article,\n    summary: raw\n  }\n};"
       },
-      "id": "cff58916-03e1-4fc5-878a-614608f0ad1a",
+      "id": "46ed9cbe-9d69-48da-9f32-f44840a07396",
       "name": "Enrich with Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        25360,
-        832
+        32768,
+        4144
       ]
     },
     {
       "parameters": {
-        "jsCode": "const articles = $input.all().map(item => item.json);\n\nconst summary = articles\n  .map((article, index) => {\n    const sourceList = Array.isArray(article.sourceNames) && article.sourceNames.length\n      ? article.sourceNames.join(', ')\n      : (article.source || 'Unknown source');\n    return `${index + 1}. **${article.title}** (${sourceList})\\n${article.summary}`;\n  })\n  .join('\\n\\n');\n\nreturn [{\n  json: {\n    articles,\n    summary\n  }\n}];"
+        "jsCode": "// Collect all incoming articles\nconst articles = $input.all().map(item => item.json);\n\n// Helper to build article text\nconst formatArticle = (article, index) => {\n\n  // Build source list\n  const sourceList =\n    Array.isArray(article.sourceNames) && article.sourceNames.length\n      ? article.sourceNames.join(', ')\n      : (article.source || 'Unknown source');\n\n  return [\n    `${index + 1}. **${article.title}** (${sourceList})`,\n    article.summary\n  ].join('\\n');\n};\n\n// --------------------------------------------------\n// GLOBAL SUMMARY (all articles)\n// --------------------------------------------------\nconst summary = articles\n  .map((article, index) => formatArticle(article, index))\n  .join('\\n\\n');\n\n// --------------------------------------------------\n// SUMMARIES BY PLACE\n// --------------------------------------------------\n// Group articles by place\nconst groupedByPlace = articles.reduce((acc, article) => {\n  const place = article.place || 'Other';\n\n  if (!acc[place]) {\n    acc[place] = [];\n  }\n\n  acc[place].push(article);\n\n  return acc;\n}, {});\n\n// Build summaries per place\nconst summariesByPlace = Object.fromEntries(\n  Object.entries(groupedByPlace).map(([place, placeArticles]) => {\n\n    const placeSummary = placeArticles\n      .map((article, index) => formatArticle(article, index))\n      .join('\\n\\n');\n\n    return [place, placeSummary];\n  })\n);\n\nreturn [{\n  json: {\n    // Full summary with everything\n    summary,\n\n    // Separate summaries by place\n    summariesByPlace\n  }\n}];"
       },
-      "id": "d3fbe0c5-f930-40df-b26b-d1c25f406205",
+      "id": "ad18119a-8c5a-4a6b-a3ff-500d5cfcf59c",
       "name": "Aggregate for Overview",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        25168,
-        448
+        33072,
+        4032
       ]
     },
     {
@@ -225,18 +193,18 @@
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing a daily overview.\n\nBelow are today's article summaries:\n\n${$json.summary}\n\n---\n\nWrite a quick summary capturing the most important themes and developments of the day. Be direct, factual, and clear. No fluff.\n`,\n  stream: false,\n  keep_alive: \"30m\"\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing a daily overview.\n\nBelow are today's article summaries${$json.key && $json.key !== 'global' ? ` for ${$json.key}` : ''}:\n\n${$json.text}\n\n---\n\nWrite a quick summary capturing the most important themes and developments of the day. Be direct, factual, and clear. No fluff.\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  \"options\": {\n    \"num_gpu\": $env.N8N_LLM_NUM_GPU\n  },\n} }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "fd54bf90-734e-4772-bff9-a8fea999ca33",
+      "id": "d1e8f532-71bb-45fa-bed4-ee51d7769b3e",
       "name": "Ollama Overview",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        25376,
-        576
+        33680,
+        4256
       ]
     },
     {
@@ -245,26 +213,26 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "2e849828-499a-40b4-a428-a15499d8da14",
-      "name": "Merge Overview with Articles",
+      "id": "2e168374-67e0-4a31-b9fd-0e0e10b890f4",
+      "name": "Merge Overview Loop",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        25552,
-        464
+        33936,
+        4240
       ]
     },
     {
       "parameters": {
-        "jsCode": "const overviewResponse = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nconst articles = Array.isArray($json.articles) ? $json.articles : [];\n\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\nconst getUniqueNonEmptyValues = values => [...new Set((values || []).filter(Boolean))];\n\nconst articlesSection = articles.map(article => {\n  const sourceEntries = Array.isArray(article.sources) && article.sources.length\n    ? article.sources\n    : [{\n        name: article.source || 'Unknown source',\n        link: article.link || article.url || '',\n        pubDate: article.pubDate || '',\n      }];\n\n  const sourceLine = sourceEntries\n    .map(source => source.link ? `[${source.name}](${source.link})` : source.name)\n    .join(', ');\n  const dateLine = getUniqueNonEmptyValues(sourceEntries.map(source => source.pubDate || article.pubDate)).join(', ');\n  const metaLine = [\n    sourceLine ? `**Sources:** ${sourceLine}` : '',\n    dateLine ? `**Dates:** ${dateLine}` : '',\n    article.place ? `**Place:** ${article.place}` : ''\n  ].filter(Boolean).join('  \\n');\n\n  return [\n    `### ${article.title}`,\n    metaLine,\n    '',\n    article.summary || '',\n  ].join('\\n');\n}).join('\\n\\n---\\n\\n');\n\nconst text = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Overview',\n  overviewResponse,\n  '',\n  '---',\n  '',\n  '## Articles',\n  '',\n  articlesSection\n].join('\\n');\n\nreturn [{\n  json: {\n    text,\n    summaryText: text,\n    filename: `news-summary-${date}.md`,\n    subject: `Daily News Summary - ${date}`,\n    overview: overviewResponse,\n    articles\n  }\n}];"
+        "jsCode": "/**\n * Removes hidden/internal reasoning blocks from LLM output.\n */\nconst stripThink = (text) =>\n  (text || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\n\n// Normalize inputs\nconst globalOverview = stripThink($json.globalOverview || '');\nconst overviewsByPlace = $json.overviewsByPlace || {};\nconst articles = Array.isArray($json.articles) ? $json.articles : [];\n\n// Stable YYYY-MM-DD date\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\nconst getUniqueNonEmptyValues = values =>\n  [...new Set((values || []).filter(Boolean))];\n\n/**\n * Render all place overviews one after another\n */\nconst placeOverviewsSection = Object.entries(overviewsByPlace)\n  .map(([place, overview]) => {\n    const cleanOverview = stripThink(overview);\n    if (!cleanOverview) return '';\n    return [`## ${place}`, '', cleanOverview].join('\\n');\n  })\n  .filter(Boolean)\n  .join('\\n\\n---\\n\\n');\n\n/**\n * Render all articles\n */\nconst articlesSection = articles\n  .map(article => {\n    const sourceEntries =\n      Array.isArray(article.sources) && article.sources.length\n        ? article.sources\n        : [{\n            name: article.source || 'Unknown source',\n            link: article.link || article.url || '',\n            pubDate: article.pubDate || '',\n          }];\n\n    const sourceLine = sourceEntries\n      .map(source =>\n        source.link\n          ? `[${source.name}](${source.link})`\n          : source.name\n      )\n      .join(', ');\n\n    const dateLine = getUniqueNonEmptyValues(\n      sourceEntries.map(source => source.pubDate || article.pubDate)\n    ).join(', ');\n\n    const metaLine = [\n      article.place ? `**Place:** ${article.place}` : '',\n      sourceLine ? `**Sources:** ${sourceLine}` : '',\n      dateLine ? `**Dates:** ${dateLine}` : ''\n    ]\n      .filter(Boolean)\n      .join('  \\n');\n\n    return [\n      `## ${article.title || 'Untitled Article'}`,\n      metaLine,\n      '',\n      stripThink(article.summary || '')\n    ].join('\\n');\n  })\n  .join('\\n\\n---\\n\\n');\n\n/**\n * Final merged text:\n * - global overview\n * - all place overviews\n * - all articles\n */\nconst textParts = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Global Overview',\n  globalOverview\n];\n\nif (placeOverviewsSection) {\n  textParts.push('', '---', '', '## Place Overviews', '', placeOverviewsSection);\n}\n\nif (articlesSection) {\n  textParts.push('', '---', '', '## Articles', '', articlesSection);\n}\n\nconst text = textParts.join('\\n');\n\nreturn [\n  {\n    json: {\n      filename: `news-summary-${date}.md`,\n      subject: `Daily News Summary - ${date}`,\n      text\n    }\n  }\n];"
       },
-      "id": "4827cbc3-039c-4a9c-957e-280e726edee6",
+      "id": "e8eda713-7150-48b0-8e60-24d46b31e2cb",
       "name": "Prepare Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        25712,
-        464
+        34528,
+        4096
       ]
     },
     {
@@ -272,16 +240,16 @@
         "fromEmail": "noreply@guebbit.com",
         "toEmail": "guerzoni.andrea91@gmail.com",
         "subject": "={{ $json.subject }}",
-        "text": "={{ $json.summaryText }}",
+        "text": "={{ $json.text }}",
         "options": {}
       },
-      "id": "ab39ef88-4be9-48aa-ac98-ce0e5870d006",
+      "id": "9c7a506a-2503-4aa5-9cb5-429c8437c5e0",
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
-        25920,
-        336
+        35008,
+        3936
       ],
       "webhookId": "25b82f9d-e1c6-4114-b2a6-b0bd65e6db54",
       "credentials": {
@@ -300,13 +268,13 @@
           "fileName": "={{ $json.filename }}"
         }
       },
-      "id": "76bca818-429b-4a92-a2fb-79a835888e34",
+      "id": "b9002086-b09c-46fd-8ec7-21b798fe615d",
       "name": "Write file",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        25920,
-        592
+        35008,
+        4272
       ]
     },
     {
@@ -317,13 +285,13 @@
           "append": false
         }
       },
-      "id": "a4993d10-307c-4408-84a9-360e06590f48",
+      "id": "be8c51d8-c630-4457-8eeb-a8e30b7c19d9",
       "name": "Save File",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        26080,
-        592
+        35184,
+        4272
       ]
     },
     {
@@ -339,13 +307,13 @@
           ]
         }
       },
-      "id": "20632ad7-4d97-4501-bda7-63fd38f6bf59",
+      "id": "a65dec6a-133f-48ec-bfce-2b46d3b688b4",
       "name": "Cron",
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        22384,
-        592
+        29120,
+        4048
       ]
     },
     {
@@ -353,47 +321,44 @@
         "url": "https://temponews.it/wp-json/wp/v2/posts?per_page=20&_fields=title,excerpt,link,date",
         "options": {}
       },
-      "id": "67665da7-5f98-49bd-8de2-58fdd16cdb84",
+      "id": "79069017-59b5-4dd1-b940-6166e7b5ca85",
       "name": "TempoNews WP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        22768,
-        784
+        29520,
+        4240
       ],
       "alwaysOutputData": true,
-      "disabled": true,
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      .filter(post => {\n        const rawDate = post.date || post.isoDate || '';\n        return rawDate.startsWith(today);\n      })\n      .map(post => ({\n        title: (post.title?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        link: post.link || '',\n        snippet: (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate: post.date || post.isoDate || '',\n        selector: '.entry-content',\n        source: 'Tempo News',\n        place: 'Carpi'\n      }))\n  }\n}];"
+        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      // Keep only todays news\n      .filter(post => {\n        const rawDate = post.date || post.isoDate || '';\n        return rawDate.startsWith(today);\n      })\n      // Convert\n      .map(post => ({\n        title: (post.title?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        link: post.link || '',\n        snippet: (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate: post.date || post.isoDate || '',\n        selector: '.entry-content',\n        source: 'Tempo News',\n        place: 'Carpi'\n      }))\n  }\n}];"
       },
-      "id": "0e66a94d-1f06-4f34-b6ba-ebd3a92efc4b",
+      "id": "0f91c91d-b521-4276-b011-e955110a0708",
       "name": "TempoNews Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22912,
-        784
-      ],
-      "disabled": true
+        29664,
+        4240
+      ]
     },
     {
       "parameters": {
         "url": "={{ $json.url }}",
         "options": {}
       },
-      "id": "bdb92484-66e0-4395-b522-9be052296dd4",
+      "id": "01075bf1-9cea-44d9-9d87-efc514ab5424",
       "name": "VoceIt Scrape",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        22848,
-        1072
+        29648,
+        4528
       ],
       "alwaysOutputData": true,
-      "disabled": true,
       "onError": "continueRegularOutput"
     },
     {
@@ -436,54 +401,26 @@
           "cleanUpText": true
         }
       },
-      "id": "59102e96-6408-428f-99fa-0ec521a5c444",
+      "id": "30041485-d87c-41c7-8b66-7c9d2a0d9729",
       "name": "VoceIt Extract",
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        22784,
-        1216
-      ],
-      "disabled": true
+        29584,
+        4736
+      ]
     },
     {
       "parameters": {
         "jsCode": "const scrapedItems = $input.all().map(item => item.json || {});\n\n/**\n * Ensure the value is always an array.\n */\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\n\n/**\n * Normalize text:\n * - convert null/undefined to ''\n * - collapse multiple spaces/newlines\n * - trim\n */\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\n\n/**\n * Convert any date-like value to YYYY-MM-DD using JS Date.\n * Returns '' if invalid.\n */\nconst toDateKey = (value) => {\n  const d = new Date(value);\n  if (Number.isNaN(d.getTime())) return '';\n\n  const y = d.getFullYear();\n  const m = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n\n  return `${y}-${m}-${day}`;\n};\n\n/**\n * Convert relative URLs to absolute URL on voce.it.\n * WARNING: URL api can't be used in n8n nodes!\n */\nconst toAbsoluteUrl = (href) => {\n  const raw = String(href || '').trim();\n  if (!raw || raw.toLowerCase() === 'null') return '';\n\n  // Already absolute\n  if (/^https?:\\/\\//i.test(raw)) return raw;\n\n  // Normalize common relative formats used by your scraper\n  let path = raw;\n\n  // remove leading ../ or ./\n  path = path.replace(/^(\\.\\.\\/)+/, '/');\n  path = path.replace(/^\\.\\//, '/');\n\n  // ensure it starts with /\n  if (!path.startsWith('/')) path = `/${path}`;\n\n  // keep only target domain\n  return `https://www.voce.it${path}`;\n};\n\n/**\n * Italian month map (short + full).\n */\nconst monthMap = {\n  gen: 1, gennaio: 1,\n  feb: 2, febbraio: 2,\n  mar: 3, marzo: 3,\n  apr: 4, aprile: 4,\n  mag: 5, maggio: 5,\n  giu: 6, giugno: 6,\n  lug: 7, luglio: 7,\n  ago: 8, agosto: 8,\n  set: 9, settembre: 9,\n  ott: 10, ottobre: 10,\n  nov: 11, novembre: 11,\n  dic: 12, dicembre: 12\n};\n\n/**\n * Normalize a raw date into YYYY-MM-DD.\n * Handles:\n * - numeric forms: 05/05/2026, 05-05-2026, 05.05.2026\n * - Italian text forms: 5 Mag 2026, 5 Maggio 2026\n * - fallback to JS Date parser\n */\nconst normalizeDate = (rawDate) => {\n  const text = normalizeText(rawDate);\n  if (!text) return '';\n\n  // 1) Numeric date\n  const numeric = text.match(/(\\d{1,2})[\\/.\\-](\\d{1,2})[\\/.\\-](\\d{2,4})/);\n  if (numeric) {\n    const day = Number(numeric[1]);\n    const month = Number(numeric[2]);\n    const year = Number(numeric[3].length === 2 ? `20${numeric[3]}` : numeric[3]);\n\n    if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 2) Italian textual date\n  const monthText = text\n    .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '');\n\n  const textDate = monthText.match(/(\\d{1,2})\\s+([a-z]+)\\s+(\\d{4})/);\n  if (textDate) {\n    const day = Number(textDate[1]);\n    const month = monthMap[textDate[2]];\n    const year = Number(textDate[3]);\n\n    if (month && day >= 1 && day <= 31) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 3) Fallback\n  return toDateKey(text);\n};\n\n/**\n * Return true if text looks like a supported date.\n */\nconst isDateLike = (value) => !!normalizeDate(value);\n\nconst seen = new Set();\nconst articles = [];\n\n/**\n * Push one article only if title/link/date are valid.\n * De-duplicates by lowercased link + title.\n */\nconst pushArticle = (title, rawLink, rawDate) => {\n  const normalizedTitle = normalizeText(title);\n  const link = toAbsoluteUrl(rawLink);\n  const pubDate = normalizeDate(rawDate);\n\n  if (!normalizedTitle || !link || !pubDate) return;\n\n  const dedupeKey = `${link.toLowerCase()}|${normalizedTitle.toLowerCase()}`;\n  if (seen.has(dedupeKey)) return;\n  seen.add(dedupeKey);\n\n  articles.push({\n    title: normalizedTitle,\n    link,\n    pubDate,\n    selector: '[itemprop=\"articleBody\"]',\n    source: 'La Voce',\n    place: 'Carpi',\n  });\n};\n\nfor (const scraped of scrapedItems) {\n  const timelineTexts = toArray(scraped.timelineTexts).map(normalizeText).filter(Boolean);\n  const rawTimelineLinks = toArray(scraped.timelineLinks);\n\n  // Keep only usable non-null/non-empty links, normalized.\n  const timelineLinks = rawTimelineLinks\n    .map(normalizeText)\n    .filter(v => v && v.toLowerCase() !== 'null');\n\n  /**\n   * TIMELINE MODE (robust):\n   * Instead of fixed index pairing (i += 2), scan text sequence.\n   * Whenever we hit a date-like text, pair it with the previous non-date text as title.\n   * Then assign the next available link.\n   */\n  if (timelineTexts.length && timelineLinks.length) {\n    let linkCursor = 0;\n    let lastNonDateText = '';\n\n    for (const text of timelineTexts) {\n      if (isDateLike(text)) {\n        const title = lastNonDateText;\n        const link = timelineLinks[linkCursor] || '';\n        const rawDate = text;\n\n        // advance link cursor only when we try to emit a timeline record\n        linkCursor++;\n\n        pushArticle(title, link, rawDate);\n      } else {\n        // Keep latest non-date candidate; when next date appears,\n        // this will be considered the related title.\n        lastNonDateText = text;\n      }\n    }\n\n    // Continue to next scraped block (fallback not needed if timeline was processed)\n    continue;\n  }\n\n  /**\n   * FALLBACK MODE:\n   * Standard parallel arrays titles/links/dates.\n   */\n  const titleList = toArray(scraped.titles).map(normalizeText);\n  const linkList = toArray(scraped.links).map(normalizeText);\n  const dateList = toArray(scraped.dates).map(normalizeText);\n  const maxLen = Math.max(titleList.length, linkList.length, dateList.length);\n\n  for (let i = 0; i < maxLen; i++) {\n    pushArticle(titleList[i] || '', linkList[i] || '', dateList[i] || '');\n  }\n}\n\n/**\n * Keep only articles of today.\n * NOTE: n8n runtime timezone can affect \"today\".\n */\nconst today = toDateKey(new Date());\nconst todays = articles.filter(article => article.pubDate === today);\n\nreturn [{\n  json: {\n    articles: todays\n  }\n}];"
       },
-      "id": "33fe1d77-d221-4412-b874-f169b99e44d1",
+      "id": "dbf1a9a8-49eb-4cf7-a4bb-700fade0067f",
       "name": "VoceIt Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22928,
-        1216
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "jsCode": "const articles = $input.all().flatMap(item => Array.isArray(item.json?.articles) ? item.json.articles : []);\n\nreturn [{\n  json: {\n    articles\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        23312,
-        528
-      ],
-      "id": "d0aac399-39d1-4921-bb5b-56e8b007d9e8",
-      "name": "Merge sources1"
-    },
-    {
-      "parameters": {
-        "jsCode": "const hasText = (value) => typeof value === 'string' ? value.trim() !== '' : !!value;\nconst articles = Array.isArray($json.articles) ? $json.articles : [];\n\nreturn articles\n  .filter(article => hasText(article?.title) && hasText(article?.link))\n  .map(article => ({ json: article }));"
-      },
-      "id": "ad2fb4ab-4f18-42fc-a87f-2f73b89df6d2",
-      "name": "Filter Valid Articles",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        23568,
-        528
+        29728,
+        4736
       ]
     },
     {
@@ -494,11 +431,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        22832,
-        16
+        29568,
+        3472
       ],
       "typeVersion": 1,
-      "id": "836a4cd8-d068-4ae4-834d-723cd0db7644",
+      "id": "c6206592-f0f5-442e-b649-feb508d6da3e",
       "name": "Sticky Note2"
     },
     {
@@ -509,11 +446,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        22816,
-        672
+        29552,
+        4128
       ],
       "typeVersion": 1,
-      "id": "5b3c8135-018d-46ac-8f4b-5c3e5aab889d",
+      "id": "94fdb06e-6bad-4ffa-900a-9cf3d2d1ab96",
       "name": "Sticky Note5"
     },
     {
@@ -524,26 +461,25 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        22816,
-        960
+        29552,
+        4416
       ],
       "typeVersion": 1,
-      "id": "e8841f8a-bd70-4e3b-b31b-a89f6e2eb8aa",
+      "id": "3d5a278e-d2c8-4532-9c3a-5ef4f9290282",
       "name": "Sticky Note6"
     },
     {
       "parameters": {
         "jsCode": "const categoryUrls = [\n  'https://www.voce.it/it/categoria/scuola',\n  'https://www.voce.it/it/categoria/sanita',\n  'https://www.voce.it/it/categoria/economia',\n  'https://www.voce.it/it/categoria/attualita',\n  'https://www.voce.it/it/categoria/cultura',\n  'https://www.voce.it/it/categoria/ambiente',\n  'https://www.voce.it/it/categoria/moda',\n  'https://www.voce.it/it/categoria/sociale',\n  'https://www.voce.it/it/categoria/sport',\n  'https://www.voce.it/it/categoria/territorio'\n];\n\nreturn categoryUrls.map(url => ({ json: { url } }));"
       },
-      "id": "b6a93136-2d56-4420-a060-289ebc32865f",
+      "id": "b9a4327a-bf3e-461b-9153-4a62487ec50b",
       "name": "VoceIt Categories",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22704,
-        1072
-      ],
-      "disabled": true
+        29504,
+        4528
+      ]
     },
     {
       "parameters": {
@@ -564,6 +500,16 @@
                 "operation": "notExists",
                 "singleValue": true
               }
+            },
+            {
+              "id": "d3d95761-5c66-45bb-9677-890b8fecd9c1",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -573,26 +519,153 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        22992,
-        1072
+        29424,
+        4736
       ],
-      "id": "4ec9f04f-a78e-4013-af97-d60965e30644",
-      "name": "VoceIt Filter Errors",
-      "disabled": true
+      "id": "bdb3721c-f953-4614-974b-f0148a69fe62",
+      "name": "VoceIt Filter Errors"
     },
     {
       "parameters": {
-        "mode": "combine",
-        "combineBy": "combineByPosition",
+        "content": "### Preliminary translation loop\n1 article per iteration.\n\nTranslate title and snippet, to better intercept interests (that are language sensitive)",
+        "height": 112,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        30816,
+        4272
+      ],
+      "typeVersion": 1,
+      "id": "717a05fe-ddb3-4386-8124-741bb7842380",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "idRZ2wjOcbIB0Qnv",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/idRZ2wjOcbIB0Qnv",
+          "cachedResultName": "fn_articles_get()"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
         "options": {}
       },
-      "id": "fc292290-9f1e-406a-881f-a5b27fb54d15",
-      "name": "Merge Translation",
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
       "position": [
-        24128,
-        592
+        31744,
+        3936
+      ],
+      "id": "856fe88e-a7bb-4979-b5b8-d87a22c96edd",
+      "name": "Call 'fn_articles_get()'",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "content": "Merge all articles from all sources and filter away the invalid ones (no title, no link)",
+        "height": 80,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        29984,
+        4160
+      ],
+      "typeVersion": 1,
+      "id": "2c2abc2a-100d-4e77-8883-50d753fe5a6f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Filter articles based on interests",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        31488,
+        3840
+      ],
+      "typeVersion": 1,
+      "id": "6c406a6a-f7cc-4d44-9203-69623f714e94",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Get full articles using the link",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        31712,
+        3840
+      ],
+      "typeVersion": 1,
+      "id": "921bb923-2d67-4268-ad6c-0b90977e826f",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Transalte the full article in english",
+        "height": 80,
+        "width": 166
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32096,
+        3840
+      ],
+      "typeVersion": 1,
+      "id": "504e3784-4bba-41ed-a923-3479220a2fce",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Max chars allowed in the output text.\n// Comes from env so you can tune truncation globally without touching the node.\nconst maxChars = parseInt($env.N8N_OVERVIEW_MAX_CHARS || '8000', 10);\n\n// Small guard to prevent oversized payloads downstream.\n// Adds a visible marker so you know the text was cut intentionally.\nconst truncate = (text) =>\n  text.length > maxChars\n    ? text.slice(0, maxChars) + '\\n...[truncated]'\n    : text;\n\n// Input expected from previous node.\nconst { summary, summariesByPlace } = $json;\n\n// Normalize output structure:\n// - one \"global\" summary\n// - one item per place\nconst items = [\n  {\n    key: 'global',\n    text: truncate(summary || '') // fallback avoids undefined issues\n  },\n\n  // Transform object entries into flat n8n items.\n  ...Object.entries(summariesByPlace || {}).map(([place, text]) => ({\n    key: place,\n    text: truncate(text || '')\n  }))\n];\n\n// n8n Code node must return [{ json: ... }]\nreturn items.map(item => ({ json: item }));"
+      },
+      "id": "6cb9b346-62c3-40dd-8a7d-011c313b0089",
+      "name": "Prepare Overview Inputs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        33296,
+        4032
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d79f6c04-1d94-4a31-a4d3-d6d67de6f345",
+      "name": "Loop Over Overviews",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        33536,
+        4032
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract only the json payloads from incoming n8n items.\n// Easier to work with than nested item.json everywhere.\nconst items = $input.all().map(item => item.json);\n\n// Find the special \"global\" entry.\n// Optional chaining avoids crashes if missing.\nconst globalItem = items.find(i => i.key === 'global');\n\n// Fallback keeps downstream nodes predictable.\nconst globalOverview = globalItem?.overview || '';\n\n// Rebuild a clean object grouped by place:\n// {\n//   Rome: \"...\",\n//   Milan: \"...\"\n// }\nconst overviewsByPlace = Object.fromEntries(\n  items\n    // Exclude the already-handled global item\n    .filter(i => i.key !== 'global')\n\n    // Convert array items into [key, value] pairs\n    .map(i => [i.key, i.overview])\n);\n\n// Return a single normalized payload.\nreturn [{\n  json: {\n    globalOverview,\n    overviewsByPlace\n  }\n}];"
+      },
+      "id": "3fcd68b4-ff9b-4262-855f-83c067bae6bf",
+      "name": "Collect Overviews",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        34304,
+        4096
       ]
     },
     {
@@ -617,26 +690,26 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        24576,
-        592
+        31520,
+        3936
       ],
-      "id": "6e5b3a7f-1ee7-4a0c-b285-79e1810ae5ac",
+      "id": "82717eb6-de6f-4be4-ae43-94bc4a602818",
       "name": "Call 'fn_articles_filter()'"
     },
     {
       "parameters": {
-        "content": "### Preliminary translation\n\nTranslate title and snippet, to better intercept interests (that are language sensitive)",
-        "height": 112,
-        "width": 400
+        "content": "Unload to allow embeddings model to work",
+        "height": 80,
+        "width": 150
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        23776,
-        448
+        30832,
+        3712
       ],
       "typeVersion": 1,
-      "id": "eef23fa0-d590-4052-a512-94e624ef1c39",
-      "name": "Sticky Note7"
+      "id": "80785b2b-b22d-45b7-87cf-f8ba4de685b5",
+      "name": "Sticky Note12"
     },
     {
       "parameters": {
@@ -644,86 +717,59 @@
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a translator. Translate each item's title and snippet from Italian to English.\nReturn ONLY a valid JSON array with the same length as the input, where each element has title and snippet keys.\nDo not add explanations, comments, or any text outside the JSON array.\n\nInput:\n${JSON.stringify(\n  $input.all()\n    .map(item => item.json)\n    .filter(x => Array.isArray(x?.articles))\n    .flatMap(x => x.articles)\n    .filter(a =>\n      typeof a?.title === 'string' &&\n      a.title.trim() !== '' &&\n      typeof a?.snippet === 'string' &&\n      a.snippet.trim() !== ''\n    )\n    .map(({ title, snippet }) => ({ title, snippet }))\n)}`,\n  stream: false,\n  keep_alive: \"30m\"\n}) }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  keep_alive: \"0\"\n} }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "6d3266a4-4039-4cc2-a47d-4a32728de456",
-      "name": "Translate",
+      "id": "19606238-ff23-4d79-bcd7-94ab1c2e9f15",
+      "name": "Unload heavy LLM",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        23840,
-        736
+        30864,
+        3824
       ]
     },
     {
       "parameters": {
-        "jsCode": "return JSON.parse(items[0].json.response).map(el => ({\n  json: el\n}));"
+        "content": "### Overview Seneration loop\n1 \"place\" per iteration. + global",
+        "height": 80,
+        "width": 512
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.stickyNote",
       "position": [
-        23984,
-        736
+        33440,
+        4544
       ],
-      "id": "52199e9b-cc9e-4554-b59e-ccc4b95b5274",
-      "name": "Transform"
+      "typeVersion": 1,
+      "id": "53d3dec6-74a0-4f8c-86b2-406576265225",
+      "name": "Sticky Note11"
     },
     {
       "parameters": {
-        "jsCode": "const normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\nconst normalizeLink = (value) => normalizeText(value).replace(/\\/$/, '').toLowerCase();\n\nconst stopWords = new Set([\n  'the','and','for','with','from','that','this','into','about','after','before','between','under','over','into','without',\n  'gli','delle','della','dello','dell','alla','allo','agli','dalle','dalla','dallo','sulla','sullo','nelle','nella','nell',\n  'per','con','una','uno','del','dei','degli','dai','dalle','dal','dalla','alla','alle','sul','sui','sulle','nel','nei','nelle',\n  'che','chi','non','piu','più','come','dopo','prima','anche','sono','oggi','ieri','news','ultima','ultime'\n]);\n\nconst tokenize = (...parts) => {\n  const tokens = new Set();\n  parts\n    .map(normalizeText)\n    .join(' ')\n    .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9\\s]/g, ' ')\n    .split(/\\s+/)\n    .filter(token => token.length >= 4 && !stopWords.has(token))\n    .forEach(token => tokens.add(token));\n  return tokens;\n};\n\nconst overlapRatio = (left, right) => {\n  if (!left.size || !right.size) return 0;\n  let matches = 0;\n  for (const token of left) {\n    if (right.has(token)) matches += 1;\n  }\n  return matches / Math.min(left.size, right.size);\n};\n\nconst addUnique = (list, value) => {\n  const normalized = normalizeText(value);\n  if (!normalized) return list;\n  if (!list.some(entry => normalizeText(entry) === normalized)) list.push(normalized);\n  return list;\n};\n\nconst addUniqueObject = (list, candidate, keyBuilder) => {\n  const key = keyBuilder(candidate);\n  if (!key) return list;\n  if (!list.some(entry => keyBuilder(entry) === key)) list.push(candidate);\n  return list;\n};\n\nconst merged = [];\nconst byLink = new Map();\nconst byTitle = new Map();\n\nfor (const item of $input.all()) {\n  const batch = item.json || {};\n  const articles = Array.isArray(batch.articles) ? batch.articles : [];\n\n  for (const article of articles) {\n    const normalizedTitle = normalizeText(article.title);\n    const normalizedSnippet = normalizeText(article.snippet);\n    const normalizedLink = normalizeLink(article.link || article.url);\n    if (!normalizedTitle || !normalizedLink) continue;\n\n    const titleKey = normalizedTitle.toLowerCase();\n    const titleTokens = tokenize(normalizedTitle);\n    const contextTokens = tokenize(normalizedTitle, normalizedSnippet);\n    const sourceEntry = {\n      name: normalizeText(article.source) || 'Unknown source',\n      title: normalizedTitle,\n      snippet: normalizedSnippet,\n      link: normalizeText(article.link || article.url),\n      pubDate: normalizeText(article.pubDate),\n      place: normalizeText(article.place),\n    };\n\n    const match = byLink.get(normalizedLink)\n      || byTitle.get(titleKey)\n      || merged.find(existing => {\n        const titleScore = overlapRatio(titleTokens, existing._titleTokens);\n        const contextScore = overlapRatio(contextTokens, existing._contextTokens);\n        return titleScore >= 0.8 || contextScore >= 0.7;\n      });\n\n    if (!match) {\n      const created = {\n        ...article,\n        title: normalizedTitle,\n        snippet: normalizedSnippet,\n        originalTitle: normalizeText(article.originalTitle) || normalizedTitle,\n        originalSnippet: normalizeText(article.originalSnippet) || normalizedSnippet,\n        translatedTitle: normalizeText(article.translatedTitle),\n        translatedSnippet: normalizeText(article.translatedSnippet),\n        sources: [sourceEntry],\n        sourceNames: [sourceEntry.name],\n        sourceLinks: sourceEntry.link ? [sourceEntry.link] : [],\n        sourceTitles: sourceEntry.title ? [sourceEntry.title] : [],\n        sourceSnippets: sourceEntry.snippet ? [sourceEntry.snippet] : [],\n        sourceCount: 1,\n        _links: new Set([normalizedLink]),\n        _titles: new Set([titleKey]),\n        _titleTokens: titleTokens,\n        _contextTokens: contextTokens,\n      };\n      merged.push(created);\n      byLink.set(normalizedLink, created);\n      byTitle.set(titleKey, created);\n      continue;\n    }\n\n    addUniqueObject(match.sources, sourceEntry, entry => `${normalizeText(entry.name).toLowerCase()}|${normalizeLink(entry.link)}|${normalizeText(entry.title).toLowerCase()}`);\n    addUnique(match.sourceNames, sourceEntry.name);\n    if (sourceEntry.link) addUnique(match.sourceLinks, sourceEntry.link);\n    if (sourceEntry.title) addUnique(match.sourceTitles, sourceEntry.title);\n    if (sourceEntry.snippet) addUnique(match.sourceSnippets, sourceEntry.snippet);\n    match._links.add(normalizedLink);\n    match._titles.add(titleKey);\n    byLink.set(normalizedLink, match);\n    byTitle.set(titleKey, match);\n    titleTokens.forEach(token => match._titleTokens.add(token));\n    contextTokens.forEach(token => match._contextTokens.add(token));\n    match.sourceCount = match.sourceNames.length;\n\n    if (normalizedSnippet.length > normalizeText(match.snippet).length) {\n      match.snippet = normalizedSnippet;\n      if (!normalizeText(match.originalSnippet)) match.originalSnippet = normalizedSnippet;\n    }\n\n    if (normalizedTitle.length > normalizeText(match.title).length) {\n      match.title = normalizedTitle;\n      if (!normalizeText(match.originalTitle)) match.originalTitle = normalizedTitle;\n    }\n\n    if (!normalizeText(match.link || match.url) && sourceEntry.link) {\n      match.link = sourceEntry.link;\n    }\n\n    if (!normalizeText(match.pubDate) && sourceEntry.pubDate) {\n      match.pubDate = sourceEntry.pubDate;\n    }\n\n    if (!normalizeText(match.place) && sourceEntry.place) {\n      match.place = sourceEntry.place;\n    }\n  }\n}\n\nreturn merged.map(article => {\n  const { _links, _titles, _titleTokens, _contextTokens, ...cleanArticle } = article;\n  return {\n    json: {\n      ...cleanArticle,\n      source: article.sourceNames[0] || article.source || 'Unknown source',\n      link: cleanArticle.link || cleanArticle.url || article.sourceLinks[0] || '',\n      relatedLinks: article.sourceLinks,\n      relatedTitles: article.sourceTitles,\n      relatedSnippets: article.sourceSnippets,\n    }\n  };\n});"
+        "numberInputs": 5
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
       "position": [
-        23904,
-        576
+        29984,
+        3904
       ],
-      "id": "0b8f380f-056a-4065-b289-e0082029b5bc",
-      "name": "Transform1"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "idRZ2wjOcbIB0Qnv",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/idRZ2wjOcbIB0Qnv",
-          "cachedResultName": "fn_articles_get()"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        24384,
-        592
-      ],
-      "id": "ed9b08e2-2549-48ab-9d4a-363d1b258058",
-      "name": "Call 'fn_articles_get()'",
-      "alwaysOutputData": false
+      "id": "0a6462de-28d3-4449-be53-5abbceba8b97",
+      "name": "Merge Sources"
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "name": "Loop Over Articles (Translate)",
+      "id": "290bff2a-aa57-405b-8d3b-ea49acd0c5d5",
+      "name": "Translate title + snippet loop",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        24080,
-        576
+        30688,
+        3952
       ]
     },
     {
@@ -732,18 +778,18 @@
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `Translate the following title and snippet to English.\\nReturn ONLY a valid JSON object with \"title\" and \"snippet\" keys. No explanation, no extra text.\\n\\nTitle: ${$json.title || ''}\\nSnippet: ${$json.snippet || ''}`,\n  stream: false,\n  keep_alive: \"30m\"\n}) }}",
+        "jsonBody": "={{ JSON.stringify({\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `Translate the following title and snippet to English.\\nReturn ONLY a valid JSON object with \"title\" and \"snippet\" keys. No explanation, no extra text.\\n\\nTitle: ${$json.title || ''}\\nSnippet: ${$json.snippet || ''}`,\n  stream: false,\n  keep_alive: \"30m\",\n  \"options\": {\n    \"num_gpu\": $env.N8N_LLM_NUM_GPU\n  },\n}) }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-      "name": "Translate Single",
+      "id": "e6287a08-eab2-45b8-9e5e-821947083210",
+      "name": "Translate snippet & title",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        24080,
-        800
+        30832,
+        4096
       ]
     },
     {
@@ -752,30 +798,1744 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
-      "name": "Merge Translate Single",
+      "id": "4ef562a0-906f-4cc1-8c57-6127cad5c5ca",
+      "name": "Merge snippet & title",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        24256,
-        800
+        31056,
+        4064
       ]
     },
     {
       "parameters": {
         "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nlet translated;\ntry {\n  translated = JSON.parse(raw);\n} catch (error) {\n  translated = {};\n}\n\nconst originalTitle = $json.originalTitle || $json.title || '';\nconst originalSnippet = $json.originalSnippet || $json.snippet || '';\nconst translatedTitle = translated.title || $json.translatedTitle || $json.title;\nconst translatedSnippet = translated.snippet || $json.translatedSnippet || $json.snippet;\n\nreturn {\n  json: {\n    ...$json,\n    originalTitle,\n    originalSnippet,\n    translatedTitle,\n    translatedSnippet,\n    title: translatedTitle,\n    snippet: translatedSnippet,\n  }\n};"
       },
-      "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
-      "name": "Enrich with Translation",
+      "id": "157b5ac6-c5ba-4300-989f-dafdcb44f6c0",
+      "name": "Transform snippet & title",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        24432,
-        800
+        31248,
+        4064
       ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "57b68728-70af-4833-b4aa-a78e4bda2016",
+      "name": "Translate article loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        32144,
+        3936
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Merge and filter all articles\n * Return the array of articles directly\n */\nreturn items\n  .flatMap(item => item.json.articles || [])\n  .filter(article => article.title?.trim() && article.link?.trim())\n  .map(article => ({\n    json: article,\n  }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        30160,
+        3952
+      ],
+      "id": "6ccb5305-201b-4ea5-a29e-3932db05ce69",
+      "name": "Merge and Filter articles"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nreturn {\n  json: {\n    ...$json,\n    overview: raw\n  }\n};"
+      },
+      "id": "e487477b-3e95-41ad-8d9f-473f00a7bfcd",
+      "name": "Add Overview",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        34096,
+        4240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "text",
+        "binaryPropertyName": "=data",
+        "options": {
+          "fileName": "={{ $json.filename }}"
+        }
+      },
+      "id": "322c725a-1037-46a5-947d-bd5d58074df2",
+      "name": "Write file1",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        35008,
+        4096
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@guebbit.com",
+        "toEmail": "guerzoni.andrea91@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "text": "={{ $json.summaryText }}",
+        "options": {
+          "attachments": "data"
+        }
+      },
+      "id": "8ea1ca44-4737-4f3a-8862-c478b75ecb59",
+      "name": "Send Email1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        35168,
+        4096
+      ],
+      "webhookId": "25b82f9d-e1c6-4114-b2a6-b0bd65e6db54",
+      "credentials": {
+        "smtp": {
+          "id": "WgYVtkRpU6mRxukw",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "text",
+        "binaryPropertyName": "=data",
+        "options": {
+          "fileName": "={{ $json.filename }}"
+        }
+      },
+      "id": "cd90df3a-af80-4d26-8e8a-7a06272f6a64",
+      "name": "Write file2",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        34528,
+        3904
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Removes hidden/internal reasoning blocks from LLM output.\n */\nconst stripThink = (text) =>\n  (text || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\n\n// Normalize inputs\nconst globalOverview = stripThink($json.globalOverview || '');\nconst overviewsByPlace = $json.overviewsByPlace || {};\nconst articles = Array.isArray($json.articles) ? $json.articles : [];\n\n// Stable YYYY-MM-DD date\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;\n\nconst getUniqueNonEmptyValues = values =>\n  [...new Set((values || []).filter(Boolean))];\n\n/**\n * Render all place overviews one after another\n */\nconst placeOverviewsSection = Object.entries(overviewsByPlace)\n  .map(([place, overview]) => {\n    const cleanOverview = stripThink(overview);\n    if (!cleanOverview) return '';\n    return [`## ${place}`, '', cleanOverview].join('\\n');\n  })\n  .filter(Boolean)\n  .join('\\n\\n---\\n\\n');\n\n/**\n * Render all articles\n */\nconst articlesSection = articles\n  .map(article => {\n    const sourceEntries =\n      Array.isArray(article.sources) && article.sources.length\n        ? article.sources\n        : [{\n            name: article.source || 'Unknown source',\n            link: article.link || article.url || '',\n            pubDate: article.pubDate || '',\n          }];\n\n    const sourceLine = sourceEntries\n      .map(source =>\n        source.link\n          ? `[${source.name}](${source.link})`\n          : source.name\n      )\n      .join(', ');\n\n    const dateLine = getUniqueNonEmptyValues(\n      sourceEntries.map(source => source.pubDate || article.pubDate)\n    ).join(', ');\n\n    const metaLine = [\n      article.place ? `**Place:** ${article.place}` : '',\n      sourceLine ? `**Sources:** ${sourceLine}` : '',\n      dateLine ? `**Dates:** ${dateLine}` : ''\n    ]\n      .filter(Boolean)\n      .join('  \\n');\n\n    return [\n      `## ${article.title || 'Untitled Article'}`,\n      metaLine,\n      '',\n      stripThink(article.summary || '')\n    ].join('\\n');\n  })\n  .join('\\n\\n---\\n\\n');\n\n/**\n * Final merged text:\n * - global overview\n * - all place overviews\n * - all articles\n */\nconst textParts = [\n  `# Daily News Briefing — ${date}`,\n  '',\n  '## Global Overview',\n  globalOverview\n];\n\nif (placeOverviewsSection) {\n  textParts.push('', '---', '', '## Place Overviews', '', placeOverviewsSection);\n}\n\nif (articlesSection) {\n  textParts.push('', '---', '', '## Articles', '', articlesSection);\n}\n\nconst text = textParts.join('\\n');\n\nreturn [\n  {\n    json: {\n      filename: `news-summary-${date}.md`,\n      subject: `Daily News Summary - ${date}`,\n      text\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        34304,
+        3904
+      ],
+      "id": "fb73705a-a071-49f8-983f-3cbfce195f29",
+      "name": "Code in JavaScript"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Merge and Filter articles": [
+      {
+        "json": {
+          "title": "Fragilità umane e rinascita, i 22 in corsa a Cannes in un'edizione senza Italia",
+          "link": "https://www.ansa.it/sito/notizie/cultura/cinema/2026/05/09/fragilita-umane-e-rinascita-i-22-in-corsa-a-cannes-in-unedizione-senza-italia_06b42411-7f89-4569-86b7-6a76aa0d0d31.html",
+          "pubDate": "Sun, 10 May 2026 10:29:13 +0200",
+          "content": "Tanti autori tra drammi storici, fantascienza e autobiografia",
+          "contentSnippet": "Tanti autori tra drammi storici, fantascienza e autobiografia",
+          "guid": "https://www.ansa.it/sito/notizie/cultura/cinema/2026/05/09/fragilita-umane-e-rinascita-i-22-in-corsa-a-cannes-in-unedizione-senza-italia_06b42411-7f89-4569-86b7-6a76aa0d0d31.html",
+          "isoDate": "2026-05-10T08:29:13.000Z",
+          "snippet": "Tanti autori tra drammi storici, fantascienza e autobiografia",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "I divi a Cannes, da Cate Blanchett a Cruz e Bardem",
+          "link": "https://www.ansa.it/canale_lifestyle/notizie/people/2026/05/09/i-divi-a-cannes-da-cate-blanchett-a-cruz-e-bardem_bb3a9df5-d936-4200-9db7-bdb93564acd5.html",
+          "pubDate": "Sun, 10 May 2026 09:34:06 +0200",
+          "content": "Fra le feste, l'Amfar e l'afterparty di DiCaprio a Cap D'Antibes",
+          "contentSnippet": "Fra le feste, l'Amfar e l'afterparty di DiCaprio a Cap D'Antibes",
+          "guid": "https://www.ansa.it/canale_lifestyle/notizie/people/2026/05/09/i-divi-a-cannes-da-cate-blanchett-a-cruz-e-bardem_bb3a9df5-d936-4200-9db7-bdb93564acd5.html",
+          "isoDate": "2026-05-10T07:34:06.000Z",
+          "snippet": "Fra le feste, l'Amfar e l'afterparty di DiCaprio a Cap D'Antibes",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "L'appello dei ricercatori, 'riportare il dibattito sull'IA su basi chiare e realistiche'",
+          "link": "https://www.ansa.it/canale_tecnologia/notizie/tecnologia/2026/05/06/appello-ricercatori-riportare-discussione-sullia-su-basi-chiare-e-realistiche_9c807a62-071b-449e-89d6-2d91fba56feb.html",
+          "pubDate": "Sun, 10 May 2026 09:35:26 +0200",
+          "content": "\"Spiegare con precisione cosa è davvero, la competenza fondamentale per tutti i cittadini'",
+          "contentSnippet": "\"Spiegare con precisione cosa è davvero, la competenza fondamentale per tutti i cittadini'",
+          "guid": "https://www.ansa.it/canale_tecnologia/notizie/tecnologia/2026/05/06/appello-ricercatori-riportare-discussione-sullia-su-basi-chiare-e-realistiche_9c807a62-071b-449e-89d6-2d91fba56feb.html",
+          "isoDate": "2026-05-10T07:35:26.000Z",
+          "snippet": "\"Spiegare con precisione cosa è davvero, la competenza fondamentale per tutti i cittadini'",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Oltre 11 milioni italiani useranno la bici nelle vacanze",
+          "link": "https://www.ansa.it/canale_viaggi/notizie/itinerari/2026/05/09/confturismo-confcommercio-oltre-11-milioni-italiani-useranno-la-bici-nelle-vacanze_35ae45c6-6f1c-4a0d-90a3-196e8a64adf3.html",
+          "pubDate": "Sun, 10 May 2026 09:36:18 +0200",
+          "content": "Confturismo-Confcommercio,  \"febbre\" che ogni anno si ravviva in occasione del Giro d'Italia",
+          "contentSnippet": "Confturismo-Confcommercio,  \"febbre\" che ogni anno si ravviva in occasione del Giro d'Italia",
+          "guid": "https://www.ansa.it/canale_viaggi/notizie/itinerari/2026/05/09/confturismo-confcommercio-oltre-11-milioni-italiani-useranno-la-bici-nelle-vacanze_35ae45c6-6f1c-4a0d-90a3-196e8a64adf3.html",
+          "isoDate": "2026-05-10T07:36:18.000Z",
+          "snippet": "Confturismo-Confcommercio,  \"febbre\" che ogni anno si ravviva in occasione del Giro d'Italia",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Ricevimento reale a Buckingham Palace con William e Kate",
+          "link": "https://www.ansa.it/sito/videogallery/mondo/2026/05/09/ricevimento-reale-a-buckingham-palace-con-william-e-kate_d0d2bdb1-802b-4d03-acea-7f9b275f8996.html",
+          "pubDate": "Sun, 10 May 2026 09:23:35 +0200",
+          "content": "Migliaia di invitati nel giardino per la cerimonia tradizionale della monarchia britannica",
+          "contentSnippet": "Migliaia di invitati nel giardino per la cerimonia tradizionale della monarchia britannica",
+          "guid": "https://www.ansa.it/sito/videogallery/mondo/2026/05/09/ricevimento-reale-a-buckingham-palace-con-william-e-kate_d0d2bdb1-802b-4d03-acea-7f9b275f8996.html",
+          "isoDate": "2026-05-10T07:23:35.000Z",
+          "snippet": "Migliaia di invitati nel giardino per la cerimonia tradizionale della monarchia britannica",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "I media iraniani: 'Teheran ha inviato la risposta alla proposta Usa', via Pakistan - LIVEBLOG",
+          "link": "https://www.ansa.it/sito/notizie/mondo/africa/2026/05/10/medio-oriente-gli-usa-ancora-in-attesa-della-risposta-delliran-sul_7d55d137-3a2c-4390-bd52-6f0c44c06bbe.html",
+          "pubDate": "Sun, 10 May 2026 16:43:20 +0200",
+          "content": "Pezeshkian: 'Non ci piegheremo mai al nemico, negoziare non significa arrendersi'. Media: 'Nave colpita da un proiettile al largo di Doha'",
+          "contentSnippet": "Pezeshkian: 'Non ci piegheremo mai al nemico, negoziare non significa arrendersi'. Media: 'Nave colpita da un proiettile al largo di Doha'",
+          "guid": "https://www.ansa.it/sito/notizie/mondo/africa/2026/05/10/medio-oriente-gli-usa-ancora-in-attesa-della-risposta-delliran-sul_7d55d137-3a2c-4390-bd52-6f0c44c06bbe.html",
+          "isoDate": "2026-05-10T14:43:20.000Z",
+          "snippet": "Pezeshkian: 'Non ci piegheremo mai al nemico, negoziare non significa arrendersi'. Media: 'Nave colpita da un proiettile al largo di Doha'",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Il Cremlino: 'La guerra in Ucraina finirà con una vittoria. Witkoff e Kushner attesi presto a Mosca'",
+          "link": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/il-cremlino-la-guerra-in-ucraina-finira-con-una-vittoria_f39c259a-c352-4d11-b4ac-46054fcb973c.html",
+          "pubDate": "Sun, 10 May 2026 16:01:40 +0200",
+          "content": "Peskov: 'Questa è la nostra guerra. E la vinceremo'. Il consigliere presidenziale russo: gli inviati del presidente americano qui per 'continuare il dialogo'. Berlino risponde su Schroeder: 'Preso nota, ma da Putin spesso false offerte'",
+          "contentSnippet": "Peskov: 'Questa è la nostra guerra. E la vinceremo'. Il consigliere presidenziale russo: gli inviati del presidente americano qui per 'continuare il dialogo'. Berlino risponde su Schroeder: 'Preso nota, ma da Putin spesso false offerte'",
+          "guid": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/il-cremlino-la-guerra-in-ucraina-finira-con-una-vittoria_f39c259a-c352-4d11-b4ac-46054fcb973c.html",
+          "isoDate": "2026-05-10T14:01:40.000Z",
+          "snippet": "Peskov: 'Questa è la nostra guerra. E la vinceremo'. Il consigliere presidenziale russo: gli inviati del presidente americano qui per 'continuare il dialogo'. Berlino risponde su Schroeder: 'Preso nota, ma da Putin spesso false offerte'",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Hantavirus, cominciato lo sbarco dei primi passeggeri dalla nave Hondius. A Madrid il primo volo con gli evacuati",
+          "link": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/hantavirus-la-nave-hondius-entrata-nel-porto-di-granadilla-a-tenerife_ea78814a-26fe-435b-97c5-e853bf3740dd.html",
+          "pubDate": "Sun, 10 May 2026 16:16:14 +0200",
+          "content": "L'imbarcazione era entrata questa mattina nel porto di Granadilla a Tenerife. Il primo gruppo di evacuati è composto da 14 cittadini spagnoli",
+          "contentSnippet": "L'imbarcazione era entrata questa mattina nel porto di Granadilla a Tenerife. Il primo gruppo di evacuati è composto da 14 cittadini spagnoli",
+          "guid": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/hantavirus-la-nave-hondius-entrata-nel-porto-di-granadilla-a-tenerife_ea78814a-26fe-435b-97c5-e853bf3740dd.html",
+          "isoDate": "2026-05-10T14:16:14.000Z",
+          "snippet": "L'imbarcazione era entrata questa mattina nel porto di Granadilla a Tenerife. Il primo gruppo di evacuati è composto da 14 cittadini spagnoli",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Flotilla, espulsi da Israele i due attivisti Thiago e Saif",
+          "link": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/flotilla-espulsi-da-israele-i-due-attivisti-thiago-e-saif_9ecfdffa-2a09-45bc-97d8-c3fc6ea619a2.html",
+          "pubDate": "Sun, 10 May 2026 13:56:31 +0200",
+          "content": "Arrestati in acque internazionali e rimasti in stato di detenzione per oltre una settimana",
+          "contentSnippet": "Arrestati in acque internazionali e rimasti in stato di detenzione per oltre una settimana",
+          "guid": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/flotilla-espulsi-da-israele-i-due-attivisti-thiago-e-saif_9ecfdffa-2a09-45bc-97d8-c3fc6ea619a2.html",
+          "isoDate": "2026-05-10T11:56:31.000Z",
+          "snippet": "Arrestati in acque internazionali e rimasti in stato di detenzione per oltre una settimana",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Sempio gettò nella spazzatura un biglietto con scritto 'assassino' ",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/sempio-getto-nella-spazzatura-un-biglietto-con-scritto-assassino-_f8923437-c798-440e-a392-c71e1f61d019.html",
+          "pubDate": "Sun, 10 May 2026 12:36:53 +0200",
+          "content": "Pm: 'Al rifiuto di Chiara ebbe una reazione esplosiva improvvisa'",
+          "contentSnippet": "Pm: 'Al rifiuto di Chiara ebbe una reazione esplosiva improvvisa'",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/sempio-getto-nella-spazzatura-un-biglietto-con-scritto-assassino-_f8923437-c798-440e-a392-c71e1f61d019.html",
+          "isoDate": "2026-05-10T10:36:53.000Z",
+          "snippet": "Pm: 'Al rifiuto di Chiara ebbe una reazione esplosiva improvvisa'",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Papà e nonni della famiglia piacentina scomparsa sono al campo base",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/papa-e-nonni-della-famiglia-piacentina-scomparsa-sono-al-campo-base_34bdbeda-7ffe-4e33-8c16-c3af2ae0cb1d.html",
+          "pubDate": "Sun, 10 May 2026 12:54:59 +0200",
+          "content": "Nuova giornata di ricerche della donna e dei due figli",
+          "contentSnippet": "Nuova giornata di ricerche della donna e dei due figli",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/papa-e-nonni-della-famiglia-piacentina-scomparsa-sono-al-campo-base_34bdbeda-7ffe-4e33-8c16-c3af2ae0cb1d.html",
+          "isoDate": "2026-05-10T10:54:59.000Z",
+          "snippet": "Nuova giornata di ricerche della donna e dei due figli",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Donna aggredita a martellate su un bus, proseguono le ricerche del marito",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/aggredita-a-martellate-su-un-bus-proseguono-le-ricerche-del-marito_af87f348-1318-4951-96f2-949f9af53d42.html",
+          "pubDate": "Sun, 10 May 2026 10:34:18 +0200",
+          "content": "La vittima ancora in condizioni molto gravi all'ospedale di Terni",
+          "contentSnippet": "La vittima ancora in condizioni molto gravi all'ospedale di Terni",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/aggredita-a-martellate-su-un-bus-proseguono-le-ricerche-del-marito_af87f348-1318-4951-96f2-949f9af53d42.html",
+          "isoDate": "2026-05-10T08:34:18.000Z",
+          "snippet": "La vittima ancora in condizioni molto gravi all'ospedale di Terni",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "A Roma Race for the cure, in 200mila per la lotta al tumore del seno",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/partita-la-race-for-the-cure-in-200mila-per-la-lotta-al-tumore-del_c3e396c5-acc9-4cf5-92b9-66f9dfc81d83.html",
+          "pubDate": "Sun, 10 May 2026 15:01:53 +0200",
+          "content": "La marea rosa nel centro della città, '120mila donatori'",
+          "contentSnippet": "La marea rosa nel centro della città, '120mila donatori'",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/partita-la-race-for-the-cure-in-200mila-per-la-lotta-al-tumore-del_c3e396c5-acc9-4cf5-92b9-66f9dfc81d83.html",
+          "isoDate": "2026-05-10T13:01:53.000Z",
+          "snippet": "La marea rosa nel centro della città, '120mila donatori'",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "La nostra libertà un vostro diritto",
+          "link": "https://www.ansa.it/sito/podcast/la_scelta_del_direttore/2026/05/08/la-nostra-liberta-un-vostro-diritto_231ff3d0-48f7-4acb-a608-03fb62691394.html",
+          "pubDate": "Sun, 10 May 2026 09:28:41 +0200",
+          "content": "Riflessioni sul giornalismo in occasione della giornata mondiale sulla libertà di stampa. ",
+          "contentSnippet": "Riflessioni sul giornalismo in occasione della giornata mondiale sulla libertà di stampa.",
+          "guid": "https://www.ansa.it/sito/podcast/la_scelta_del_direttore/2026/05/08/la-nostra-liberta-un-vostro-diritto_231ff3d0-48f7-4acb-a608-03fb62691394.html",
+          "isoDate": "2026-05-10T07:28:41.000Z",
+          "snippet": "Riflessioni sul giornalismo in occasione della giornata mondiale sulla libertà di stampa.",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Hantavirus, evacuata la nave a Tenerife: \"Tutti asintomatici\"",
+          "link": "https://www.ansa.it/sito/videogallery/mondo/2026/05/10/hantavirus-evacuata-la-nave-a-tenerife-tutti-asintomatici_3e30ea73-34b0-43a5-bc24-5739b34bdcde.html",
+          "pubDate": "Sun, 10 May 2026 15:55:48 +0200",
+          "content": "Autorita': \"Operazione sotto controllo, nessun contatto con la popolazione locale\"",
+          "contentSnippet": "Autorita': \"Operazione sotto controllo, nessun contatto con la popolazione locale\"",
+          "guid": "https://www.ansa.it/sito/videogallery/mondo/2026/05/10/hantavirus-evacuata-la-nave-a-tenerife-tutti-asintomatici_3e30ea73-34b0-43a5-bc24-5739b34bdcde.html",
+          "isoDate": "2026-05-10T13:55:48.000Z",
+          "snippet": "Autorita': \"Operazione sotto controllo, nessun contatto con la popolazione locale\"",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Serie A: alle 15 in campo Fiorentina-Genoa DIRETTA",
+          "link": "https://www.ansa.it/sito/notizie/sport/calcio/2026/05/10/serie-a-alle-15-in-campo-fiorentina-genoa-diretta_15b1d1c6-c012-4f4d-9779-e5afa63f43ae.html",
+          "pubDate": "Sun, 10 May 2026 15:37:01 +0200",
+          "content": "La cronaca e le foto",
+          "contentSnippet": "La cronaca e le foto",
+          "guid": "https://www.ansa.it/sito/notizie/sport/calcio/2026/05/10/serie-a-alle-15-in-campo-fiorentina-genoa-diretta_15b1d1c6-c012-4f4d-9779-e5afa63f43ae.html",
+          "isoDate": "2026-05-10T13:37:01.000Z",
+          "snippet": "La cronaca e le foto",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Serie A: in campo Cremonese-Pisa 2-0 DIRETTA",
+          "link": "https://www.ansa.it/sito/notizie/sport/calcio/2026/05/10/serie-a-alle-15-in-campo-cremonese-pisa-diretta_1e25b334-8c50-4348-8247-6c41b98ae38a.html",
+          "pubDate": "Sun, 10 May 2026 16:12:56 +0200",
+          "content": "Gol di Vardy al 31' e Bonazzoli al 51' per i grigiorossi",
+          "contentSnippet": "Gol di Vardy al 31' e Bonazzoli al 51' per i grigiorossi",
+          "guid": "https://www.ansa.it/sito/notizie/sport/calcio/2026/05/10/serie-a-alle-15-in-campo-cremonese-pisa-diretta_1e25b334-8c50-4348-8247-6c41b98ae38a.html",
+          "isoDate": "2026-05-10T14:12:56.000Z",
+          "snippet": "Gol di Vardy al 31' e Bonazzoli al 51' per i grigiorossi",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Motogp: dominio dell'Aprilia in Francia, vince Martin davanti a Bezzecchi",
+          "link": "https://www.ansa.it/sito/notizie/sport/moto/2026/05/10/motogp-dominio-aprilia-in-francia-vince-martin-davanti-a-bezzecchi_d4edfcc7-fd60-4891-83f4-7b70c1a3973b.html",
+          "pubDate": "Sun, 10 May 2026 14:59:31 +0200",
+          "content": "Show dello spagnolo in rimonta, fuori Bagnaia",
+          "contentSnippet": "Show dello spagnolo in rimonta, fuori Bagnaia",
+          "guid": "https://www.ansa.it/sito/notizie/sport/moto/2026/05/10/motogp-dominio-aprilia-in-francia-vince-martin-davanti-a-bezzecchi_d4edfcc7-fd60-4891-83f4-7b70c1a3973b.html",
+          "isoDate": "2026-05-10T12:59:31.000Z",
+          "snippet": "Show dello spagnolo in rimonta, fuori Bagnaia",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Un 14enne ferito gravemente, l'aggressore ha 15 anni",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/un-14enne-ferito-gravemente-per-sguardo-di-troppo-a-una-ragazzina_72248dbe-7702-4929-aeff-eb56012bef62.html",
+          "pubDate": "Sun, 10 May 2026 16:35:59 +0200",
+          "content": "Bloccato dalla polizia municipale a Napoli. Lite vicino il luogo dell'omicidio di Giogiò Cutolo",
+          "contentSnippet": "Bloccato dalla polizia municipale a Napoli. Lite vicino il luogo dell'omicidio di Giogiò Cutolo",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/un-14enne-ferito-gravemente-per-sguardo-di-troppo-a-una-ragazzina_72248dbe-7702-4929-aeff-eb56012bef62.html",
+          "isoDate": "2026-05-10T14:35:59.000Z",
+          "snippet": "Bloccato dalla polizia municipale a Napoli. Lite vicino il luogo dell'omicidio di Giogiò Cutolo",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Parroco e imam sul ring per l'inaugurazione di Boxe Piacenza",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/parroco-e-imam-sul-ring-per-linaugurazione-di-boxe-piacenza_829d9e37-6c61-41b2-9b3a-f88a50d9be6a.html",
+          "pubDate": "Sun, 10 May 2026 15:59:37 +0200",
+          "content": "Lo sport \"veicolo di integrazione, sociale e anche religiosa\"",
+          "contentSnippet": "Lo sport \"veicolo di integrazione, sociale e anche religiosa\"",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/parroco-e-imam-sul-ring-per-linaugurazione-di-boxe-piacenza_829d9e37-6c61-41b2-9b3a-f88a50d9be6a.html",
+          "isoDate": "2026-05-10T13:59:37.000Z",
+          "snippet": "Lo sport \"veicolo di integrazione, sociale e anche religiosa\"",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Monopattini elettrici, obbligo di targa entro 16 maggio, ma c'è rischio ritardi",
+          "link": "https://www.ansa.it/canale_motori/notizie/istituzioni/2026/05/10/monopattini-elettrici-obbligo-di-targa-entro-16-maggio-ma-ce-rischio-ritardi_b0df7f0e-2276-48e1-a973-459df0fcd40b.html",
+          "pubDate": "Sun, 10 May 2026 14:10:13 +0200",
+          "content": "Assoutenti: 'Mit spieghi se si può circolare in attesa di contrassegno senza multe'",
+          "contentSnippet": "Assoutenti: 'Mit spieghi se si può circolare in attesa di contrassegno senza multe'",
+          "guid": "https://www.ansa.it/canale_motori/notizie/istituzioni/2026/05/10/monopattini-elettrici-obbligo-di-targa-entro-16-maggio-ma-ce-rischio-ritardi_b0df7f0e-2276-48e1-a973-459df0fcd40b.html",
+          "isoDate": "2026-05-10T12:10:13.000Z",
+          "snippet": "Assoutenti: 'Mit spieghi se si può circolare in attesa di contrassegno senza multe'",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Ungheria, il ministro della Salute scatenato nella \"danza della vittoria\"",
+          "link": "https://www.ansa.it/sito/videogallery/mondo/2026/05/10/ungheria-il-ministro-della-salute-scatenato-nella-danza-della-vittoria_bdd66197-c5fe-4c72-8eeb-de3ebac00bfc.html",
+          "pubDate": "Sun, 10 May 2026 16:30:16 +0200",
+          "content": "Il ballo sfrenato di Hegedus al giuramento di Magyar diventa virale sui social",
+          "contentSnippet": "Il ballo sfrenato di Hegedus al giuramento di Magyar diventa virale sui social",
+          "guid": "https://www.ansa.it/sito/videogallery/mondo/2026/05/10/ungheria-il-ministro-della-salute-scatenato-nella-danza-della-vittoria_bdd66197-c5fe-4c72-8eeb-de3ebac00bfc.html",
+          "isoDate": "2026-05-10T14:30:16.000Z",
+          "snippet": "Il ballo sfrenato di Hegedus al giuramento di Magyar diventa virale sui social",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "'Illustrazione del tortellino rubata', vince la causa contro Ikea",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/illustrazione-del-tortellino-rubata-vince-la-causa-contro-ikea_7a6e2bfc-b027-4a53-8ac4-c7c068051539.html",
+          "pubDate": "Sun, 10 May 2026 16:32:32 +0200",
+          "content": "La vittoria di una artista bolognese, il colosso svedese deve risarcirla",
+          "contentSnippet": "La vittoria di una artista bolognese, il colosso svedese deve risarcirla",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/illustrazione-del-tortellino-rubata-vince-la-causa-contro-ikea_7a6e2bfc-b027-4a53-8ac4-c7c068051539.html",
+          "isoDate": "2026-05-10T14:32:32.000Z",
+          "snippet": "La vittoria di una artista bolognese, il colosso svedese deve risarcirla",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Festa della mamma, come essere mamme meno stanche in 5 step",
+          "link": "https://www.ansa.it/canale_lifestyle/notizie/societa_diritti/2026/05/08/festa-della-mamma-come-essere-mamme-meno-stanche-in-5-step_e0153996-3500-43bb-afe9-d066f0d2a8af.html",
+          "pubDate": "Sat, 9 May 2026 18:29:03 +0200",
+          "content": "Il tema del sonno non vale solo per i figli, necessario un cambio di prospettiva",
+          "contentSnippet": "Il tema del sonno non vale solo per i figli, necessario un cambio di prospettiva",
+          "guid": "https://www.ansa.it/canale_lifestyle/notizie/societa_diritti/2026/05/08/festa-della-mamma-come-essere-mamme-meno-stanche-in-5-step_e0153996-3500-43bb-afe9-d066f0d2a8af.html",
+          "isoDate": "2026-05-09T16:29:03.000Z",
+          "snippet": "Il tema del sonno non vale solo per i figli, necessario un cambio di prospettiva",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Adunata degli Alpini, Genova sfilano in 90mila per la chiusura",
+          "link": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/adunata-degli-alpini-genova-sfilano-in-90mila-per-la-chiusura_1d2f7acf-647c-4f5c-b512-e88b02f97139.html",
+          "pubDate": "Sun, 10 May 2026 11:37:18 +0200",
+          "content": "Poi il passaggio della stecca con Brescia- Il messaggio del ministro Crosetto",
+          "contentSnippet": "Poi il passaggio della stecca con Brescia- Il messaggio del ministro Crosetto",
+          "guid": "https://www.ansa.it/sito/notizie/cronaca/2026/05/10/adunata-degli-alpini-genova-sfilano-in-90mila-per-la-chiusura_1d2f7acf-647c-4f5c-b512-e88b02f97139.html",
+          "isoDate": "2026-05-10T09:37:18.000Z",
+          "snippet": "Poi il passaggio della stecca con Brescia- Il messaggio del ministro Crosetto",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Diplomazia",
+          "link": "https://www.ansa.it/sito/podcast/la_parola_della_settimana/2026/05/09/diplomazia_b7727211-b662-4b0f-a46a-afc58d2545f5.html",
+          "pubDate": "Sat, 9 May 2026 09:20:18 +0200",
+          "content": "",
+          "contentSnippet": "",
+          "guid": "https://www.ansa.it/sito/podcast/la_parola_della_settimana/2026/05/09/diplomazia_b7727211-b662-4b0f-a46a-afc58d2545f5.html",
+          "isoDate": "2026-05-09T07:20:18.000Z",
+          "snippet": "",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Ultimatum a Starmer dall'interno del Labour, 'passi la mano o sarà sfida'",
+          "link": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/ultimatum-a-starmer-dallinterno-del-labour-passi-la-mano-o-sara-sfida_9822988a-6931-4d41-b255-b1b4023c673e.html",
+          "pubDate": "Sun, 10 May 2026 16:27:16 +0200",
+          "content": "Una deputata lancia il guanto, fra venti di rivolta. Lui si gioca la carta anti Brexit",
+          "contentSnippet": "Una deputata lancia il guanto, fra venti di rivolta. Lui si gioca la carta anti Brexit",
+          "guid": "https://www.ansa.it/sito/notizie/mondo/2026/05/10/ultimatum-a-starmer-dallinterno-del-labour-passi-la-mano-o-sara-sfida_9822988a-6931-4d41-b255-b1b4023c673e.html",
+          "isoDate": "2026-05-10T14:27:16.000Z",
+          "snippet": "Una deputata lancia il guanto, fra venti di rivolta. Lui si gioca la carta anti Brexit",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "L'ANSA consegue la certificazione per la parità di genere",
+          "link": "https://www.ansa.it/sito/notizie/politica/2026/05/07/lansa-consegue-la-certificazione-per-la-parita-di-genere-_3bf5641e-1c59-4a2b-b063-8059084fd86a.html",
+          "pubDate": "Sat, 9 May 2026 10:48:05 +0200",
+          "content": "'Inclusione, equità e sviluppo sostenibile delle persone' ",
+          "contentSnippet": "'Inclusione, equità e sviluppo sostenibile delle persone'",
+          "guid": "https://www.ansa.it/sito/notizie/politica/2026/05/07/lansa-consegue-la-certificazione-per-la-parita-di-genere-_3bf5641e-1c59-4a2b-b063-8059084fd86a.html",
+          "isoDate": "2026-05-09T08:48:05.000Z",
+          "snippet": "'Inclusione, equità e sviluppo sostenibile delle persone'",
+          "selector": "div[itemprop='articleBody']",
+          "source": "ANSA",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Internazionali in diretta: Musetti sfida Cerundolo, in palio gli ottavi",
+          "link": "https://www.repubblica.it/sport/dossier/internazionali-di-tennis-italia/2026/05/10/diretta/internazionali_tennis_roma_2026_oggi_musetti_arnaldi-425335931/",
+          "pubDate": "Sun, 10 May 2026 14:30:19 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Oggi in campo anche Arnaldi e Cobolli, nel torneo femminile Cocciaretto affronta Swiatek",
+          "contentSnippet": "Oggi in campo anche Arnaldi e Cobolli, nel torneo femminile Cocciaretto affronta Swiatek",
+          "guid": "rep-locali:repubblica:425335931",
+          "categories": [
+            {
+              "_": "Tennis",
+              "$": {
+                "domain": "/repubblica/sport/tennis"
+              }
+            },
+            {
+              "_": "Internazionali di tennis Italia",
+              "$": {
+                "domain": "/repubblica/sport/dossier/internazionali-di-tennis-italia"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T14:30:19.000Z",
+          "snippet": "Oggi in campo anche Arnaldi e Cobolli, nel torneo femminile Cocciaretto affronta Swiatek",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Guerra in Iran – news di oggi. Arrivata risposta Iran sul negoziato: “Focalizzati su fine guerra”",
+          "link": "https://www.repubblica.it/esteri/2026/05/10/diretta/guerra_iran_usa_israele_news_oggi-425335259/",
+          "pubDate": "Sun, 10 May 2026 13:37:54 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Le indicazioni della Guida suprema iraniana. Vertice Usa-Qatar a Miami nel tentativo di arrivare a un’intesa",
+          "contentSnippet": "Le indicazioni della Guida suprema iraniana. Vertice Usa-Qatar a Miami nel tentativo di arrivare a un’intesa",
+          "guid": "rep-locali:repubblica:425335259",
+          "categories": [
+            {
+              "_": "Esteri",
+              "$": {
+                "domain": "/repubblica/esteri"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T13:37:54.000Z",
+          "snippet": "Le indicazioni della Guida suprema iraniana. Vertice Usa-Qatar a Miami nel tentativo di arrivare a un’intesa",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "MotoGp, festa Aprilia in Francia: vince Martin davanti a Bezzecchi e Ogura. Bagnaia cade",
+          "link": "https://www.repubblica.it/sport/moto-gp/2026/05/10/news/martin_vince_gp_francia_motogp-425336081/",
+          "pubDate": "Sun, 10 May 2026 13:36:26 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Dopo la Sprint, lo spagnolo vince anche la gara lunga tornando sul gradino più alto del podio dopo quasi due anni. Week end da dimenticare per la Ducati",
+          "contentSnippet": "Dopo la Sprint, lo spagnolo vince anche la gara lunga tornando sul gradino più alto del podio dopo quasi due anni. Week end da dimenticare per la Ducati",
+          "guid": "rep-locali:repubblica:425336081",
+          "categories": [
+            {
+              "_": "Moto GP",
+              "$": {
+                "domain": "/repubblica/sport/moto-gp"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T13:36:26.000Z",
+          "snippet": "Dopo la Sprint, lo spagnolo vince anche la gara lunga tornando sul gradino più alto del podio dopo quasi due anni. Week end da dimenticare per la Ducati",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Il passeggero a bordo della Hondius: “Sembra un film, siamo ostaggio del virus da 40 giorni”",
+          "link": "https://www.repubblica.it/cronaca/2026/05/10/news/passeggero_nave_hondius_hantavirus_storia-425335971/",
+          "pubDate": "Sun, 10 May 2026 12:26:05 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Emin Yogurtcuoglu, noto birdwatcher turco: “L'aereo della protezione civile spagnola ci sta girando sulla testa, centinaia di giornalisti ci aspettano al molo”. I 151 passeggeri hanno cominciato a lasciare la nave su piccoli gommoni",
+          "contentSnippet": "Emin Yogurtcuoglu, noto birdwatcher turco: “L'aereo della protezione civile spagnola ci sta girando sulla testa, centinaia di giornalisti ci aspettano al molo”. I 151 passeggeri hanno cominciato a lasciare la nave su piccoli gommoni",
+          "guid": "rep-locali:repubblica:425335971",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/repubblica/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T12:26:05.000Z",
+          "snippet": "Emin Yogurtcuoglu, noto birdwatcher turco: “L'aereo della protezione civile spagnola ci sta girando sulla testa, centinaia di giornalisti ci aspettano al molo”. I 151 passeggeri hanno cominciato a lasciare la nave su piccoli gommoni",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Visti facili, l’ex ambasciatore: “Non sono una spia russa”. Verifiche sul patrimonio da 3 milioni",
+          "link": "https://roma.repubblica.it/cronaca/2026/05/10/news/visti_russi_ex_ambasciatore_uzbekistan_indagine_patrimonio-425335914/",
+          "pubDate": "Sun, 10 May 2026 11:46:29 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Piergabriele Papadia de Bottini di Sant’Agnese, ex ambasciatore italiano in Uzbekistan, è stato arrestato nell’inchiesta sui visti Schengen rilasciati a cittadini russi senza titolo. Ora la finanza indaga",
+          "contentSnippet": "Piergabriele Papadia de Bottini di Sant’Agnese, ex ambasciatore italiano in Uzbekistan, è stato arrestato nell’inchiesta sui visti Schengen rilasciati a cittadini russi senza titolo. Ora la finanza indaga",
+          "guid": "rep-locali:rep-roma:425335914",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/rep-roma/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T11:46:29.000Z",
+          "snippet": "Piergabriele Papadia de Bottini di Sant’Agnese, ex ambasciatore italiano in Uzbekistan, è stato arrestato nell’inchiesta sui visti Schengen rilasciati a cittadini russi senza titolo. Ora la finanza indaga",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Racchettoni in spiaggia, la Cassazione: sì al risarcimento se si feriscono i bagnanti con la pallina",
+          "link": "https://www.repubblica.it/cronaca/2026/05/10/news/racchettoni_gioco_spiaggia_cassazione_risarcimento-425335732/",
+          "pubDate": "Sun, 10 May 2026 09:40:18 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Si rischia il processo per lesioni gravi. In Puglia un padre e una figlia condannati a pagare 10mila euro",
+          "contentSnippet": "Si rischia il processo per lesioni gravi. In Puglia un padre e una figlia condannati a pagare 10mila euro",
+          "guid": "rep-locali:repubblica:425335732",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/repubblica/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T09:40:18.000Z",
+          "snippet": "Si rischia il processo per lesioni gravi. In Puglia un padre e una figlia condannati a pagare 10mila euro",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Giro, Scaroni a rischio squalifica per aver esultato per la vittoria del compagno: cosa è successo",
+          "link": "https://www.repubblica.it/sport/dossier/ciclismo-giro-italia/2026/05/10/news/scaroni_ammonizione_esultanza_vittoria_silva_giro_2026-425335489/",
+          "pubDate": "Sun, 10 May 2026 07:06:38 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Il bresciano, 4°, ha alzato le braccia nella pancia del gruppo per festeggiare il successo del compagno",
+          "contentSnippet": "Il bresciano, 4°, ha alzato le braccia nella pancia del gruppo per festeggiare il successo del compagno",
+          "guid": "rep-locali:repubblica:425335489",
+          "categories": [
+            {
+              "_": "Ciclismo",
+              "$": {
+                "domain": "/repubblica/sport/ciclismo"
+              }
+            },
+            {
+              "_": "ciclismo giro italia",
+              "$": {
+                "domain": "/repubblica/sport/dossier/ciclismo-giro-italia"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T07:06:38.000Z",
+          "snippet": "Il bresciano, 4°, ha alzato le braccia nella pancia del gruppo per festeggiare il successo del compagno",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Lino Banfi: “Stavo per diventare usciere in banca. Mi salvò mia moglie che mi voleva artista”",
+          "link": "https://www.repubblica.it/spettacoli/cinema/2026/05/10/news/lino_banfi_compleanno_90_anni_fumetto_docufilm_intervista-425334655/",
+          "pubDate": "Sun, 10 May 2026 03:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "L’attore racconta i suoi novant’anni tra guerra, fame, Totò, e il successo arrivato dopo mille vite. E diventa un fumetto nella biografia “La commedia di una vita”",
+          "contentSnippet": "L’attore racconta i suoi novant’anni tra guerra, fame, Totò, e il successo arrivato dopo mille vite. E diventa un fumetto nella biografia “La commedia di una vita”",
+          "guid": "rep-locali:repubblica:425334655",
+          "categories": [
+            {
+              "_": "Cinema",
+              "$": {
+                "domain": "/repubblica/spettacoli/cinema"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T03:00:00.000Z",
+          "snippet": "L’attore racconta i suoi novant’anni tra guerra, fame, Totò, e il successo arrivato dopo mille vite. E diventa un fumetto nella biografia “La commedia di una vita”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Il ritorno di Khamenei: “Lesioni a rotula e schiena”. Ma decide lui la strategia",
+          "link": "https://www.repubblica.it/esteri/2026/05/10/news/guida_suprema_iran_mojtaba_khamenei_condizioni_lesioni_rotula_schiena-425335095/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Per la prima volta il regime parla delle condizioni della Guida. “Parlerà al momento opportuno”. Gli 007 Usa lo davano in fin di vita",
+          "contentSnippet": "Per la prima volta il regime parla delle condizioni della Guida. “Parlerà al momento opportuno”. Gli 007 Usa lo davano in fin di vita",
+          "guid": "rep-locali:repubblica:425335095",
+          "categories": [
+            {
+              "_": "Esteri",
+              "$": {
+                "domain": "/repubblica/esteri"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Per la prima volta il regime parla delle condizioni della Guida. “Parlerà al momento opportuno”. Gli 007 Usa lo davano in fin di vita",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "L’analista emiratino: “Il Pakistan non è imparziale, noi del Golfo divisi sulle richieste”",
+          "link": "https://www.repubblica.it/esteri/2026/05/10/news/amjad_taha_intervista_pakistan_non_e_imparziale_golfo_divisi_richieste-425335223/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Amjad Taha: “Non possono avere il controllo dello Stretto quello che stanno facendo è una violazione delle leggi”",
+          "contentSnippet": "Amjad Taha: “Non possono avere il controllo dello Stretto quello che stanno facendo è una violazione delle leggi”",
+          "guid": "rep-locali:repubblica:425335223",
+          "categories": [
+            {
+              "_": "Esteri",
+              "$": {
+                "domain": "/repubblica/esteri"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Amjad Taha: “Non possono avere il controllo dello Stretto quello che stanno facendo è una violazione delle leggi”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Hantavirus, la nave a Tenerife. Sbarcano i passeggeri, porto e acque off limits",
+          "link": "https://www.repubblica.it/cronaca/2026/05/10/news/hantavirus_nave_tenerife_canarie-425335184/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "La Marina ordina alla nave di entrare nel porto. Il direttore generale dell’Oms: “Non sarà un altro Covid”",
+          "contentSnippet": "La Marina ordina alla nave di entrare nel porto. Il direttore generale dell’Oms: “Non sarà un altro Covid”",
+          "guid": "rep-locali:repubblica:425335184",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/repubblica/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "La Marina ordina alla nave di entrare nel porto. Il direttore generale dell’Oms: “Non sarà un altro Covid”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Gianni Rezza: “Giusto cautelarsi ma rispetto al Covid il contagio è più difficile”",
+          "link": "https://www.repubblica.it/cronaca/2026/05/10/news/hantavirus_intervista_giovanni_rezza-425335172/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "L’infettivologo, tra gli esperti in prima linea durante l’ultima pandemia: “Stavolta il rischio è basso”",
+          "contentSnippet": "L’infettivologo, tra gli esperti in prima linea durante l’ultima pandemia: “Stavolta il rischio è basso”",
+          "guid": "rep-locali:repubblica:425335172",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/repubblica/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "L’infettivologo, tra gli esperti in prima linea durante l’ultima pandemia: “Stavolta il rischio è basso”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Scatta l’allarme Hantavirus, quattro italiani in quarantena: erano in aereo con una vittima",
+          "link": "https://www.repubblica.it/cronaca/2026/05/10/news/hantavirus_italiani_quarantena_aereo_vittima-425335162/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "La donna fatta scendere poco dopo l’imbarco a Johannesburg: è morta il giorno successivo\n  \n  \n   La segnalazione arrivata dopo due settimane. Uno dei sorvegliati: “Sto bene, non ho sintomi”",
+          "contentSnippet": "La donna fatta scendere poco dopo l’imbarco a Johannesburg: è morta il giorno successivo\n  \n  \n   La segnalazione arrivata dopo due settimane. Uno dei sorvegliati: “Sto bene, non ho sintomi”",
+          "guid": "rep-locali:repubblica:425335162",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/repubblica/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "La donna fatta scendere poco dopo l’imbarco a Johannesburg: è morta il giorno successivo\n  \n  \n   La segnalazione arrivata dopo due settimane. Uno dei sorvegliati: “Sto bene, non ho sintomi”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Bigliettini, disegni, tracce. Tutte le prove che incastrano Sempio: “Sta mentendo da vent’anni”",
+          "link": "https://milano.repubblica.it/cronaca/2026/05/10/news/prove_incastrano_sempio_bigliettini_disegni_tracce_garlasco_news-425335233/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Le contestazioni della procura in cento pagine lette all’indagato che resta muto. Nei guai anche il carabiniere che, nella prima inchiesta, non verbalizzò il malore",
+          "contentSnippet": "Le contestazioni della procura in cento pagine lette all’indagato che resta muto. Nei guai anche il carabiniere che, nella prima inchiesta, non verbalizzò il malore",
+          "guid": "rep-locali:rep-milano:425335233",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/rep-milano/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Le contestazioni della procura in cento pagine lette all’indagato che resta muto. Nei guai anche il carabiniere che, nella prima inchiesta, non verbalizzò il malore",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "La verità di Stefania Cappa, cugina di Chiara Poggi: “Lei mi parlò del video con Stasi”",
+          "link": "https://milano.repubblica.it/cronaca/2026/05/10/news/stefania_cappa_chiara_poggi_video_stasi_verbali_interrogatorio-425335177/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Marco Poggi: “Qualcuno può aver visto quel filmato quando uscivo dalla stanza”",
+          "contentSnippet": "Marco Poggi: “Qualcuno può aver visto quel filmato quando uscivo dalla stanza”",
+          "guid": "rep-locali:rep-milano:425335177",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/rep-milano/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Marco Poggi: “Qualcuno può aver visto quel filmato quando uscivo dalla stanza”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Alberto Stasi al lavoro con gli avvocati: “Ora basta con il biondino perverso”",
+          "link": "https://milano.repubblica.it/cronaca/2026/05/10/news/alberto_stasi_avvocati_revisione_processo-425335200/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Il pranzo del sabato con mamma Betty. Ora al vaglio le carte per la revisione: “Cercheremo di accelerare nonostante la mole”",
+          "contentSnippet": "Il pranzo del sabato con mamma Betty. Ora al vaglio le carte per la revisione: “Cercheremo di accelerare nonostante la mole”",
+          "guid": "rep-locali:rep-milano:425335200",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/rep-milano/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Il pranzo del sabato con mamma Betty. Ora al vaglio le carte per la revisione: “Cercheremo di accelerare nonostante la mole”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "L’apertura di Putin all’Europa: “Il conflitto con Kiev sta finendo, vorrei Schroeder negoziatore”",
+          "link": "https://www.repubblica.it/esteri/2026/05/10/news/apertura_putin_europa_conflitto_kiev_sta_finendo_schroeder_negoziatore-425335192/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Parata in tono minore sulla Piazza Rossa per l’anniversario del V-Day. “I nostri soldati combattono contro una forza sostenuta dalla Nato”. Ma al presidente del Consiglio Ue dice: “Mai rifiutato di parlare con voi. Fico mi ha detto che Zelensky vuole incontrarmi. Ok, ma dopo accordo”",
+          "contentSnippet": "Parata in tono minore sulla Piazza Rossa per l’anniversario del V-Day. “I nostri soldati combattono contro una forza sostenuta dalla Nato”. Ma al presidente del Consiglio Ue dice: “Mai rifiutato di parlare con voi. Fico mi ha detto che Zelensky vuole incontrarmi. Ok, ma dopo accordo”",
+          "guid": "rep-locali:repubblica:425335192",
+          "categories": [
+            {
+              "_": "Esteri",
+              "$": {
+                "domain": "/repubblica/esteri"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Parata in tono minore sulla Piazza Rossa per l’anniversario del V-Day. “I nostri soldati combattono contro una forza sostenuta dalla Nato”. Ma al presidente del Consiglio Ue dice: “Mai rifiutato di parlare con voi. Fico mi ha detto che Zelensky vuole incontrarmi. Ok, ma dopo accordo”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Dietro la voglia di trattare, un fronte in Ucraina troppo fermo dove nessuno può vincere",
+          "link": "https://www.repubblica.it/esteri/2026/05/10/news/fronte_ucraina_russia_fermo_nessuno_puo_vincere-425335180/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "In questo momento Kiev potrebbe sedersi al tavolo con una serie di garanzie. Superata la fase critica del divorzio dall’America le armi di Zelensky sono soprattutto europee",
+          "contentSnippet": "In questo momento Kiev potrebbe sedersi al tavolo con una serie di garanzie. Superata la fase critica del divorzio dall’America le armi di Zelensky sono soprattutto europee",
+          "guid": "rep-locali:repubblica:425335180",
+          "categories": [
+            {
+              "_": "Esteri",
+              "$": {
+                "domain": "/repubblica/esteri"
+              }
+            },
+            {
+              "_": "venti di guerra",
+              "$": {
+                "domain": "/repubblica/dossier/cronaca/venti-di-guerra"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "In questo momento Kiev potrebbe sedersi al tavolo con una serie di garanzie. Superata la fase critica del divorzio dall’America le armi di Zelensky sono soprattutto europee",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "L’ex cancelliere tedesco Schröder, da sempre amico del Cremlino",
+          "link": "https://www.repubblica.it/esteri/2026/05/10/news/ex_cancelliere_tedesco_schroder_negoziati_ue_russia_amico_putin-425335171/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Il presidente russo Vladimir Putin ha indicato lui come negoziatore “preferito” per negoziati con l’Europa. Fu l’architetto, quando era cancelliere, del più controverso progetto energetico europeo, il gasdotto russo-tedesco Nordstream",
+          "contentSnippet": "Il presidente russo Vladimir Putin ha indicato lui come negoziatore “preferito” per negoziati con l’Europa. Fu l’architetto, quando era cancelliere, del più controverso progetto energetico europeo, il gasdotto russo-tedesco Nordstream",
+          "guid": "rep-locali:repubblica:425335171",
+          "categories": [
+            {
+              "_": "Esteri",
+              "$": {
+                "domain": "/repubblica/esteri"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Il presidente russo Vladimir Putin ha indicato lui come negoziatore “preferito” per negoziati con l’Europa. Fu l’architetto, quando era cancelliere, del più controverso progetto energetico europeo, il gasdotto russo-tedesco Nordstream",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "L’analista ucraino: “Putin è un abile manipolatore, ma con Bruxelles vuole dialogo”",
+          "link": "https://www.repubblica.it/esteri/2026/05/10/news/intervista_ruslan_bortnik_putin_abile_manipolatore_negoziato_ue-425335204/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Ruslan Bortnik, direttore dell’Istituto di Politica di Kiev: “La Russia aveva inviato segnali all’amministrazione Trump dicendo di essere pronta a usare missili balistici, forse persino evocando una minaccia nucleare”",
+          "contentSnippet": "Ruslan Bortnik, direttore dell’Istituto di Politica di Kiev: “La Russia aveva inviato segnali all’amministrazione Trump dicendo di essere pronta a usare missili balistici, forse persino evocando una minaccia nucleare”",
+          "guid": "rep-locali:repubblica:425335204",
+          "categories": [
+            {
+              "_": "Esteri",
+              "$": {
+                "domain": "/repubblica/esteri"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Ruslan Bortnik, direttore dell’Istituto di Politica di Kiev: “La Russia aveva inviato segnali all’amministrazione Trump dicendo di essere pronta a usare missili balistici, forse persino evocando una minaccia nucleare”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Biennale, l’apertura al pubblico e il giallo dei visti business ai russi",
+          "link": "https://www.repubblica.it/politica/2026/05/10/news/biennale_apertura_pubblico_e_giallo_dei_visti-425335050/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Folla di visitatori nella prima giornata della rassegna a Venezia. Buttafuoco invita il Papa. Il giallo dei visti business per gli ospiti di Mosca: chiesti da un imprenditore italiano",
+          "contentSnippet": "Folla di visitatori nella prima giornata della rassegna a Venezia. Buttafuoco invita il Papa. Il giallo dei visti business per gli ospiti di Mosca: chiesti da un imprenditore italiano",
+          "guid": "rep-locali:repubblica:425335050",
+          "categories": [
+            {
+              "_": "Politica",
+              "$": {
+                "domain": "/repubblica/politica"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Folla di visitatori nella prima giornata della rassegna a Venezia. Buttafuoco invita il Papa. Il giallo dei visti business per gli ospiti di Mosca: chiesti da un imprenditore italiano",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Biennale, 52 artisti si ribellano: “Non vogliamo il Leone dei visitatori”",
+          "link": "https://www.repubblica.it/politica/2026/05/10/news/artisti_contrari_leoni_pubblico_premi_visitatori-425335027/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "La lettera firmata da esponenti di vari Paesi dopo le dimissioni \ndella Giuria",
+          "contentSnippet": "La lettera firmata da esponenti di vari Paesi dopo le dimissioni \ndella Giuria",
+          "guid": "rep-locali:repubblica:425335027",
+          "categories": [
+            {
+              "_": "Politica",
+              "$": {
+                "domain": "/repubblica/politica"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "La lettera firmata da esponenti di vari Paesi dopo le dimissioni \ndella Giuria",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Biennale, il miliardario pacifista: “Insultato dai pro Pal ma volevo solo il dialogo”",
+          "link": "https://www.repubblica.it/politica/2026/05/10/news/biennale_intervista_eyal_waldman_israele_proteste_pro_pal-425335033/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Eyal Waldman: “Sono al lavoro per il dialogo. In molti mi chiedono di candidarmi, non so ancora se lo farò”",
+          "contentSnippet": "Eyal Waldman: “Sono al lavoro per il dialogo. In molti mi chiedono di candidarmi, non so ancora se lo farò”",
+          "guid": "rep-locali:repubblica:425335033",
+          "categories": [
+            {
+              "_": "Politica",
+              "$": {
+                "domain": "/repubblica/politica"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Eyal Waldman: “Sono al lavoro per il dialogo. In molti mi chiedono di candidarmi, non so ancora se lo farò”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Renzi: “Crolla il ponte con Donald. Meloni finita in un vuoto galattico”",
+          "link": "https://www.repubblica.it/politica/2026/05/10/news/intervista_matteo_renzi_europa_donald_trump_meloni-425335068/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Il leader di Italia viva: “La premier ha cambiato idea su Putin, sull’euro sulla Nato. Detestava Macron e adorava il presidente Usa. Ora i FdI cantano la Marsigliese”",
+          "contentSnippet": "Il leader di Italia viva: “La premier ha cambiato idea su Putin, sull’euro sulla Nato. Detestava Macron e adorava il presidente Usa. Ora i FdI cantano la Marsigliese”",
+          "guid": "rep-locali:repubblica:425335068",
+          "categories": [
+            {
+              "_": "Politica",
+              "$": {
+                "domain": "/repubblica/politica"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Il leader di Italia viva: “La premier ha cambiato idea su Putin, sull’euro sulla Nato. Detestava Macron e adorava il presidente Usa. Ora i FdI cantano la Marsigliese”",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Né chiocce né coccodrilli:la lezione delle mamme che ci insegnano a volare",
+          "link": "https://www.repubblica.it/cronaca/2026/05/10/news/festa_della_mamma_ruolo_figura_insostituibile_psicanalisi-425335043/",
+          "pubDate": "Sat, 09 May 2026 23:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Spesso, in psicoanalisi, è stata descritta come patologica. Invece\nla madre resta una figura insostituibile",
+          "contentSnippet": "Spesso, in psicoanalisi, è stata descritta come patologica. Invece\nla madre resta una figura insostituibile",
+          "guid": "rep-locali:repubblica:425335043",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/repubblica/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T23:00:00.000Z",
+          "snippet": "Spesso, in psicoanalisi, è stata descritta come patologica. Invece\nla madre resta una figura insostituibile",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Meglio credere nella Francia o negli alieni?",
+          "link": "https://www.repubblica.it/sport/rubriche/e-sempre-domenica/2026/05/10/news/rubrica_romagnoli_francia_mondiali-425335237/",
+          "pubDate": "Sat, 09 May 2026 22:01:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "La rubrica ‘È sempre domenica’",
+          "contentSnippet": "La rubrica ‘È sempre domenica’",
+          "guid": "rep-locali:repubblica:425335237",
+          "categories": [
+            {
+              "_": "Calcio",
+              "$": {
+                "domain": "/repubblica/sport/calcio"
+              }
+            },
+            {
+              "_": "E' sempre domenica",
+              "$": {
+                "domain": "/repubblica/sport/rubriche/e-sempre-domenica"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T22:01:00.000Z",
+          "snippet": "La rubrica ‘È sempre domenica’",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Le due bandiere di Putin",
+          "link": "https://www.repubblica.it/commenti/2026/05/10/news/putin_piazza_rossa_celebrazionieziomauro-425334735/",
+          "pubDate": "Sat, 09 May 2026 22:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "",
+          "contentSnippet": "",
+          "guid": "rep-locali:repubblica:425334735",
+          "categories": [
+            {
+              "_": "Commenti",
+              "$": {
+                "domain": "/repubblica/commenti"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T22:00:00.000Z",
+          "snippet": "",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Borgarelli, il killer che uccise e decapitò lo zio incastrato dai soliloqui: “Tanto l’ho ammazzato”",
+          "link": "https://genova.repubblica.it/cronaca/2026/05/09/news/claudio_borgarelli_lumarzo_delitto_zio_decapitato_genova_soliloquio-425334796/",
+          "pubDate": "Sat, 09 May 2026 17:40:32 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Dieci anni fa il delitto di Lumarzo, nella campagna vicino Genova: l’ex infermiere intercettato mentre parlava da solo in casa decise poi di confessare",
+          "contentSnippet": "Dieci anni fa il delitto di Lumarzo, nella campagna vicino Genova: l’ex infermiere intercettato mentre parlava da solo in casa decise poi di confessare",
+          "guid": "rep-locali:rep-genova:425334796",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/rep-genova/cronaca"
+              }
+            }
+          ],
+          "isoDate": "2026-05-09T17:40:32.000Z",
+          "snippet": "Dieci anni fa il delitto di Lumarzo, nella campagna vicino Genova: l’ex infermiere intercettato mentre parlava da solo in casa decise poi di confessare",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Repubblica Insieme, prima tappa a Genova il 13 maggio: come partecipare",
+          "link": "https://genova.repubblica.it/cronaca/2026/05/04/news/repubblica_insieme_prima_tappa_a_genova_il_13_maggio_ecco_il_programma-425322947/",
+          "pubDate": "Fri, 08 May 2026 14:00:00 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "Dalle 17 alla Borsa l’evento per i cinquant’anni del quotidiano. Dai 25 anni del G8 all’intervista alla sindaca Salis. Poi spazio ai due panel economici su energia, mobilità e tecnologia fino all’incontro finale fra parole e musica con gli Ex Otago. Ingresso libero fino a esaurimento dei posti, registrandosi sulla piattaforma",
+          "contentSnippet": "Dalle 17 alla Borsa l’evento per i cinquant’anni del quotidiano. Dai 25 anni del G8 all’intervista alla sindaca Salis. Poi spazio ai due panel economici su energia, mobilità e tecnologia fino all’incontro finale fra parole e musica con gli Ex Otago. Ingresso libero fino a esaurimento dei posti, registrandosi sulla piattaforma",
+          "guid": "rep-locali:rep-genova:425322947",
+          "categories": [
+            {
+              "_": "Cronaca",
+              "$": {
+                "domain": "/rep-genova/cronaca"
+              }
+            },
+            {
+              "_": "Repubblica insieme",
+              "$": {
+                "domain": "/repubblica/cronaca/dossier/repubblica-insieme"
+              }
+            }
+          ],
+          "isoDate": "2026-05-08T14:00:00.000Z",
+          "snippet": "Dalle 17 alla Borsa l’evento per i cinquant’anni del quotidiano. Dai 25 anni del G8 all’intervista alla sindaca Salis. Poi spazio ai due panel economici su energia, mobilità e tecnologia fino all’incontro finale fra parole e musica con gli Ex Otago. Ingresso libero fino a esaurimento dei posti, registrandosi sulla piattaforma",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "title": "Dal 14 maggio in regalo con Repubblica le prime pagine che hanno fatto la storia del giornale",
+          "link": "https://www.repubblica.it/cultura/dossier/1976-2026-repubblica-50-una-storia-di-futuro/2026/05/08/news/prime_pagine_repubblica_regalo-425332431/",
+          "pubDate": "Fri, 08 May 2026 12:51:27 +0000",
+          "author": "repubblicawww@repubblica.it (Redazione Repubblica.it)",
+          "content": "L’iniziativa è in programma ogni giovedì fino all’11 giugno per festeggiare i nostri 50 anni",
+          "contentSnippet": "L’iniziativa è in programma ogni giovedì fino all’11 giugno per festeggiare i nostri 50 anni",
+          "guid": "rep-locali:repubblica:425332431",
+          "categories": [
+            {
+              "_": "1976 - 2026 | Repubblica 50: una storia di futuro",
+              "$": {
+                "domain": "/repubblica/cultura/dossier/1976-2026-repubblica-50-una-storia-di-futuro"
+              }
+            }
+          ],
+          "isoDate": "2026-05-08T12:51:27.000Z",
+          "snippet": "L’iniziativa è in programma ogni giovedì fino all’11 giugno per festeggiare i nostri 50 anni",
+          "selector": "#article-body",
+          "source": "Repubblica",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": {
+            "$": {
+              "xmlns:dc": "http://purl.org/dc/elements/1.1/"
+            }
+          },
+          "title": "Hantavirus, progressi e sfide nello sviluppo del vaccino: dati promettenti ma restano ostacoli ",
+          "link": "https://www.ilsole24ore.com/art/hantavirus-progressi-e-sfide-sviluppo-vaccino-dati-promettenti-ma-restano-ostacoli-AIVof9zC",
+          "pubDate": "Sun, 10 May 2026 13:43:41 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/11/Immagini/Ritagli/e58ed1f98845c617600e837dc27b4715-U81711311435MMO-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": {
+            "$": {
+              "xmlns:dc": "http://purl.org/dc/elements/1.1/"
+            }
+          },
+          "content": "Il <b><a target=\"_self\" href=\"https://www.ilsole24ore.com/art/hantavirus-sintomi-contagio-cure-e-come-proteggersi-AI8oecxC\">focolaio di Hantavirus</a></b> sulla nave da crociera <b><a target=\"_self\" href=\"https://www.ilsole24ore.com/art/hantavirus-ministero-salute-sorveglianza-4-passeggeri-passati-roma-AIKI2JzC\">Mv Hondius</a></b> ora arrivata a Tenerife per far sbarcare i passeggeri ha rilanciato <b>la corsa al vaccino</b> contro...",
+          "contentSnippet": "Il focolaio di Hantavirus sulla nave da crociera Mv Hondius ora arrivata a Tenerife per far sbarcare i passeggeri ha rilanciato la corsa al vaccino contro...",
+          "guid": "AIVof9zC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T13:43:41.000Z",
+          "snippet": "Il focolaio di Hantavirus sulla nave da crociera Mv Hondius ora arrivata a Tenerife per far sbarcare i passeggeri ha rilanciato la corsa al vaccino contro...",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Celestina Dominelli",
+          "title": "Simest: al via la misura  anti rincari per le pmi: pronti 800 milioni. Come funziona",
+          "link": "https://www.ilsole24ore.com/art/simest-via-misura-anti-rincari-le-pmi-pronti-800-milioni-come-funziona-AIi5CxzC",
+          "pubDate": "Sun, 10 May 2026 08:32:31 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/11/Immagini/Ritagli/IMG-20260507-WA0030-U80111450227hpT-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": "di Celestina Dominelli",
+          "content": "Dal 25 maggio e fino al 31 dicembre le imprese che hanno subito un incremento dei costi energetici o una riduzione del fatturato potranno presentare domanda",
+          "contentSnippet": "Dal 25 maggio e fino al 31 dicembre le imprese che hanno subito un incremento dei costi energetici o una riduzione del fatturato potranno presentare domanda",
+          "guid": "AIi5CxzC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T08:32:31.000Z",
+          "snippet": "Dal 25 maggio e fino al 31 dicembre le imprese che hanno subito un incremento dei costi energetici o una riduzione del fatturato potranno presentare domanda",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": {
+            "$": {
+              "xmlns:dc": "http://purl.org/dc/elements/1.1/"
+            }
+          },
+          "title": "Costruiamo una società per guardare al futuro",
+          "link": "https://www.ilsole24ore.com/art/costruiamo-societa-guardare-futuro-AI5YV9xC",
+          "pubDate": "Sun, 10 May 2026 06:45:41 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/09/Immagini/Ritagli/pexels-breno-cardoso-149064345-33829399-U57084535085nBl-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": {
+            "$": {
+              "xmlns:dc": "http://purl.org/dc/elements/1.1/"
+            }
+          },
+          "content": "La maternità continua a essere, per molte donne, una scelta positiva, un’esperienza capace di generare appartenenza e senso in una società sempre più frammentata",
+          "contentSnippet": "La maternità continua a essere, per molte donne, una scelta positiva, un’esperienza capace di generare appartenenza e senso in una società sempre più frammentata",
+          "guid": "AI5YV9xC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:45:41.000Z",
+          "snippet": "La maternità continua a essere, per molte donne, una scelta positiva, un’esperienza capace di generare appartenenza e senso in una società sempre più frammentata",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Chiara Di Cristofaro e Simona Rossitto",
+          "title": "Il part-time e la rinuncia alla carriera: le trappole per le madri che lavorano",
+          "link": "https://www.ilsole24ore.com/art/il-part-time-e-rinuncia-carriera-trappole-le-madri-che-lavorano-AIPZWutC",
+          "pubDate": "Sun, 10 May 2026 06:45:26 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/10/Immagini/Ritagli/vitaly-gariev-vMOh5hUoYH8-unsplash-U44375403471qBd-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": "di Chiara Di Cristofaro e Simona Rossitto",
+          "content": "Secondo i dati di Save the Children lavora circa il 58% delle madri con figli in età prescolare. Ma anche per chi riesce a restare al lavoro la strada è difficile e irta di ostacoli: servono una riorganizzazione dei modelli lavorativi e una revisione degli strumenti dei congedi. Insieme a una suddivisione dei carichi di cura familiare che sia realmente paritaria",
+          "contentSnippet": "Secondo i dati di Save the Children lavora circa il 58% delle madri con figli in età prescolare. Ma anche per chi riesce a restare al lavoro la strada è difficile e irta di ostacoli: servono una riorganizzazione dei modelli lavorativi e una revisione degli strumenti dei congedi. Insieme a una suddivisione dei carichi di cura familiare che sia realmente paritaria",
+          "guid": "AIPZWutC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:45:26.000Z",
+          "snippet": "Secondo i dati di Save the Children lavora circa il 58% delle madri con figli in età prescolare. Ma anche per chi riesce a restare al lavoro la strada è difficile e irta di ostacoli: servono una riorganizzazione dei modelli lavorativi e una revisione degli strumenti dei congedi. Insieme a una suddivisione dei carichi di cura familiare che sia realmente paritaria",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Flavia Landolfi e Manuela Perrone",
+          "title": "Giulia e le altre: storie di bimbe sottratte alle madri per sentenza",
+          "link": "https://www.ilsole24ore.com/art/giulia-e-altre-storie-bimbe-sottratte-madri-sentenza-AIsWE5tC",
+          "pubDate": "Sun, 10 May 2026 06:45:09 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/07/Immagini/Ritagli/AdobeStock_140651176-U72440548224HYz-1440x752@IlSole24Ore-Web.jpeg",
+            "type": "image/jpeg",
+            "length": "0"
+          },
+          "dc:creator": "di Flavia Landolfi e Manuela Perrone",
+          "content": "La Spagna vieta l’alienazione parentale, ma nei tribunali italiani persiste la prassi di punire le mamme se i figli rifiutano i padri. Il documento della Garante Terragni: allontanamenti extrema ratio",
+          "contentSnippet": "La Spagna vieta l’alienazione parentale, ma nei tribunali italiani persiste la prassi di punire le mamme se i figli rifiutano i padri. Il documento della Garante Terragni: allontanamenti extrema ratio",
+          "guid": "AIsWE5tC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:45:09.000Z",
+          "snippet": "La Spagna vieta l’alienazione parentale, ma nei tribunali italiani persiste la prassi di punire le mamme se i figli rifiutano i padri. Il documento della Garante Terragni: allontanamenti extrema ratio",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Flavia Landolfi e Manuela Perrone",
+          "title": "Figli? No grazie. La fatica delle madri scoraggia la maternità delle ragazze",
+          "link": "https://www.ilsole24ore.com/art/figli-no-grazie-fatica-madri-scoraggia-maternita-ragazze-AICTbyrC",
+          "pubDate": "Sun, 10 May 2026 06:45:00 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/05/Immagini/Il%20Sole%2024%20Ore_Festa%20della%20mamma_def.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": "di Flavia Landolfi e Manuela Perrone",
+          "content": "Cresce il rinvio della scelta di diventare mamma: i costi scoraggiano e gli incentivi non bastano a far cambiare idea",
+          "contentSnippet": "Cresce il rinvio della scelta di diventare mamma: i costi scoraggiano e gli incentivi non bastano a far cambiare idea",
+          "guid": "AICTbyrC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:45:00.000Z",
+          "snippet": "Cresce il rinvio della scelta di diventare mamma: i costi scoraggiano e gli incentivi non bastano a far cambiare idea",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Giulia Cannizzaro",
+          "title": "Adozioni internazionali ancora in calo: pesa la complessità dei casi",
+          "link": "https://www.ilsole24ore.com/art/adozioni-internazionali-ancora-calo-pesa-complessita-casi-AIe7CftC",
+          "pubDate": "Sun, 10 May 2026 06:44:37 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/07/Immagini/Ritagli/pexels-kindelmedia-7978489-U05212362158hIT-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": "di Giulia Cannizzaro",
+          "content": "Nel 2025 flessione contenuta ma strutturale: il 70% dei minori adottati presenta bisogni speciali, iter ancora sopra i 50 mesi",
+          "contentSnippet": "Nel 2025 flessione contenuta ma strutturale: il 70% dei minori adottati presenta bisogni speciali, iter ancora sopra i 50 mesi",
+          "guid": "AIe7CftC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:44:37.000Z",
+          "snippet": "Nel 2025 flessione contenuta ma strutturale: il 70% dei minori adottati presenta bisogni speciali, iter ancora sopra i 50 mesi",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Livia Zancaner",
+          "title": "Povertà minorile, in Italia sfiora il 50% se l’unico genitore è la madre",
+          "link": "https://www.ilsole24ore.com/art/poverta-minorile-italia-sfiora-50percento-se-l-unico-genitore-e-madre-AILvlMtC",
+          "pubDate": "Sun, 10 May 2026 06:44:23 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/06/Immagini/Ritagli/pexels-ron-lach-8668967-U66701646358Ihp-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": "di Livia Zancaner",
+          "content": "In Italia il 26,7% dei minori sotto i 16 anni – oltre 2 milioni – vive in condizioni di povertà o esclusione sociale (contro una media ue del 24,2%)",
+          "contentSnippet": "In Italia il 26,7% dei minori sotto i 16 anni – oltre 2 milioni – vive in condizioni di povertà o esclusione sociale (contro una media ue del 24,2%)",
+          "guid": "AILvlMtC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:44:23.000Z",
+          "snippet": "In Italia il 26,7% dei minori sotto i 16 anni – oltre 2 milioni – vive in condizioni di povertà o esclusione sociale (contro una media ue del 24,2%)",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Nicoletta Labarile",
+          "title": "La scelta di essere madri, tra volontà e possibilità",
+          "link": "https://www.ilsole24ore.com/art/la-scelta-essere-madri-volonta-e-possibilita-AIdUZorC",
+          "pubDate": "Sun, 10 May 2026 06:44:06 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/05/Immagini/Ritagli/pexels-tima-miroshnichenko-7203900-U64543153630lqy-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": "di Nicoletta Labarile",
+          "content": "Il mercato del lavoro resta fragile per le donne, il welfare insufficiente e la mancanza di reti di supporto non creano le condizioni per la maternità",
+          "contentSnippet": "Il mercato del lavoro resta fragile per le donne, il welfare insufficiente e la mancanza di reti di supporto non creano le condizioni per la maternità",
+          "guid": "AIdUZorC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:44:06.000Z",
+          "snippet": "Il mercato del lavoro resta fragile per le donne, il welfare insufficiente e la mancanza di reti di supporto non creano le condizioni per la maternità",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Ilaria Potenza",
+          "title": "Quando i nonni sono lontani: la distanza che cambia l’economia della maternità",
+          "link": "https://www.ilsole24ore.com/art/quando-nonni-sono-lontani-distanza-che-cambia-l-economia-maternita-AIosunqC",
+          "pubDate": "Sun, 10 May 2026 06:43:47 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/05/Immagini/Ritagli/pexels-vidalbalielojrfotografia-1682497-U84670372121NQi-1440x752@IlSole24Ore-Web.jpg",
+            "type": "image/jpg",
+            "length": "0"
+          },
+          "dc:creator": "di Ilaria Potenza",
+          "content": "La mobilità geografica allontana dalle famiglie di origine e trasforma la cura dei figli in un costo sempre più rilevante",
+          "contentSnippet": "La mobilità geografica allontana dalle famiglie di origine e trasforma la cura dei figli in un costo sempre più rilevante",
+          "guid": "AIosunqC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:43:47.000Z",
+          "snippet": "La mobilità geografica allontana dalle famiglie di origine e trasforma la cura dei figli in un costo sempre più rilevante",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Manuela Perrone",
+          "title": "Claudia Potenza: «Il lavoro più difficile? Educare alla libertà, la via per rispettare gli altri»",
+          "link": "https://www.ilsole24ore.com/art/claudia-potenza-il-lavoro-piu-difficile-educare-liberta-via-rispettare-altri-AIz549sC",
+          "pubDate": "Sun, 10 May 2026 06:42:45 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/06/Immagini/Ritagli/claudia_potenza-U45844785028OpF-1440x752@IlSole24Ore-Web.jpeg",
+            "type": "image/jpeg",
+            "length": "0"
+          },
+          "dc:creator": "di Manuela Perrone",
+          "content": "«Il tema su cui cerco di lavorare è la libertà. È credere nell’importanza della presenza per costruire il rapporto madre-figli, ma al tempo stesso riuscire da subito a vederli come...",
+          "contentSnippet": "«Il tema su cui cerco di lavorare è la libertà. È credere nell’importanza della presenza per costruire il rapporto madre-figli, ma al tempo stesso riuscire da subito a vederli come...",
+          "guid": "AIz549sC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:42:45.000Z",
+          "snippet": "«Il tema su cui cerco di lavorare è la libertà. È credere nell’importanza della presenza per costruire il rapporto madre-figli, ma al tempo stesso riuscire da subito a vederli come...",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "creator": "di Raffaella Calandra",
+          "title": "Decreto sicurezza, più mamme in carcere coi figli",
+          "link": "https://www.ilsole24ore.com/art/decreto-sicurezza-piu-mamme-carcere-coi-figli-AIOx3OhC",
+          "pubDate": "Sun, 10 May 2026 06:42:29 GMT",
+          "enclosure": {
+            "url": "https://i2.res.24o.it/images2010/S24/Documenti/2026/05/10/Immagini/Ritagli/AdobeStock_79035096-U11153686163UNv-1440x752@IlSole24Ore-Web.jpeg",
+            "type": "image/jpeg",
+            "length": "0"
+          },
+          "dc:creator": "di Raffaella Calandra",
+          "content": "A fine aprile, 24 bimbi negli Icam",
+          "contentSnippet": "A fine aprile, 24 bimbi negli Icam",
+          "guid": "AIOx3OhC",
+          "categories": [
+            {
+              "_": "Italia",
+              "$": {
+                "domain": "https://www.ilsole24ore.com"
+              }
+            }
+          ],
+          "isoDate": "2026-05-10T06:42:29.000Z",
+          "snippet": "A fine aprile, 24 bimbi negli Icam",
+          "selector": ".aentry",
+          "source": "Sole24Ore",
+          "place": "Italy"
+        }
+      },
+      {
+        "json": {
+          "title": "Hantavirus, Mussini (Simit): “l’attenzione deve restare altissima”",
+          "link": "https://temponews.it/2026/05/10/hantavirus-mussini-simit-lattenzione-deve-restare-altissima/",
+          "snippet": "L’arrivo della nave MV Hondius è previsto per oggi a Tenerife. L’Oms ha disposto che i passeggeri siano sbarcati e riportati a casa nonostante il periodo di incubazione dell’hantavirus sia di quaranta giorni. Alcuni Paesi tra cui Usa, Gran Bretagna e nazioni europee invieranno aerei per il servizio di trasporto sicuro. A casa resteranno in [&hellip;]",
+          "pubDate": "2026-05-10T09:38:12",
+          "selector": ".entry-content",
+          "source": "Tempo News",
+          "place": "Carpi"
+        }
+      },
+      {
+        "json": {
+          "title": "Anche una rappresentanza carpigiana all'adunata nazionale degli Alpini diGenova...",
+          "link": "https://www.voce.it/articolo/1/attualita/anche-una-rappresentanza-carpigiana-alladunata-nazionale-degli-alpini-di-genova",
+          "pubDate": "2026-05-10",
+          "selector": "[itemprop=\"articleBody\"]",
+          "source": "La Voce",
+          "place": "Carpi"
+        }
+      }
+    ]
+  },
   "connections": {
     "Ansa RSS": {
       "main": [
@@ -803,7 +2563,7 @@
       "main": [
         [
           {
-            "node": "Merge sources1",
+            "node": "Merge Sources",
             "type": "main",
             "index": 0
           }
@@ -814,9 +2574,9 @@
       "main": [
         [
           {
-            "node": "Merge sources1",
+            "node": "Merge Sources",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -825,9 +2585,9 @@
       "main": [
         [
           {
-            "node": "Merge sources1",
+            "node": "Merge Sources",
             "type": "main",
-            "index": 0
+            "index": 2
           }
         ]
       ]
@@ -837,29 +2597,6 @@
         [
           {
             "node": "Sole24Ore Prepare",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Articles1": {
-      "main": [
-        [
-          {
-            "node": "Aggregate for Overview",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Ollama Translate & Summarize",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge Summary Results",
             "type": "main",
             "index": 0
           }
@@ -892,7 +2629,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Articles1",
+            "node": "Translate article loop",
             "type": "main",
             "index": 0
           }
@@ -903,12 +2640,41 @@
       "main": [
         [
           {
-            "node": "Merge Overview with Articles",
+            "node": "Prepare Overview Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Overview Inputs": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Overviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Overviews": {
+      "main": [
+        [
+          {
+            "node": "Collect Overviews",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ollama Overview",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Ollama Overview",
+            "node": "Merge Overview Loop",
             "type": "main",
             "index": 0
           }
@@ -919,14 +2685,25 @@
       "main": [
         [
           {
-            "node": "Merge Overview with Articles",
+            "node": "Merge Overview Loop",
             "type": "main",
             "index": 1
           }
         ]
       ]
     },
-    "Merge Overview with Articles": {
+    "Merge Overview Loop": {
+      "main": [
+        [
+          {
+            "node": "Add Overview",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Overviews": {
       "main": [
         [
           {
@@ -941,12 +2718,17 @@
       "main": [
         [
           {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "Write file",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Send Email",
+            "node": "Write file1",
             "type": "main",
             "index": 0
           }
@@ -1010,9 +2792,9 @@
       "main": [
         [
           {
-            "node": "Merge sources1",
+            "node": "Merge Sources",
             "type": "main",
-            "index": 0
+            "index": 3
           }
         ]
       ]
@@ -1054,20 +2836,9 @@
       "main": [
         [
           {
-            "node": "Merge sources1",
+            "node": "Merge Sources",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge sources1": {
-      "main": [
-        [
-          {
-            "node": "Filter Valid Articles",
-            "type": "main",
-            "index": 0
+            "index": 4
           }
         ]
       ]
@@ -1083,29 +2854,18 @@
         ]
       ]
     },
-    "Call 'fn_articles_filter()'": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Articles1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Call 'fn_articles_get()'": {
       "main": [
         [
           {
-            "node": "Call 'fn_articles_filter()'",
+            "node": "Translate article loop",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Loop Over Articles (Translate)": {
+    "Call 'fn_articles_filter()'": {
       "main": [
         [
           {
@@ -1113,59 +2873,147 @@
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Merge Sources": {
+      "main": [
         [
           {
-            "node": "Translate Single",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge Translate Single",
+            "node": "Merge and Filter articles",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Translate Single": {
+    "Translate title + snippet loop": {
       "main": [
         [
           {
-            "node": "Merge Translate Single",
+            "node": "Unload heavy LLM",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Call 'fn_articles_filter()'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Translate snippet & title",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge snippet & title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translate snippet & title": {
+      "main": [
+        [
+          {
+            "node": "Merge snippet & title",
             "type": "main",
             "index": 1
           }
         ]
       ]
     },
-    "Merge Translate Single": {
+    "Merge snippet & title": {
       "main": [
         [
           {
-            "node": "Enrich with Translation",
+            "node": "Transform snippet & title",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Enrich with Translation": {
+    "Transform snippet & title": {
       "main": [
         [
           {
-            "node": "Loop Over Articles (Translate)",
+            "node": "Translate title + snippet loop",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Filter Valid Articles": {
+    "Translate article loop": {
       "main": [
         [
           {
-            "node": "Loop Over Articles (Translate)",
+            "node": "Aggregate for Overview",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ollama Translate & Summarize",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Summary Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge and Filter articles": {
+      "main": [
+        [
+          {
+            "node": "Translate title + snippet loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Overview": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Overviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write file1": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Write file2",
             "type": "main",
             "index": 0
           }
@@ -1178,7 +3026,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "9056e070-7745-44d0-9291-3a839ebad125",
+  "versionId": "f4684160-b98a-461c-97f2-326c130924df",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },

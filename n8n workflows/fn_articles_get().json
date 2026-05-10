@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        784,
-        304
+        1024,
+        576
       ],
-      "id": "09131d73-e923-446e-b51a-e4c315936f64",
+      "id": "b3405be1-0da4-4610-baf8-9945e0a46340",
       "name": "Merge"
     },
     {
@@ -24,10 +24,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        0,
-        0
+        176,
+        368
       ],
-      "id": "32f5d65f-66fd-4f1e-8b20-e6d1e5b2be7a",
+      "id": "6786c759-e4a9-49f0-b8f5-b679440c27f7",
       "name": "HTTP Request",
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
@@ -36,27 +36,14 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "d3d70454-229d-4782-b213-db5bed1f6889",
+      "id": "b9f0a895-94f2-405c-87d2-9155c90bc354",
       "typeVersion": 1.1,
       "name": "Start",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        -528,
-        320
+        -320,
+        592
       ]
-    },
-    {
-      "parameters": {
-        "jsCode": "return items;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -368,
-        320
-      ],
-      "id": "998ef9cf-45ab-4291-a285-d18bc3f190d9",
-      "name": "Pass Through Articles"
     },
     {
       "parameters": {
@@ -76,10 +63,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        496,
-        96
+        736,
+        448
       ],
-      "id": "363dd78e-2ef5-4861-9294-be0a1d91bfd0",
+      "id": "25fe2cff-b9fa-45f8-8322-ad68edb47947",
       "name": "Extract article"
     },
     {
@@ -91,10 +78,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        160,
-        96
+        384,
+        448
       ],
-      "id": "2dde9161-1d11-4827-87b5-7d21282735f8",
+      "id": "453d417e-c4ef-4910-85f4-6ed6ade741ae",
       "name": "Merge HTML page and selector needed"
     },
     {
@@ -104,10 +91,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -160,
-        112
+        0,
+        464
       ],
-      "id": "e30ed236-fc56-4c9e-9856-45d28ba1b2fd",
+      "id": "12b0d8f5-b0e1-4316-8782-4ad8bf931d11",
       "name": "Give link and selector"
     },
     {
@@ -138,56 +125,41 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        320,
-        96
+        560,
+        448
       ],
-      "id": "156adf7c-fe95-48b8-9091-aeff26c0c88f",
+      "id": "443356bb-a827-4584-8880-a6068ba43715",
       "name": "Filter"
     },
     {
       "parameters": {
-        "content": "## fn_articles_get()\n\nAccepts article items as-is and:\n\n1. **Fetches** the full HTML page for each article\n2. **Extracts** the article body using a CSS selector\n3. **Merges** extracted content back into the article object",
-        "height": 240,
+        "content": "## fn_articles_get()\n\nAccepts article items as-is and:\n\nFor each article:\n\n1.  **Fetche** the full HTML page (`link`)\n2. Skip if fetch fails (HTTP error filtered out)\n3. **Extract** body text using `selector` (CSS)\n4. **Merge** extracted `article` text back into the article object",
+        "height": 208,
         "width": 480
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -160,
-        -272
+        368,
+        208
       ],
       "typeVersion": 1,
-      "id": "4cd9c9fa-74f6-4dae-817e-dfbb77c74ad3",
+      "id": "89c26edd-30c3-476c-bf0e-006f8dd019fd",
       "name": "Sticky Note"
     },
     {
       "parameters": {
         "content": "### Input Contract\n\nEach incoming item should already be a single article object, for example:\n\n```\n{\n  title: '...',\n  link: '...',\n  pubDate: '...',\n  snippet: '...',\n  selector: '...'\n}\n```\n\n`fn_articles_get()` uses the incoming fields directly without expanding or normalizing batches.",
-        "height": 272,
+        "height": 288,
         "width": 448
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -688,
-        0
+        -496,
+        224
       ],
       "typeVersion": 1,
-      "id": "680aaaec-435e-42c9-85b8-e611d7df43ed",
+      "id": "427de06a-315c-41f1-b884-5dd3acadfdd5",
       "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "content": "### Article Extraction\n\nFor each article:\n\n1. Fetch the full HTML page (`link`)\n2. Skip if fetch fails (HTTP error filtered out)\n3. Extract body text using `selector` (CSS)\n4. Merge extracted `article` text back into the article object",
-        "height": 192,
-        "width": 464
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        432,
-        -128
-      ],
-      "typeVersion": 1,
-      "id": "7c730e40-ba8b-44c9-8fd8-656b5c25d94f",
-      "name": "Sticky Note2"
     }
   ],
   "pinData": {},
@@ -196,7 +168,12 @@
       "main": [
         [
           {
-            "node": "Pass Through Articles",
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Give link and selector",
             "type": "main",
             "index": 0
           }
@@ -252,32 +229,11 @@
         ]
       ]
     },
-    "Merge": {
-      "main": [
-        []
-      ]
-    },
     "Filter": {
       "main": [
         [
           {
             "node": "Extract article",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Pass Through Articles": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
-          },
-          {
-            "node": "Give link and selector",
             "type": "main",
             "index": 0
           }
@@ -290,7 +246,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "5eb8b9ce-df17-4361-954b-d0f8dc7cf697",
+  "versionId": "26e325b4-4da0-4289-b1f1-361b0c7df200",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },

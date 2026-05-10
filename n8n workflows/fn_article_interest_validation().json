@@ -137,8 +137,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        608,
-        1888
+        864,
+        1920
       ],
       "typeVersion": 1,
       "id": "942aa506-a9b8-484a-b946-a0e3d462d02d",
@@ -187,7 +187,7 @@
     },
     {
       "parameters": {
-        "jsCode": "/**\n * Calculates cosine similarity between 2 embedding vectors.\n *\n * Result:\n * - 1   = very similar / same direction\n * - 0   = unrelated\n * - -1  = opposite meaning (rare for embeddings)\n */\nfunction cosineSimilarity(a, b) {\n  // Dot product = how much the vectors point in the same direction\n  let dot = 0;\n  // Magnitude (length) of the vectors\n  let magA = 0;\n  let magB = 0;\n  \n  for (let i = 0; i < a.length; i++) {\n    // Multiply matching dimensions and sum them\n    dot += a[i] * b[i];\n\n    // Sum squared values to calculate vector length later\n    magA += a[i] * a[i];\n    magB += b[i] * b[i];\n  }\n\n  /**\n   * Final cosine similarity formula:\n   *\n   *            dot product\n   * --------------------------------\n   * magnitude(A) × magnitude(B)\n   *\n   * Why:\n   * This normalizes the score so it reflects direction similarity,\n   * not just vector size.\n   */\n  const denom = Math.sqrt(magA) * Math.sqrt(magB);\n\n  /**\n   * Prevent division by zero.\n   *\n   * If one vector is empty or invalid, magnitude becomes 0,\n   * and cosine similarity would break.\n   *\n   * In that case, return 0 (no similarity).\n   */\n  return denom === 0 ? 0 : dot / denom;\n}\n\n\n\n\n/**\n * No meaningful content — skip calculation and force similarity to 0\n */\nif (!((($json.title || '') + ($json.snippet || $json.article || '')).trim()))\n  return {\n    json: {\n      ...article,\n      similarityScore: 0 \n    } \n  };\n\n/**\n * Get embeddings from incoming n8n JSON.\n *\n * embeddings[0] = article embedding\n * embeddings[1] = user interest embedding\n */\nconst embeddings = $json.embeddings || [];\n\n/**\n * Extract vectors safely.\n *\n * Fallback to [] so the workflow doesn't crash\n * if one embedding is missing.\n */\nconst articleEmb = embeddings[0] || [];\nconst interestEmb = embeddings[1] || [];\n\n/**\n * Calculate semantic similarity score\n * between article and user interest.\n */\nconst score = cosineSimilarity(articleEmb, interestEmb);\n\n/**\n * Remove large/unnecessary metadata fields\n * from the original payload before returning.\n *\n * - keeps output clean\n * - avoids storing heavy embedding arrays\n * - keeps only useful article data + final score\n */\nconst {\n  embeddings: _e,\n  model: _m,\n  total_duration: _td,\n  load_duration: _ld,\n  prompt_eval_count: _pc,\n  created_at: _ca,\n  done: _d,\n  done_reason: _dr,\n  // destructuring like this means \"put in the articles constant all attributes that were not listed yet\"\n  ...article\n} = $json;\n\n\n/**\n * Return cleaned article object\n * with the new similarity score attached.\n */\nreturn {\n  json: {\n    ...article,\n    similarityScore: score\n  }\n};"
+        "jsCode": "/**\n * Calculates cosine similarity between 2 embedding vectors.\n *\n * Result:\n * - 1   = very similar / same direction\n * - 0   = unrelated\n * - -1  = opposite meaning (rare for embeddings)\n */\nfunction cosineSimilarity(a, b) {\n  // Dot product = how much the vectors point in the same direction\n  let dot = 0;\n  // Magnitude (length) of the vectors\n  let magA = 0;\n  let magB = 0;\n  \n  for (let i = 0; i < a.length; i++) {\n    // Multiply matching dimensions and sum them\n    dot += a[i] * b[i];\n\n    // Sum squared values to calculate vector length later\n    magA += a[i] * a[i];\n    magB += b[i] * b[i];\n  }\n\n  /**\n   * Final cosine similarity formula:\n   *\n   *            dot product\n   * --------------------------------\n   * magnitude(A) × magnitude(B)\n   *\n   * Why:\n   * This normalizes the score so it reflects direction similarity,\n   * not just vector size.\n   */\n  const denom = Math.sqrt(magA) * Math.sqrt(magB);\n\n  /**\n   * Prevent division by zero.\n   *\n   * If one vector is empty or invalid, magnitude becomes 0,\n   * and cosine similarity would break.\n   *\n   * In that case, return 0 (no similarity).\n   */\n  return denom === 0 ? 0 : dot / denom;\n}\n\n\n\n\n/**\n * No meaningful content — skip calculation and force similarity to 0\n */\nif (!((($json.title || '') + ($json.snippet || $json.article || '')).trim()))\n  return {\n    json: {\n      similarityScore: 0 \n    } \n  };\n\n/**\n * Get embeddings from incoming n8n JSON.\n *\n * embeddings[0] = article embedding\n * embeddings[1] = user interest embedding\n */\nconst embeddings = $json.embeddings || [];\n\n/**\n * Extract vectors safely.\n *\n * Fallback to [] so the workflow doesn't crash\n * if one embedding is missing.\n */\nconst articleEmb = embeddings[0] || [];\nconst interestEmb = embeddings[1] || [];\n\n/**\n * Calculate semantic similarity score\n * between article and user interest.\n */\nconst score = cosineSimilarity(articleEmb, interestEmb);\n\n/**\n * Remove large/unnecessary metadata fields\n * from the original payload before returning.\n *\n * - keeps output clean\n * - avoids storing heavy embedding arrays\n * - keeps only useful article data + final score\n */\nconst {\n  embeddings: _e,\n  model: _m,\n  total_duration: _td,\n  load_duration: _ld,\n  prompt_eval_count: _pc,\n  created_at: _ca,\n  done: _d,\n  done_reason: _dr,\n  // destructuring like this means \"put in the articles constant all attributes that were not listed yet\"\n  ...article\n} = $json;\n\n\n/**\n * Return cleaned article object\n * with the new similarity score attached.\n */\nreturn {\n  json: {\n    ...article,\n    similarityScore: score\n  }\n};"
       },
       "id": "a8c62de7-a61d-4c0e-a8d5-c0e3cd520771",
       "name": "Cosine Similarity",
@@ -220,8 +220,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
       "position": [
-        624,
-        1728
+        288,
+        1744
       ]
     },
     {
@@ -230,7 +230,7 @@
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  input: [\n    ($json.title || '') + '. ' + ($json.snippet || $json.article || '').slice(0, 500),\n    $env.N8N_NEWS_INTERESTS\n  ]\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  input: [\n    ($json.title || '') + '. ' + ($json.snippet || $json.article || '').slice(0, 500),\n    $env.N8N_NEWS_INTERESTS\n  ],\n} }}",
         "options": {
           "timeout": 60000
         }
@@ -278,7 +278,7 @@
         "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_FAST_MODEL,\n  prompt: `You are a news relevance classifier.\\n\\nInterests:\\n${$env.N8N_NEWS_INTERESTS}\\n\\nArticle Title:\\n${$json.title}\\n\\nSnippet:\\n${$json.snippet || $json.article || ''}\\n\\nAnswer only YES or NO.`,\n  stream: false,\n  keep_alive: \"0\"\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_FAST_MODEL,\n  prompt: `You are a news relevance classifier.\\n\\nInterests:\\n${$env.N8N_NEWS_INTERESTS}\\n\\nArticle Title:\\n${$json.title}\\n\\nSnippet:\\n${$json.snippet || $json.article || ''}\\n\\nAnswer only YES or NO.`,\n  stream: false,\n} }}",
         "options": {
           "timeout": 120000
         }
@@ -290,6 +290,63 @@
       "position": [
         1664,
         1872
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d451cba4-df1a-42ab-8b00-61ffd5b1860b",
+              "leftValue": "={{ $env.N8N_NEWS_INTERESTS }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "021c819a-9ba3-40c8-9c32-5fe68b7d16e4",
+              "leftValue": "={{ $env.N8N_NEWS_INTERESTS }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        512,
+        1744
+      ],
+      "id": "734bcf51-d36e-4aa8-8e6a-1384b674f8a8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n    json: {...$json,\n        isRelevant: true,\n        filterMethod: 'no_filters'\n    }\n};"
+      },
+      "id": "7ca412f3-281d-4e93-9ccc-5b56d90c4903",
+      "name": "No interests, accept all",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        1840
       ]
     }
   ],
@@ -351,14 +408,9 @@
       "main": [
         [
           {
-            "node": "Embed Article+Interests",
+            "node": "If",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Merge Embeddings+Article",
-            "type": "main",
-            "index": 1
           }
         ]
       ]
@@ -395,6 +447,29 @@
           }
         ]
       ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Embed Article+Interests",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Embeddings+Article",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "No interests, accept all",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -402,7 +477,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "747a42bd-acf9-446e-860a-46c9939960ae",
+  "versionId": "46289ea5-d0b3-451e-90ba-658592f7da1a",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },

@@ -3,19 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "options": {}
-      },
-      "id": "9fad351a-bac0-4736-9c84-29af4819a5a1",
-      "name": "Loop Over Articles",
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        1760,
-        624
-      ]
-    },
-    {
-      "parameters": {
         "jsCode": "// Fixes n8n pairedItem tracking across the loop boundary.\n// Without this, downstream merge nodes lose the link to the original loop iteration.\nreturn { json: $json, pairedItem: 0 };"
       },
       "id": "126559cc-69e7-4230-b19b-f06ddc63953f",
@@ -34,7 +21,7 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
       "position": [
-        1536,
+        1264,
         624
       ]
     },
@@ -46,8 +33,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1520,
-        160
+        1472,
+        48
       ],
       "typeVersion": 1,
       "id": "5f7ea267-a417-4206-bd95-60953642b9db",
@@ -60,7 +47,7 @@
           "value": "wmJ76asR2FwreSDM",
           "mode": "list",
           "cachedResultUrl": "/workflow/wmJ76asR2FwreSDM",
-          "cachedResultName": "fn_filter_article()"
+          "cachedResultName": "fn_article_interest_validation()"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -79,7 +66,92 @@
         640
       ],
       "id": "ac7cc63f-1c9e-4640-9e67-d994d82f05d8",
-      "name": "Call 'fn_filter_article()'"
+      "name": "Call 'fn_article_interest_validation()'"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"30m\"\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1632,
+        464
+      ],
+      "id": "d6850840-8f3e-4770-8570-10a9940a6e9d",
+      "name": "Wake Fast LLM"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"30m\"\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1472,
+        464
+      ],
+      "id": "ba0fcb4f-b54e-424e-95ec-31f03178a40a",
+      "name": "Wake Embedding LLM"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9fad351a-bac0-4736-9c84-29af4819a5a1",
+      "name": "Loop Over Articles",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1760,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"0\"\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1968,
+        336
+      ],
+      "id": "27359162-1f53-484c-a1de-abb37a915043",
+      "name": "Unload Embedding LLM"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"0\"\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2128,
+        336
+      ],
+      "id": "4d45330c-7b0c-4d26-b1d1-05f4a21573c4",
+      "name": "Unload Fast LLM"
     },
     {
       "parameters": {
@@ -113,12 +185,39 @@
         480
       ],
       "id": "8adc6181-7216-4f76-bf87-57a4bf81e87f",
-      "name": "Is Relevant = true"
+      "name": "Is Relevant = true Filter"
     }
   ],
   "pinData": {},
   "connections": {
     "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Wake Embedding LLM",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Checkpoint": {
+      "main": [
+        [
+          {
+            "node": "Call 'fn_article_interest_validation()'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'fn_article_interest_validation()'": {
       "main": [
         [
           {
@@ -129,11 +228,27 @@
         ]
       ]
     },
+    "Wake Embedding LLM": {
+      "main": [
+        [
+          {
+            "node": "Wake Fast LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Loop Over Articles": {
       "main": [
         [
           {
-            "node": "Is Relevant = true",
+            "node": "Is Relevant = true Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Unload Embedding LLM",
             "type": "main",
             "index": 0
           }
@@ -147,22 +262,11 @@
         ]
       ]
     },
-    "Article Checkpoint": {
+    "Unload Embedding LLM": {
       "main": [
         [
           {
-            "node": "Call 'fn_filter_article()'",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call 'fn_filter_article()'": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Articles",
+            "node": "Unload Fast LLM",
             "type": "main",
             "index": 0
           }
@@ -175,7 +279,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "a48a79b2-3e25-4425-95cf-ab580123b026",
+  "versionId": "6b475c31-7aa4-4bc0-96c5-5b51dbc7481d",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },
