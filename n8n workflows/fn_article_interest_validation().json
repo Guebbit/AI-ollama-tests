@@ -227,7 +227,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "url": "={{ $env.OLLAMA_BASE_URL }}/api/embed",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  input: [\n    ($json.title || '') + '. ' + ($json.snippet || $json.article || '').slice(0, 500),\n    $env.N8N_NEWS_INTERESTS\n  ],\n} }}",
@@ -275,7 +275,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/generate",
+        "url": "={{ $env.OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ {\n  model: $env.N8N_LLM_FAST_MODEL,\n  prompt: `You are a news relevance classifier.\\n\\nInterests:\\n${$env.N8N_NEWS_INTERESTS}\\n\\nArticle Title:\\n${$json.title}\\n\\nSnippet:\\n${$json.snippet || $json.article || ''}\\n\\nAnswer only YES or NO.`,\n  stream: false,\n} }}",

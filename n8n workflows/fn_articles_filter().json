@@ -71,7 +71,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "url": "={{ $env.OLLAMA_BASE_URL }}/api/embed",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"30m\"\n} }}",
@@ -89,7 +89,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "url": "={{ $env.OLLAMA_BASE_URL }}/api/embed",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"30m\"\n} }}",
@@ -120,7 +120,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "url": "={{ $env.OLLAMA_BASE_URL }}/api/embed",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"0\"\n} }}",
@@ -138,7 +138,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.N8N_OLLAMA_BASE_URL }}/api/embed",
+        "url": "={{ $env.OLLAMA_BASE_URL }}/api/embed",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ {\n  model: $env.N8N_LLM_EMBED_MODEL,\n  keep_alive: \"0\"\n} }}",
