@@ -1,0 +1,368 @@
+{
+  "name": "notifications_tester",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d13120ef-d67e-4b2d-b290-5aca6d6c12df",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        1072
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1a2b3c4-0001-0001-0001-000000000001",
+              "name": "title",
+              "value": "Test Notification",
+              "type": "string"
+            },
+            {
+              "id": "f1a2b3c4-0001-0001-0001-000000000002",
+              "name": "message",
+              "value": "This is a test message from n8n. If you can read this, the integration is working correctly!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1ce30e3f-318b-474e-9777-fd4f5a0d6be7",
+      "name": "Test Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -368,
+        1072
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=*{{ $json.title }}*\n\n{{ $json.message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "60f9318c-c7d7-4884-9bf9-7e496da8a256",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "cf9b5444-24cb-4732-b000-bf7d6203b10a",
+      "credentials": {
+        "telegramApi": {
+          "id": "g4Nkwu8EUASyHb3N",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: $json.title + '\\n\\n' + $json.message } }}",
+        "options": {}
+      },
+      "id": "cc77df10-217c-42d2-b14b-1423ee373e7c",
+      "name": "Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { content: $json.title + '\\n\\n' + $json.message } }}",
+        "options": {}
+      },
+      "id": "87a8b34a-f82a-4bf6-9850-b55ab56e9259",
+      "name": "Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "from": "={{ $env.TWILIO_WHATSAPP_FROM }}",
+        "to": "={{ $env.TWILIO_WHATSAPP_TO }}",
+        "message": "={{ $json.title + '\\n\\n' + $json.message }}",
+        "options": {}
+      },
+      "id": "b9eac078-627a-4aa7-ab4d-9447b93d4a5d",
+      "name": "WhatsApp (Twilio)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        0,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.N8N_EMAIL_FROM }}",
+        "toEmail": "={{ $env.N8N_EMAIL_TO }}",
+        "subject": "={{ $json.title }}",
+        "text": "={{ $json.message }}",
+        "options": {}
+      },
+      "id": "3d58e5ad-5b17-46aa-b4b7-1485228958d4",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        0,
+        800
+      ],
+      "webhookId": "c163fab8-dd8b-4c6d-86cf-0c5a86758cf8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pushover.net/1/messages.json",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { token: $env.PUSHOVER_TOKEN, user: $env.PUSHOVER_USER, title: $json.title, message: $json.message } }}",
+        "options": {}
+      },
+      "id": "b9676b70-035c-4abc-8e30-0cd0f765b023",
+      "name": "Pushover",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.NTFY_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.NTFY_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { topic: $env.NTFY_TOPIC, title: $json.title, message: $json.message, priority: 3 } }}",
+        "options": {}
+      },
+      "id": "0ca3c89c-d7ba-4d48-a129-28e876840df7",
+      "name": "Ntfy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.MATRIX_HOMESERVER + '/_matrix/client/v3/rooms/' + encodeURIComponent($env.MATRIX_ROOM_ID) + '/send/m.room.message/txn' + Date.now() }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.MATRIX_ACCESS_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { msgtype: 'm.text', body: $json.title + '\\n\\n' + $json.message } }}",
+        "options": {}
+      },
+      "id": "e6d2e9cc-8648-4a7a-8fdd-aaa579164401",
+      "name": "Matrix",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        1408
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.MASTODON_INSTANCE + '/api/v1/statuses' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.MASTODON_ACCESS_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { status: $json.title + '\\n\\n' + $json.message } }}",
+        "options": {}
+      },
+      "id": "bcbf5690-ae58-4fb9-a237-ba7bc4c2bfd9",
+      "name": "Mastodon",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        1600
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GOTIFY_URL + '/message?token=' + $env.GOTIFY_TOKEN }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { title: $json.title, message: $json.message, priority: 5 } }}",
+        "options": {}
+      },
+      "id": "ffc42c3e-24a8-4d10-af26-99fbbeab8df7",
+      "name": "Gotify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Notification Channels Test\n\nSend a test message to all configured notification channels.\n\n**Nodes requiring n8n Credentials** (configure in Settings → Credentials):\n- **Telegram** → create a `Telegram Bot` credential with your bot token\n- **WhatsApp (Twilio)** → create a `Twilio` credential with Account SID + Auth Token\n- **Send Email** → create an `SMTP` credential, then replace `REPLACE_WITH_SMTP_CREDENTIAL_ID`\n\nAfter creating the credentials, open each node and re-select the credential from the dropdown — this updates the internal ID.\n\n**All other nodes** read tokens/URLs directly from env vars. See `.env-example` for the full list.",
+        "height": 340,
+        "width": 520
+      },
+      "id": "16cc9cbb-b985-45aa-b64e-478d9aa184a2",
+      "name": "Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1184,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Dream Log Analyzer\n\nSend a voice note describing your dream. Every 7 entries, Ollama finds recurring themes and patterns.\n\n**Flow:**\n1. Voice note → Whisper transcription\n2. Entry appended to `dreams.json` with date + time\n3. Every 7th dream → Ollama writes a pattern analysis\n4. Reply: \"Dream #N logged\" or full analysis\n\n**Dreams file:** `N8N_DATA_PATH/dreams.json`\nMake sure that path is writable from inside the n8n Docker container.\n\n**Setup:**\n- Create a `Telegram Bot` credential and replace `REPLACE_WITH_TELEGRAM_CREDENTIAL_ID`\n- Set `TELEGRAM_BOT_TOKEN`, `WHISPER_URL`, `WHISPER_MODEL`, `N8N_DATA_PATH` in `.env`\n- Run a Whisper-compatible server (speaches, faster-whisper-server, or use OpenAI)",
+        "height": 380,
+        "width": 480
+      },
+      "id": "bc9800a3-1cc4-49b9-aad4-02699e7d956a",
+      "name": "Notes1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        1760
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Test Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Message": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp (Twilio)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pushover",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ntfy",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Matrix",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mastodon",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gotify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2bd9dbff-91c0-473f-82cb-017f0779f319",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
+  },
+  "id": "4kt4OYJzCfYGvmdU",
+  "tags": []
+}

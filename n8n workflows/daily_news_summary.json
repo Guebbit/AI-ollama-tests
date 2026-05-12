@@ -6,13 +6,13 @@
         "url": "https://www.ansa.it/sito/ansait_rss.xml",
         "options": {}
       },
-      "id": "bd86293d-084e-4158-996f-4bd461165995",
+      "id": "01a33147-418c-4378-85ac-dc09282d6cfc",
       "name": "Ansa RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        65760,
-        10064
+        75872,
+        12080
       ]
     },
     {
@@ -20,13 +20,13 @@
         "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
         "options": {}
       },
-      "id": "874ee0b3-88f4-4c88-a04d-4f79810eba1d",
+      "id": "ccd2c41e-287c-48e5-8c7d-eba9b8847274",
       "name": "Repubblica RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        65760,
-        10240
+        75872,
+        12256
       ]
     },
     {
@@ -36,36 +36,36 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        65920,
-        10064
+        76032,
+        12080
       ],
-      "id": "9199932e-a835-4304-87d0-91e7b981a7b1",
+      "id": "f5ffbf4e-7262-46a8-af84-8d5e68058221",
       "name": "Ansa Prepare"
     },
     {
       "parameters": {
-        "functionCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \"#article-body\",\n      source: 'Repubblica',\n      place: 'Italy',\n    }))\n  }\n}];"
+        "jsCode": "return [{\n  json: {\n    articles: $input.all().map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \"#article-body\",\n      source: 'Repubblica',\n      place: 'Italy',\n    }))\n  }\n}];"
       },
-      "id": "e89826e5-2a51-4c41-9b60-67f558e9d7a7",
+      "id": "55d6aae5-01cc-47c6-a5c1-9ee77a7e66c9",
       "name": "Repubblica Prepare",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        65920,
-        10240
+        76032,
+        12256
       ]
     },
     {
       "parameters": {
-        "functionCode": "return [{\n  json: {\n    articles: items.map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \".aentry\",\n      source: 'Sole24Ore',\n      place: 'Italy',\n    }))\n  }\n}];"
+        "jsCode": "return [{\n  json: {\n    articles: $input.all().map(item => ({\n      ...item.json,\n      title: item.json.title || '',\n      link: item.json.link || '',\n      pubDate: item.json.pubDate || item.json.isoDate || '',\n      snippet: item.json.contentSnippet || item.json.content || '',\n      selector: \".aentry\",\n      source: 'Sole24Ore',\n      place: 'Italy',\n    }))\n  }\n}];"
       },
-      "id": "96566d9e-535c-48d3-bd39-162dda53993b",
+      "id": "002cc8c9-fb8a-4782-bdad-3cb728c22f5c",
       "name": "Sole24Ore Prepare",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        65920,
-        10416
+        76032,
+        12432
       ]
     },
     {
@@ -73,28 +73,28 @@
         "url": "https://www.ilsole24ore.com/rss/italia.xml",
         "options": {}
       },
-      "id": "7012f69f-d18e-4cae-b1f2-dd7796f56fbf",
+      "id": "0a17f144-5b05-4f9a-bcda-4f22c5f9510e",
       "name": "Sole24Ore RSS",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
       "position": [
-        65760,
-        10416
+        75872,
+        12432
       ]
     },
     {
       "parameters": {
-        "content": "# daily_news_summary\n\nFull pipeline:\n\n1. **Cron** triggers at 09:00 and 22:00\n2. **RSS feeds** fetch headlines from each source\n3. **Prepare nodes** shape each source into the fn_add_articles() contract\n4. **fn_add_articles()** fetches + extracts full article text\n5. **fn_filter_articles()** filters out non-relevant articles\n6. **Loop** translates + summarizes each relevant article\n7. **Aggregate**: all summaries collected, LLM writes a daily overview\n8. **Output**: Markdown file saved + email sent",
-        "height": 272,
-        "width": 544
+        "content": "# daily_news_summary\n\nFull pipeline:\n\n1. **Cron** triggers at 09:00 and 22:00\n2. **RSS feeds** fetch headlines from each source\n3. **Prepare nodes** shape each source into the fn_articles contract\n4. **Translate title+snippet** loop (preliminary pass for filter accuracy)\n5. **fn_articles_filter()** filters out non-relevant articles\n6. **fn_articles_get()** fetches full article text\n7. **Translate & Summarize** loop — LLM writes ADHD-friendly English summary\n8. **Collect Articles / Collect Overviews** — split into two parallel routes:\n   - MD route → Write articles/overviews file (email attachments)\n   - HTML route → Merge HTML Parts (email body)\n9. **Overview loop** — LLM writes a daily overview per place + global\n10. **Merge + Send Email** — HTML body · MD attachments · plain-text fallback",
+        "height": 320,
+        "width": 576
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        66800,
-        9856
+        76912,
+        11872
       ],
       "typeVersion": 1,
-      "id": "8ee50da9-a4de-41c6-a307-5db48be40fa0",
+      "id": "fa1be712-d8b2-4eb6-83ea-c70b5c610dd5",
       "name": "Sticky Note"
     },
     {
@@ -104,11 +104,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        68592,
-        10832
+        78704,
+        12848
       ],
       "typeVersion": 1,
-      "id": "1de6ab93-e83d-4508-8969-d6c87d94f0bb",
+      "id": "d69e3747-1040-4c25-982b-6e166c44514a",
       "name": "Sticky Note3"
     },
     {
@@ -119,11 +119,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        68784,
-        10096
+        78896,
+        12112
       ],
       "typeVersion": 1,
-      "id": "fd9333cf-dd20-4b86-95d5-a9688aeaf42c",
+      "id": "67d2dd7b-198c-4b2c-8af4-d6b73cd0b491",
       "name": "Sticky Note4"
     },
     {
@@ -132,18 +132,18 @@
         "url": "={{ $env.OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nPrimary Source: ${$json.source}\nAll Sources: ${Array.isArray($json.sourceNames) && $json.sourceNames.length ? $json.sourceNames.join(', ') : $json.source}\n\nSOURCE NOTES:\n${Array.isArray($json.sources) && $json.sources.length\n  ? $json.sources\n      .map((source, index) => `${index + 1}. ${source.name}${source.title ? ` — ${source.title}` : ''}${source.snippet ? ` | ${source.snippet}` : ''}`)\n      .join('\\n')\n  : 'No extra source notes provided.'}\n\nFULL ARTICLE CONTENT:\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs\n- Short, max 6 sentences\n- No bullet points if not EXTREMELY necessary\n- Write in English regardless of the article's original language\n- If multiple sources cover the same story, merge them into one coherent summary\n- If sources highlight different opinions or angles, mention that briefly and attribute those differences to the relevant source names\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: {\n    num_gpu: parseInt($env.N8N_LLM_NUM_GPU || \"99\")\n  },\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nPrimary Source: ${$json.source}\nAll Sources: ${Array.isArray($json.sourceNames) && $json.sourceNames.length ? $json.sourceNames.join(', ') : $json.source}\n\nSOURCE NOTES:\n${Array.isArray($json.sources) && $json.sources.length\n  ? $json.sources\n      .map((source, index) => `${index + 1}. ${source.name}${source.title ? ` — ${source.title}` : ''}${source.snippet ? ` | ${source.snippet}` : ''}`)\n      .join('\\n')\n  : 'No extra source notes provided.'}\n\nFULL ARTICLE CONTENT:\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs\n- Short, max 6 sentences\n- No bullet points if not EXTREMELY necessary\n- Write in English regardless of the article's original language\n- If multiple sources cover the same story, merge them into one coherent summary\n- If sources highlight different opinions or angles, mention that briefly and attribute those differences to the relevant source names\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: $env.N8N_LLM_NUM_GPU ? { num_gpu: parseInt($env.N8N_LLM_NUM_GPU) } : {},\n} }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "60d21517-695e-43f2-b067-42a908390f3e",
+      "id": "2cce19a3-cd80-4dea-a55d-91369614e0c0",
       "name": "Ollama Translate & Summarize",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        68528,
-        10624
+        78640,
+        12640
       ]
     },
     {
@@ -152,39 +152,39 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "8af215bb-5d0b-4eca-b723-a648a66bdaa2",
+      "id": "0539fef7-712a-4ec5-9db3-0d58821b9cb9",
       "name": "Merge Summary Results",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        68800,
-        10608
+        78912,
+        12624
       ]
     },
     {
       "parameters": {
         "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nconst { \n  thinking,\n  context,\n  selector,\n  response,\n  ...article\n} = $json;\n\nreturn {\n  json: {\n    ...article,\n    summary: raw\n  }\n};"
       },
-      "id": "ced2ac41-3426-4f7f-ae29-27930cd80601",
+      "id": "fddfc2d9-368a-4c86-b5ec-9211ad9d8d84",
       "name": "Enrich with Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        69008,
-        10608
+        79120,
+        12624
       ]
     },
     {
       "parameters": {
         "jsCode": "// Collect all incoming articles\nconst articles = $input.all().map(item => item.json);\n\n// Helper to build article text\nconst formatArticle = (article, index) => {\n\n  // Build source list\n  const sourceList =\n    Array.isArray(article.sourceNames) && article.sourceNames.length\n      ? article.sourceNames.join(', ')\n      : (article.source || 'Unknown source');\n\n  return [\n    `${index + 1}. **${article.title}** (${sourceList})`,\n    article.summary\n  ].join('\\n');\n};\n\n// --------------------------------------------------\n// GLOBAL SUMMARY (all articles)\n// --------------------------------------------------\nconst summary = articles\n  .map((article, index) => formatArticle(article, index))\n  .join('\\n\\n');\n\n// --------------------------------------------------\n// SUMMARIES BY PLACE\n// --------------------------------------------------\n// Group articles by place\nconst groupedByPlace = articles.reduce((acc, article) => {\n  const place = article.place || 'Other';\n\n  if (!acc[place]) {\n    acc[place] = [];\n  }\n\n  acc[place].push(article);\n\n  return acc;\n}, {});\n\n// Build summaries per place\nconst summariesByPlace = Object.fromEntries(\n  Object.entries(groupedByPlace).map(([place, placeArticles]) => {\n\n    const placeSummary = placeArticles\n      .map((article, index) => formatArticle(article, index))\n      .join('\\n\\n');\n\n    return [place, placeSummary];\n  })\n);\n\nreturn [{\n  json: {\n    // Full summary with everything\n    summary,\n\n    // Separate summaries by place\n    summariesByPlace\n  }\n}];"
       },
-      "id": "fcd7f518-1d19-47be-bffa-7198f2293d70",
+      "id": "66269e1b-c361-44b9-9ac7-d8bb63fb6148",
       "name": "Aggregate for Overview",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        69312,
-        10496
+        79424,
+        12512
       ]
     },
     {
@@ -193,18 +193,18 @@
         "url": "={{ $env.OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing a daily overview.\n\nBelow are today's article summaries${$json.key && $json.key !== 'global' ? ` for ${$json.key}` : ''}:\n\n${$json.text}\n\n---\n\nWrite a quick summary capturing the most important themes and developments of the day. Be direct, factual, and clear. No fluff.\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: {\n    num_gpu: parseInt($env.N8N_LLM_NUM_GPU || \"99\")\n  },\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing a daily overview.\n\nBelow are today's article summaries${$json.key && $json.key !== 'global' ? ` for ${$json.key}` : ''}:\n\n${$json.text}\n\n---\n\nWrite a quick summary capturing the most important themes and developments of the day. Be direct, factual, and clear. No fluff.\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: $env.N8N_LLM_NUM_GPU ? { num_gpu: parseInt($env.N8N_LLM_NUM_GPU) } : {},\n} }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "16dc0227-93ef-4f7b-8684-2185383cadc7",
+      "id": "25def9ae-e944-462b-aa2a-33310bf37c38",
       "name": "Ollama Overview",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        69920,
-        10720
+        80032,
+        12736
       ]
     },
     {
@@ -213,43 +213,43 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "b7cb904b-0c23-417e-8329-1189cbd26429",
+      "id": "2b1c5200-dd4f-44a1-848d-85917d982bf1",
       "name": "Merge Overview Loop",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        70176,
-        10704
+        80288,
+        12720
       ]
     },
     {
       "parameters": {
-        "jsCode": "const { date, globalOverview, overviewsByPlace } = $json;\n\nconst placesMd = Object.entries(overviewsByPlace)\n  .map(([place, overview]) => overview ? '## ' + place + '\\n\\n' + overview : '')\n  .filter(Boolean)\n  .join('\\n\\n---\\n\\n');\n\nconst parts = [\n  '# Daily News Overviews — ' + date, '',\n  '## Global Overview', '', globalOverview\n];\nif (placesMd) parts.push('', '---', '', '## Place Overviews', '', placesMd);\n\nreturn [{\n  json: {\n    filename: 'news-overviews-' + date + '.md',\n    text: parts.join('\\n')\n  }\n}];"
+        "jsCode": "const { date, globalOverview, overviewsByPlace } = $json;\n\nconst placesMd = Object.entries(overviewsByPlace)\n  .map(([place, overview]) => overview ? '## ' + place + '\\n\\n' + overview : '')\n  .filter(Boolean)\n  .join('\\n\\n---\\n\\n');\n\nconst parts = [\n  '# Daily News Overviews — ' + date, '',\n  '## Global Overview', '', globalOverview\n];\nif (placesMd) parts.push('', '---', '', '## Place Overviews', '', placesMd);\n\nreturn [{\n  json: {\n    filename: 'news-overviews-' + date + '.md',\n    overviewsText: parts.join('\\n')\n  }\n}];"
       },
-      "id": "c9a43c91-ef43-4368-8bfd-b5a9cce60467",
+      "id": "b5e09344-44d5-454e-af8e-f34892d6032d",
       "name": "Build Overviews MD",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        70800,
-        10640
+        80912,
+        12656
       ]
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/data/news-summaries/{{$binary.data.fileName}}",
+        "fileName": "={{ '/data/news-summaries/' + $binary.data.fileName }}",
         "options": {
           "append": false
         }
       },
-      "id": "7174727d-3e22-47c4-ace4-280ef961e0ca",
+      "id": "ccd74f16-6b8f-43f8-ba5a-294310ec0e96",
       "name": "Save File",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        71328,
-        10032
+        81440,
+        12048
       ],
       "disabled": true
     },
@@ -266,13 +266,13 @@
           ]
         }
       },
-      "id": "d7dd579e-3e13-4d4f-a356-37f6c233f045",
+      "id": "67c23ae1-c919-4d64-ba4e-406018ba3f9f",
       "name": "Cron",
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        65360,
-        10512
+        75472,
+        12528
       ]
     },
     {
@@ -280,13 +280,13 @@
         "url": "https://temponews.it/wp-json/wp/v2/posts?per_page=20&_fields=title,excerpt,link,date",
         "options": {}
       },
-      "id": "ecc6be71-c8fd-4023-bdb7-019309ff7576",
+      "id": "994fa9ca-714c-4df1-ad69-a95b0baafd5f",
       "name": "TempoNews WP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        65760,
-        10704
+        75872,
+        12720
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
@@ -295,13 +295,13 @@
       "parameters": {
         "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    articles: $input.all()\n      .map(({ json }) => json)\n      // Keep only todays news\n      .filter(post => {\n        const rawDate = post.date || post.isoDate || '';\n        return rawDate.startsWith(today);\n      })\n      // Convert\n      .map(post => ({\n        title: (post.title?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        link: post.link || '',\n        snippet: (post.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),\n        pubDate: post.date || post.isoDate || '',\n        selector: '.entry-content',\n        source: 'Tempo News',\n        place: 'Carpi'\n      }))\n  }\n}];"
       },
-      "id": "02cd90bf-9ab7-404b-bce4-4cbdb994088c",
+      "id": "46b668b7-56c3-4c99-a4b1-5c8979a0c071",
       "name": "TempoNews Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        65904,
-        10704
+        76016,
+        12720
       ]
     },
     {
@@ -309,13 +309,13 @@
         "url": "={{ $json.url }}",
         "options": {}
       },
-      "id": "f9c22d10-081e-4037-8a02-d7088e46f0c6",
+      "id": "9403d689-ec36-49b9-b713-97c94d30407f",
       "name": "VoceIt Scrape",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        65888,
-        10992
+        76000,
+        13008
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
@@ -360,26 +360,26 @@
           "cleanUpText": true
         }
       },
-      "id": "cefca728-06e4-4272-86d7-7887b5e4c5eb",
+      "id": "f1656d23-60fa-455d-8488-60a0e4ef5d81",
       "name": "VoceIt Extract",
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        65824,
-        11200
+        75936,
+        13216
       ]
     },
     {
       "parameters": {
         "jsCode": "const scrapedItems = $input.all().map(item => item.json || {});\n\n/**\n * Ensure the value is always an array.\n */\nconst toArray = (value) => Array.isArray(value) ? value : (value ? [value] : []);\n\n/**\n * Normalize text:\n * - convert null/undefined to ''\n * - collapse multiple spaces/newlines\n * - trim\n */\nconst normalizeText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();\n\n/**\n * Convert any date-like value to YYYY-MM-DD using JS Date.\n * Returns '' if invalid.\n */\nconst toDateKey = (value) => {\n  const d = new Date(value);\n  if (Number.isNaN(d.getTime())) return '';\n\n  const y = d.getFullYear();\n  const m = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n\n  return `${y}-${m}-${day}`;\n};\n\n/**\n * Convert relative URLs to absolute URL on voce.it.\n * WARNING: URL api can't be used in n8n nodes!\n */\nconst toAbsoluteUrl = (href) => {\n  const raw = String(href || '').trim();\n  if (!raw || raw.toLowerCase() === 'null') return '';\n\n  // Already absolute\n  if (/^https?:\\/\\//i.test(raw)) return raw;\n\n  // Normalize common relative formats used by your scraper\n  let path = raw;\n\n  // remove leading ../ or ./\n  path = path.replace(/^(\\.\\.\\/)+/, '/');\n  path = path.replace(/^\\.\\//, '/');\n\n  // ensure it starts with /\n  if (!path.startsWith('/')) path = `/${path}`;\n\n  // keep only target domain\n  return `https://www.voce.it${path}`;\n};\n\n/**\n * Italian month map (short + full).\n */\nconst monthMap = {\n  gen: 1, gennaio: 1,\n  feb: 2, febbraio: 2,\n  mar: 3, marzo: 3,\n  apr: 4, aprile: 4,\n  mag: 5, maggio: 5,\n  giu: 6, giugno: 6,\n  lug: 7, luglio: 7,\n  ago: 8, agosto: 8,\n  set: 9, settembre: 9,\n  ott: 10, ottobre: 10,\n  nov: 11, novembre: 11,\n  dic: 12, dicembre: 12\n};\n\n/**\n * Normalize a raw date into YYYY-MM-DD.\n * Handles:\n * - numeric forms: 05/05/2026, 05-05-2026, 05.05.2026\n * - Italian text forms: 5 Mag 2026, 5 Maggio 2026\n * - fallback to JS Date parser\n */\nconst normalizeDate = (rawDate) => {\n  const text = normalizeText(rawDate);\n  if (!text) return '';\n\n  // 1) Numeric date\n  const numeric = text.match(/(\\d{1,2})[\\/.\\-](\\d{1,2})[\\/.\\-](\\d{2,4})/);\n  if (numeric) {\n    const day = Number(numeric[1]);\n    const month = Number(numeric[2]);\n    const year = Number(numeric[3].length === 2 ? `20${numeric[3]}` : numeric[3]);\n\n    if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 2) Italian textual date\n  const monthText = text\n    .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '');\n\n  const textDate = monthText.match(/(\\d{1,2})\\s+([a-z]+)\\s+(\\d{4})/);\n  if (textDate) {\n    const day = Number(textDate[1]);\n    const month = monthMap[textDate[2]];\n    const year = Number(textDate[3]);\n\n    if (month && day >= 1 && day <= 31) {\n      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;\n    }\n  }\n\n  // 3) Fallback\n  return toDateKey(text);\n};\n\n/**\n * Return true if text looks like a supported date.\n */\nconst isDateLike = (value) => !!normalizeDate(value);\n\nconst seen = new Set();\nconst articles = [];\n\n/**\n * Push one article only if title/link/date are valid.\n * De-duplicates by lowercased link + title.\n */\nconst pushArticle = (title, rawLink, rawDate) => {\n  const normalizedTitle = normalizeText(title);\n  const link = toAbsoluteUrl(rawLink);\n  const pubDate = normalizeDate(rawDate);\n\n  if (!normalizedTitle || !link || !pubDate) return;\n\n  const dedupeKey = `${link.toLowerCase()}|${normalizedTitle.toLowerCase()}`;\n  if (seen.has(dedupeKey)) return;\n  seen.add(dedupeKey);\n\n  articles.push({\n    title: normalizedTitle,\n    link,\n    pubDate,\n    selector: '[itemprop=\"articleBody\"]',\n    source: 'La Voce',\n    place: 'Carpi',\n  });\n};\n\nfor (const scraped of scrapedItems) {\n  const timelineTexts = toArray(scraped.timelineTexts).map(normalizeText).filter(Boolean);\n  const rawTimelineLinks = toArray(scraped.timelineLinks);\n\n  // Keep only usable non-null/non-empty links, normalized.\n  const timelineLinks = rawTimelineLinks\n    .map(normalizeText)\n    .filter(v => v && v.toLowerCase() !== 'null');\n\n  /**\n   * TIMELINE MODE (robust):\n   * Instead of fixed index pairing (i += 2), scan text sequence.\n   * Whenever we hit a date-like text, pair it with the previous non-date text as title.\n   * Then assign the next available link.\n   */\n  if (timelineTexts.length && timelineLinks.length) {\n    let linkCursor = 0;\n    let lastNonDateText = '';\n\n    for (const text of timelineTexts) {\n      if (isDateLike(text)) {\n        const title = lastNonDateText;\n        const link = timelineLinks[linkCursor] || '';\n        const rawDate = text;\n\n        // advance link cursor only when we try to emit a timeline record\n        linkCursor++;\n\n        pushArticle(title, link, rawDate);\n      } else {\n        // Keep latest non-date candidate; when next date appears,\n        // this will be considered the related title.\n        lastNonDateText = text;\n      }\n    }\n\n    // Continue to next scraped block (fallback not needed if timeline was processed)\n    continue;\n  }\n\n  /**\n   * FALLBACK MODE:\n   * Standard parallel arrays titles/links/dates.\n   */\n  const titleList = toArray(scraped.titles).map(normalizeText);\n  const linkList = toArray(scraped.links).map(normalizeText);\n  const dateList = toArray(scraped.dates).map(normalizeText);\n  const maxLen = Math.max(titleList.length, linkList.length, dateList.length);\n\n  for (let i = 0; i < maxLen; i++) {\n    pushArticle(titleList[i] || '', linkList[i] || '', dateList[i] || '');\n  }\n}\n\n/**\n * Keep only articles of today.\n * NOTE: n8n runtime timezone can affect \"today\".\n */\nconst today = toDateKey(new Date());\nconst todays = articles.filter(article => article.pubDate === today);\n\nreturn [{\n  json: {\n    articles: todays\n  }\n}];"
       },
-      "id": "d01a7fd8-d9e5-4e58-80b4-16a2a2ee27cd",
+      "id": "f6b131c4-0de1-4910-b43a-2598af978813",
       "name": "VoceIt Prepare",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        65968,
-        11200
+        76080,
+        13216
       ]
     },
     {
@@ -390,11 +390,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        65808,
-        9936
+        75920,
+        11952
       ],
       "typeVersion": 1,
-      "id": "a00d0640-317f-43fd-a07b-106e27fe2126",
+      "id": "a0d3886c-ed27-4871-99b6-354651aadd6c",
       "name": "Sticky Note2"
     },
     {
@@ -405,11 +405,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        65792,
-        10592
+        75904,
+        12608
       ],
       "typeVersion": 1,
-      "id": "5b2061dc-aa0c-4e71-a4d6-aba38fb1db43",
+      "id": "e9441b81-f77c-4aa1-af60-eca02e214076",
       "name": "Sticky Note5"
     },
     {
@@ -420,24 +420,24 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        65792,
-        10880
+        75904,
+        12896
       ],
       "typeVersion": 1,
-      "id": "52a66193-17ca-4d88-86e6-36f7aac67c39",
+      "id": "73d29516-c139-4586-9c61-90e2e21b1612",
       "name": "Sticky Note6"
     },
     {
       "parameters": {
         "jsCode": "const categoryUrls = [\n  'https://www.voce.it/it/categoria/scuola',\n  'https://www.voce.it/it/categoria/sanita',\n  'https://www.voce.it/it/categoria/economia',\n  'https://www.voce.it/it/categoria/attualita',\n  'https://www.voce.it/it/categoria/cultura',\n  'https://www.voce.it/it/categoria/ambiente',\n  'https://www.voce.it/it/categoria/moda',\n  'https://www.voce.it/it/categoria/sociale',\n  'https://www.voce.it/it/categoria/sport',\n  'https://www.voce.it/it/categoria/territorio'\n];\n\nreturn categoryUrls.map(url => ({ json: { url } }));"
       },
-      "id": "33781f21-3cef-4c38-8685-4182716af042",
+      "id": "1c96d732-d530-4de0-8718-a23b715021d5",
       "name": "VoceIt Categories",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        65744,
-        10992
+        75856,
+        13008
       ]
     },
     {
@@ -478,10 +478,10 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        65664,
-        11200
+        75776,
+        13216
       ],
-      "id": "002a71a3-314a-481a-8233-71f9e524de4b",
+      "id": "0105b611-1269-4399-a25e-c5543109a7f1",
       "name": "VoceIt Filter Errors"
     },
     {
@@ -492,11 +492,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        67056,
-        10736
+        77168,
+        12752
       ],
       "typeVersion": 1,
-      "id": "0626352d-a9d3-4740-be50-72fbd5e89b70",
+      "id": "4e648aa6-65e4-4b4c-84b3-66f7a4ffff32",
       "name": "Sticky Note7"
     },
     {
@@ -521,10 +521,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        68000,
-        10400
+        78112,
+        12416
       ],
-      "id": "51ba428f-c90c-4c8b-807e-619ff51e1b23",
+      "id": "2accdc0a-9eb1-4e50-9b06-42176689b20e",
       "name": "Call 'fn_articles_get()'",
       "alwaysOutputData": false
     },
@@ -536,11 +536,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        66224,
-        10624
+        76336,
+        12640
       ],
       "typeVersion": 1,
-      "id": "022a2bed-d1b2-4887-afb2-41ea8a07a1ac",
+      "id": "7c9e5556-df88-4f3d-9b84-9f0255cd49de",
       "name": "Sticky Note1",
       "disabled": true
     },
@@ -552,11 +552,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        67728,
-        10304
+        77840,
+        12320
       ],
       "typeVersion": 1,
-      "id": "6e9e4891-531b-4bc4-9800-d83cdcc541be",
+      "id": "f85ff703-07cd-4c01-96f6-f88985afe780",
       "name": "Sticky Note8"
     },
     {
@@ -567,65 +567,65 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        67952,
-        10304
+        78064,
+        12320
       ],
       "typeVersion": 1,
-      "id": "51085475-eb1f-4912-9e4e-8393627eaaab",
+      "id": "9e676ef0-c1c5-46ec-8b49-ac7cde573f33",
       "name": "Sticky Note9"
     },
     {
       "parameters": {
-        "content": "Transalte the full article in english",
+        "content": "Translate the full article in english",
         "height": 80,
         "width": 166
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        68336,
-        10304
+        78448,
+        12320
       ],
       "typeVersion": 1,
-      "id": "f64c8aa7-6ebc-46ce-96e1-9a3586dfa839",
+      "id": "2ad883b5-dfe2-46ba-9ffc-61ef1d84f32f",
       "name": "Sticky Note10"
     },
     {
       "parameters": {
         "jsCode": "// Max chars allowed in the output text.\n// Comes from env so you can tune truncation globally without touching the node.\nconst maxChars = parseInt($env.N8N_OVERVIEW_MAX_CHARS || '8000', 10);\n\n// Small guard to prevent oversized payloads downstream.\n// Adds a visible marker so you know the text was cut intentionally.\nconst truncate = (text) =>\n  text.length > maxChars\n    ? text.slice(0, maxChars) + '\\n...[truncated]'\n    : text;\n\n// Input expected from previous node.\nconst { summary, summariesByPlace } = $json;\n\n// Normalize output structure:\n// - one \"global\" summary\n// - one item per place\nconst items = [\n  {\n    key: 'global',\n    text: truncate(summary || '') // fallback avoids undefined issues\n  },\n\n  // Transform object entries into flat n8n items.\n  ...Object.entries(summariesByPlace || {}).map(([place, text]) => ({\n    key: place,\n    text: truncate(text || '')\n  }))\n];\n\n// n8n Code node must return [{ json: ... }]\nreturn items.map(item => ({ json: item }));"
       },
-      "id": "1655bedd-8fdd-4f99-9376-39e85c4cd816",
+      "id": "a427d617-8866-41a4-85aa-56c3de76bf22",
       "name": "Prepare Overview Inputs",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        69536,
-        10496
+        79648,
+        12512
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "7d50eb06-e73a-403f-b817-c9c524ad9877",
+      "id": "e2876475-8331-479e-84cc-d74b24a07103",
       "name": "Loop Over Overviews",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        69776,
-        10496
+        79888,
+        12512
       ]
     },
     {
       "parameters": {
         "jsCode": "const stripThink = (text) =>\n  (text || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\n\nconst items = $input.all().map(item => item.json);\n\nconst globalItem = items.find(i => i.key === 'global');\nconst globalOverview = stripThink(globalItem?.overview || '');\n\nconst overviewsByPlace = Object.fromEntries(\n  items\n    .filter(i => i.key !== 'global')\n    .map(i => [i.key, stripThink(i.overview || '')])\n);\n\nconst now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());\n\nreturn [{\n  json: { date, globalOverview, overviewsByPlace }\n}];"
       },
-      "id": "8ff178cf-7cd8-4552-b9b7-c2093ebfb38f",
+      "id": "2cfd3408-a751-4127-8529-0a0ff82b79ce",
       "name": "Collect Overviews",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        70544,
-        10480
+        80656,
+        12496
       ]
     },
     {
@@ -650,10 +650,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        67760,
-        10400
+        77872,
+        12416
       ],
-      "id": "834e3433-dd1f-441a-b286-30e18d5c8487",
+      "id": "e1910015-b948-44f9-9cd6-8c124387cace",
       "name": "Call 'fn_articles_filter()'"
     },
     {
@@ -664,11 +664,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        67072,
-        10176
+        77184,
+        12192
       ],
       "typeVersion": 1,
-      "id": "c6f12030-5f79-4f51-9919-a8581fc6389f",
+      "id": "9862538e-67f4-4a1a-9660-378b5a47e00a",
       "name": "Sticky Note12"
     },
     {
@@ -682,28 +682,28 @@
           "timeout": 600000
         }
       },
-      "id": "fb9b7282-e2c0-4ec9-b8e0-9f8979104a34",
+      "id": "19426239-ce30-4b4a-8176-2f0aa71718bc",
       "name": "Unload heavy LLM",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        67072,
-        10288
+        77184,
+        12304
       ]
     },
     {
       "parameters": {
-        "content": "### Overview Seneration loop\n1 \"place\" per iteration. + global",
+        "content": "### Overview Generation loop\n1 \"place\" per iteration. + global",
         "height": 80,
         "width": 512
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        69856,
-        10928
+        79968,
+        12944
       ],
       "typeVersion": 1,
-      "id": "be5b14b2-599d-40c4-9098-ab8132e77a3e",
+      "id": "b8ebdf49-42eb-4daf-a887-f61ca1f57a2f",
       "name": "Sticky Note11"
     },
     {
@@ -713,10 +713,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        66224,
-        10368
+        76336,
+        12384
       ],
-      "id": "fff87861-de50-41ab-9f5b-97dd2d393961",
+      "id": "2e335bb2-a612-49b8-bbf9-6df0f1ad783a",
       "name": "Merge Sources",
       "disabled": true
     },
@@ -724,13 +724,13 @@
       "parameters": {
         "options": {}
       },
-      "id": "49b909f2-95f1-4e78-8266-e9bb413d88c5",
+      "id": "f9052bc8-69bb-445c-8b1c-14c1f55e661b",
       "name": "Translate title + snippet loop",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        66928,
-        10416
+        77040,
+        12432
       ]
     },
     {
@@ -739,18 +739,18 @@
         "url": "={{ $env.OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `Translate the following title and snippet to English.\\nReturn ONLY a valid JSON object with \"title\" and \"snippet\" keys. No explanation, no extra text.\\n\\nTitle: ${$json.title || ''}\\nSnippet: ${$json.snippet || ''}`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: {\n    num_gpu: parseInt($env.N8N_LLM_NUM_GPU || \"99\")\n  },\n}) }}",
+        "jsonBody": "={{ JSON.stringify({\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `Translate the following title and snippet to English.\\nReturn ONLY a valid JSON object with \"title\" and \"snippet\" keys. No explanation, no extra text.\\n\\nTitle: ${$json.title || ''}\\nSnippet: ${$json.snippet || ''}`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: $env.N8N_LLM_NUM_GPU ? { num_gpu: parseInt($env.N8N_LLM_NUM_GPU) } : {},\n}) }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "ffe0764a-9e19-4678-8a8e-eb85743e3567",
+      "id": "09013a7f-5dac-460d-8063-be84d831c604",
       "name": "Translate snippet & title",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        67072,
-        10560
+        77184,
+        12576
       ]
     },
     {
@@ -759,65 +759,65 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "6094db33-1536-4cb4-8cc7-0dc695625571",
+      "id": "c4d1fbea-912c-41ca-949a-3fcde936d645",
       "name": "Merge snippet & title",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        67296,
-        10528
+        77408,
+        12544
       ]
     },
     {
       "parameters": {
         "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nlet translated;\ntry {\n  translated = JSON.parse(raw);\n} catch (error) {\n  translated = {};\n}\n\nconst originalTitle = $json.originalTitle || $json.title || '';\nconst originalSnippet = $json.originalSnippet || $json.snippet || '';\nconst translatedTitle = translated.title || $json.translatedTitle || $json.title;\nconst translatedSnippet = translated.snippet || $json.translatedSnippet || $json.snippet;\n\nreturn {\n  json: {\n    ...$json,\n    originalTitle,\n    originalSnippet,\n    translatedTitle,\n    translatedSnippet,\n    title: translatedTitle,\n    snippet: translatedSnippet,\n  }\n};"
       },
-      "id": "501ebef9-3ecc-49f8-9e7d-7a80c411c1be",
+      "id": "edf37594-b258-4f52-ab57-9d997329493b",
       "name": "Transform snippet & title",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        67488,
-        10528
+        77600,
+        12544
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "418f832c-9b2c-416c-a039-c4bc30732f40",
+      "id": "8edac90d-be50-40b2-b3ec-cbdb62973d11",
       "name": "Translate article loop",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        68384,
-        10400
+        78496,
+        12416
       ]
     },
     {
       "parameters": {
-        "jsCode": "/**\n * Merge and filter all articles\n * Return the array of articles directly\n */\nreturn items\n  .flatMap(item => item.json.articles || [])\n  .filter(article => article.title?.trim() && article.link?.trim())\n  .map(article => ({\n    json: article,\n  }));"
+        "jsCode": "/**\n * Merge and filter all articles\n * Return the array of articles directly\n */\nreturn $input.all()\n  .flatMap(item => item.json.articles || [])\n  .filter(article => article.title?.trim() && article.link?.trim())\n  .map(article => ({\n    json: article,\n  }));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        66384,
-        10416
+        76496,
+        12432
       ],
-      "id": "3d8e01c1-d0e8-4516-b49d-692b9da23e1a",
+      "id": "c79f0dd4-e68b-4abd-9c06-129636016726",
       "name": "Merge and Filter articles"
     },
     {
       "parameters": {
         "jsCode": "const raw = ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim();\nreturn {\n  json: {\n    ...$json,\n    overview: raw\n  }\n};"
       },
-      "id": "0e4f36d0-0237-4231-8f73-cd5689c70bc6",
+      "id": "19a9d54b-8697-4acf-b294-121ca1cd34c1",
       "name": "Add Overview",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        70336,
-        10704
+        80448,
+        12720
       ]
     },
     {
@@ -827,27 +827,27 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        70544,
-        10304
+        80656,
+        12320
       ],
-      "id": "35bbcc08-b897-41fc-ad41-712568eea1f9",
+      "id": "ea90f0b3-8bfb-4d62-9738-8d680a2f95b9",
       "name": "Collect Articles"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/data/news-summaries/{{$binary.overviews.fileName}}",
+        "fileName": "={{ '/data/news-summaries/' + $binary.overviews.fileName }}",
         "options": {
           "append": false
         }
       },
-      "id": "31292204-dd2c-409b-a991-d69c64e0d813",
+      "id": "e891c99c-6d38-46c6-80df-e76cfc90cbaf",
       "name": "Save Overviews File",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        71280,
-        10752
+        81392,
+        12768
       ],
       "disabled": true
     },
@@ -857,33 +857,34 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "ac3a1d66-7b6c-4093-b45c-e7a222b32cf4",
+      "id": "f3fc902b-1d53-4ef7-bb8d-fd4e45016d4a",
       "name": "Merge Attachments",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        71328,
-        10288
+        81440,
+        12304
       ]
     },
     {
       "parameters": {
-        "fromEmail": "noreply@guebbit.com",
-        "toEmail": "guerzoni.andrea91@gmail.com",
+        "fromEmail": "={{ $env.N8N_EMAIL_FROM }}",
+        "toEmail": "={{ $env.N8N_EMAIL_TO }}",
         "subject": "={{ $json.subject }}",
-        "emailFormat": "html",
+        "emailFormat": "both",
+        "text": "={{ $json.text }}",
         "html": "={{ $json.html }}",
         "options": {
           "attachments": "data,overviews"
         }
       },
-      "id": "4b0aea4e-fb04-4082-b088-f29aa89f8042",
+      "id": "00d91a24-2997-4d98-9bee-0aaf4b84cb5d",
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
-        71984,
-        10384
+        82096,
+        12400
       ],
       "webhookId": "25b82f9d-e1c6-4114-b2a6-b0bd65e6db54",
       "credentials": {
@@ -896,89 +897,88 @@
     {
       "parameters": {
         "operation": "toText",
-        "sourceProperty": "text",
-        "binaryPropertyName": "=data",
+        "sourceProperty": "articlesText",
         "options": {
           "fileName": "={{ $json.filename }}"
         }
       },
-      "id": "6af77da5-9f08-4f7e-8c83-813e7485028d",
+      "id": "a8bd3b49-7cc2-4133-be4f-4b665e25a312",
       "name": "Write articles file",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        71040,
-        10144
+        81152,
+        12160
       ]
     },
     {
       "parameters": {
         "operation": "toText",
-        "sourceProperty": "text",
+        "sourceProperty": "overviewsText",
         "binaryPropertyName": "overviews",
         "options": {
           "fileName": "={{ $json.filename }}"
         }
       },
-      "id": "90f21707-fbd6-4c14-84e9-dad64c231018",
+      "id": "825948dd-936a-4ec5-9451-a28e05656a3a",
       "name": "Write overwies file",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        71040,
-        10640
+        81152,
+        12656
       ]
     },
     {
       "parameters": {
-        "jsCode": "const now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());\n\nconst overviewsHtml = $json.overviewsHtml || '';\nconst articlesHtml  = $json.articlesHtml  || '';\n\nconst styles =\n  'body{font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;' +\n    'max-width:760px;margin:0 auto;padding:24px 16px;color:#1a1a1a;line-height:1.65}' +\n  'h1{font-size:1.5em;color:#111;border-bottom:2px solid #ddd;padding-bottom:8px;margin-bottom:16px}' +\n  'h2{font-size:1.2em;color:#222;margin-top:24px;margin-bottom:8px}' +\n  'h3{font-size:1em;color:#333;margin-top:16px;margin-bottom:4px}' +\n  '.meta{color:#666;font-size:.88em;margin:2px 0 8px}' +\n  '.article{margin-bottom:20px}' +\n  'hr{border:none;border-top:1px solid #e0e0e0;margin:16px 0}' +\n  'hr.s-sep{border-top:2px solid #c0c0c0;margin:28px 0}' +\n  'hr.a-sep{border-top:1px dashed #d0d0d0;margin:12px 0}' +\n  'p{margin:4px 0 10px}' +\n  'a{color:#2563eb;text-decoration:none}' +\n  'strong{font-weight:600}';\n\nconst html =\n  '<!DOCTYPE html><html><head>' +\n  '<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">' +\n  '<style>' + styles + '</style></head><body>' +\n  overviewsHtml + '<hr class=\"s-sep\">' + articlesHtml +\n  '</body></html>';\n\nreturn [{\n  json: { ...$json, html, subject: 'Daily News Briefing - ' + date },\n  binary: $input.first()?.binary ?? {}\n}];"
+        "jsCode": "const now = new Date();\nconst pad = n => String(n).padStart(2, '0');\nconst date = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());\n\nconst overviewsHtml = $json.overviewsHtml || '';\nconst articlesHtml  = $json.articlesHtml  || '';\nconst overviewsText = $json.overviewsText || '';\nconst articlesText  = $json.articlesText  || '';\nconst articleCount  = $json.articleCount  || 0;\n\nconst styles =\n  'body{font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;' +\n    'max-width:760px;margin:0 auto;padding:24px 16px;color:#1a1a1a;line-height:1.65}' +\n  'h1{font-size:1.5em;color:#111;border-bottom:2px solid #ddd;padding-bottom:8px;margin-bottom:16px}' +\n  'h2{font-size:1.2em;color:#222;margin-top:24px;margin-bottom:8px}' +\n  'h3{font-size:1em;color:#333;margin-top:16px;margin-bottom:4px}' +\n  '.meta{color:#666;font-size:.88em;margin:2px 0 8px}' +\n  '.stats{color:#555;font-size:.85em;margin:4px 0 12px;font-style:italic}' +\n  '.article{margin-bottom:20px}' +\n  'hr{border:none;border-top:1px solid #e0e0e0;margin:16px 0}' +\n  'hr.s-sep{border-top:2px solid #c0c0c0;margin:28px 0}' +\n  'hr.a-sep{border-top:1px dashed #d0d0d0;margin:12px 0}' +\n  'p{margin:4px 0 10px}' +\n  'a{color:#2563eb;text-decoration:none}' +\n  'strong{font-weight:600}';\n\nconst html =\n  '<!DOCTYPE html><html><head>' +\n  '<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">' +\n  '<style>' + styles + '</style></head><body>' +\n  overviewsHtml + '<hr class=\"s-sep\">' + articlesHtml +\n  '</body></html>';\n\nconst text = overviewsText + '\\n\\n---\\n\\n' + articlesText;\n\nreturn [{\n  json: { ...$json, html, text, subject: 'Daily News Briefing - ' + date + ' (' + articleCount + ' articles)' },\n  binary: $input.first()?.binary ?? {}\n}];"
       },
-      "id": "0b9b9579-57b3-47c0-b3c9-6e2ac694b24a",
+      "id": "9b2a6dad-e931-48e1-a65a-28ab33013a8c",
       "name": "Prepare HTML Email",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        71776,
-        10384
+        81888,
+        12400
       ]
     },
     {
       "parameters": {
-        "jsCode": "const { date, articles } = $json;\n\nconst getUnique = (vals) => [...new Set((vals || []).filter(Boolean))];\n\nconst groupedByPlace = articles.reduce((acc, a) => {\n  const place = a.place || 'Other';\n  if (!acc[place]) acc[place] = [];\n  acc[place].push(a);\n  return acc;\n}, {});\n\nconst fmtArticle = (a, i) => {\n  const sources = Array.isArray(a.sources) && a.sources.length\n    ? a.sources\n    : [{ name: a.source || 'Unknown', link: a.link || '', pubDate: a.pubDate || '' }];\n\n  const srcLine = sources\n    .map(s => s.link ? '[' + s.name + '](' + s.link + ')' : s.name)\n    .join(', ');\n  const dateLine = getUnique(sources.map(s => s.pubDate || a.pubDate)).join(', ');\n  const meta = [\n    srcLine   ? '**Sources:** ' + srcLine   : '',\n    dateLine  ? '**Dates:** '   + dateLine  : ''\n  ].filter(Boolean).join('  \\n');\n\n  return ['### ' + (i + 1) + '. ' + (a.title || 'Untitled'), meta, '', a.summary || ''].join('\\n');\n};\n\nconst placesMd = Object.entries(groupedByPlace)\n  .map(([place, arts]) =>\n    ['## ' + place, '', arts.map(fmtArticle).join('\\n\\n---\\n\\n')].join('\\n'))\n  .join('\\n\\n---\\n\\n');\n\nreturn [{\n  json: {\n    filename: 'news-articles-' + date + '.md',\n    text: '# Daily News Articles — ' + date + '\\n\\n' + placesMd\n  }\n}];"
+        "jsCode": "const { date, articles } = $json;\n\nconst getUnique = (vals) => [...new Set((vals || []).filter(Boolean))];\n\nconst groupedByPlace = articles.reduce((acc, a) => {\n  const place = a.place || 'Other';\n  if (!acc[place]) acc[place] = [];\n  acc[place].push(a);\n  return acc;\n}, {});\n\nconst fmtArticle = (a, i) => {\n  const sources = Array.isArray(a.sources) && a.sources.length\n    ? a.sources\n    : [{ name: a.source || 'Unknown', link: a.link || '', pubDate: a.pubDate || '' }];\n\n  const srcLine = sources\n    .map(s => s.link ? '[' + s.name + '](' + s.link + ')' : s.name)\n    .join(', ');\n  const dateLine = getUnique(sources.map(s => s.pubDate || a.pubDate)).join(', ');\n  const meta = [\n    srcLine   ? '**Sources:** ' + srcLine   : '',\n    dateLine  ? '**Dates:** '   + dateLine  : ''\n  ].filter(Boolean).join('  \\n');\n\n  return ['### ' + (i + 1) + '. ' + (a.title || 'Untitled'), meta, '', a.summary || ''].join('\\n');\n};\n\nconst placesMd = Object.entries(groupedByPlace)\n  .map(([place, arts]) =>\n    ['## ' + place, '', arts.map(fmtArticle).join('\\n\\n---\\n\\n')].join('\\n'))\n  .join('\\n\\n---\\n\\n');\n\nreturn [{\n  json: {\n    filename: 'news-articles-' + date + '.md',\n    articlesText: '# Daily News Articles — ' + date + '\\n\\n' + placesMd,\n    articleCount: articles.length\n  }\n}];"
       },
-      "id": "41bbd8d7-9a2d-4be4-b99d-82f9296a9615",
+      "id": "eec3b341-ef3a-45cf-94ae-b0a9eeb0ea16",
       "name": "Build Articles MD",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        70800,
-        10144
+        80912,
+        12160
       ]
     },
     {
       "parameters": {
-        "jsCode": "const { date, articles } = $json;\n\nconst esc = s => String(s || '')\n  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');\nconst getUnique = (vals) => [...new Set((vals || []).filter(Boolean))];\n\nconst groupedByPlace = articles.reduce((acc, a) => {\n  const place = a.place || 'Other';\n  if (!acc[place]) acc[place] = [];\n  acc[place].push(a);\n  return acc;\n}, {});\n\nconst fmtArticle = (a, i) => {\n  const sources = Array.isArray(a.sources) && a.sources.length\n    ? a.sources\n    : [{ name: a.source || 'Unknown', link: a.link || '', pubDate: a.pubDate || '' }];\n\n  const srcLinks = sources\n    .map(s => s.link ? '<a href=\"' + esc(s.link) + '\">' + esc(s.name) + '</a>' : esc(s.name))\n    .join(', ');\n  const dates = getUnique(sources.map(s => s.pubDate || a.pubDate)).join(', ');\n\n  const metaParts = [];\n  if (srcLinks) metaParts.push('<strong>Sources:</strong> ' + srcLinks);\n  if (dates)    metaParts.push('<strong>Date:</strong> '    + esc(dates));\n\n  return '<div class=\"article\">' +\n    '<h3>' + (i + 1) + '. ' + esc(a.title || 'Untitled') + '</h3>' +\n    (metaParts.length ? '<p class=\"meta\">' + metaParts.join(' &middot; ') + '</p>' : '') +\n    '<p>' + esc(a.summary || '').replace(/\\n/g, '<br>') + '</p>' +\n    '</div>';\n};\n\nconst placesHtml = Object.entries(groupedByPlace)\n  .map(([place, arts]) =>\n    '<section class=\"place\"><h2>' + esc(place) + '</h2>' +\n    arts.map(fmtArticle).join('<hr class=\"a-sep\">') +\n    '</section>')\n  .join('<hr class=\"s-sep\">');\n\nreturn [{\n  json: {\n    articlesHtml:\n      '<section id=\"articles\">' +\n      '<h1>Daily News Articles — ' + date + '</h1>' +\n      placesHtml +\n      '</section>'\n  }\n}];"
+        "jsCode": "const { date, articles } = $json;\n\nconst esc = s => String(s || '')\n  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');\nconst getUnique = (vals) => [...new Set((vals || []).filter(Boolean))];\n\nif (articles.length === 0) {\n  return [{\n    json: {\n      articlesHtml: '<section id=\"articles\"><h1>Daily News Articles — ' + date + '</h1><p><em>No articles found today.</em></p></section>',\n      articleCount: 0\n    }\n  }];\n}\n\nconst groupedByPlace = articles.reduce((acc, a) => {\n  const place = a.place || 'Other';\n  if (!acc[place]) acc[place] = [];\n  acc[place].push(a);\n  return acc;\n}, {});\n\nconst sourceCounts = articles.reduce((acc, a) => {\n  const src = a.source || 'Unknown';\n  acc[src] = (acc[src] || 0) + 1;\n  return acc;\n}, {});\nconst statsLine = Object.entries(sourceCounts)\n  .map(([src, n]) => esc(src) + ' (' + n + ')')\n  .join(' &middot; ');\nconst statsHtml = '<p class=\"stats\">' + articles.length + ' articles from: ' + statsLine + '</p>';\n\nconst fmtArticle = (a, i) => {\n  const sources = Array.isArray(a.sources) && a.sources.length\n    ? a.sources\n    : [{ name: a.source || 'Unknown', link: a.link || '', pubDate: a.pubDate || '' }];\n\n  const srcLinks = sources\n    .map(s => s.link ? '<a href=\"' + esc(s.link) + '\">' + esc(s.name) + '</a>' : esc(s.name))\n    .join(', ');\n  const dates = getUnique(sources.map(s => s.pubDate || a.pubDate)).join(', ');\n\n  const metaParts = [];\n  if (srcLinks) metaParts.push('<strong>Sources:</strong> ' + srcLinks);\n  if (dates)    metaParts.push('<strong>Date:</strong> '    + esc(dates));\n\n  return '<div class=\"article\">' +\n    '<h3>' + (i + 1) + '. ' + esc(a.title || 'Untitled') + '</h3>' +\n    (metaParts.length ? '<p class=\"meta\">' + metaParts.join(' &middot; ') + '</p>' : '') +\n    '<p>' + esc(a.summary || '').replace(/\\n/g, '<br>') + '</p>' +\n    '</div>';\n};\n\nconst placesHtml = Object.entries(groupedByPlace)\n  .map(([place, arts]) =>\n    '<section class=\"place\"><h2>' + esc(place) + '</h2>' +\n    arts.map(fmtArticle).join('<hr class=\"a-sep\">') +\n    '</section>')\n  .join('<hr class=\"s-sep\">');\n\nreturn [{\n  json: {\n    articlesHtml:\n      '<section id=\"articles\">' +\n      '<h1>Daily News Articles — ' + date + '</h1>' +\n      statsHtml +\n      placesHtml +\n      '</section>',\n    articleCount: articles.length\n  }\n}];"
       },
-      "id": "dddd1de9-e119-45e1-b12d-4fb7d1fac746",
+      "id": "a356d68e-b408-4aa7-9bb2-7727e1c4d680",
       "name": "Build Articles HTML",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        70800,
-        10304
+        80912,
+        12320
       ]
     },
     {
       "parameters": {
         "jsCode": "const { date, globalOverview, overviewsByPlace } = $json;\n\nconst esc = s => String(s || '')\n  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');\n\nconst placesHtml = Object.entries(overviewsByPlace)\n  .map(([place, overview]) => {\n    if (!overview) return '';\n    return '<section class=\"place-overview\">' +\n      '<h2>' + esc(place) + '</h2>' +\n      '<p>' + esc(overview).replace(/\\n/g, '<br>') + '</p>' +\n      '</section>';\n  })\n  .filter(Boolean)\n  .join('<hr class=\"s-sep\">');\n\nreturn [{\n  json: {\n    overviewsHtml:\n      '<section id=\"overviews\">' +\n      '<h1>Daily News Overviews — ' + date + '</h1>' +\n      '<section class=\"global\">' +\n      '<h2>Global Overview</h2>' +\n      '<p>' + esc(globalOverview).replace(/\\n/g, '<br>') + '</p>' +\n      '</section>' +\n      (placesHtml ? '<hr class=\"s-sep\"><h2>Place Overviews</h2>' + placesHtml : '') +\n      '</section>'\n  }\n}];"
       },
-      "id": "0f8bfbe8-a3e6-4558-a50e-8f89c4cf9f01",
+      "id": "054733ac-1849-4ea8-ae69-e5658b75d353",
       "name": "Build Overviews HTML",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        70800,
-        10480
+        80912,
+        12496
       ]
     },
     {
@@ -987,13 +987,13 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "ca740401-269e-4d89-a142-6324a26c9783",
+      "id": "1c84f098-052c-4fcc-9317-796f3bcfdbda",
       "name": "Merge HTML Parts",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        71040,
-        10400
+        81152,
+        12416
       ]
     },
     {
@@ -1002,13 +1002,13 @@
         "combineBy": "combineByPosition",
         "options": {}
       },
-      "id": "79393cc7-4264-410e-8bd5-62f74cfe0e76",
+      "id": "e859aeb6-0bc4-443c-b952-83ab001c50e7",
       "name": "Pre-Email Merge",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        71568,
-        10384
+        81680,
+        12400
       ]
     },
     {
@@ -1018,10 +1018,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        68512,
-        11072
+        78624,
+        13088
       ],
-      "id": "188a2a98-eb93-40c3-a222-ebecca34d81e",
+      "id": "75aaaee1-9bda-4e9b-8cba-8d0d605e0a74",
       "name": "Article Translation Test",
       "disabled": true
     },
@@ -1031,18 +1031,18 @@
         "url": "={{ $env.OLLAMA_BASE_URL }}/api/generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nPrimary Source: ${$json.source}\nAll Sources: ${Array.isArray($json.sourceNames) && $json.sourceNames.length ? $json.sourceNames.join(', ') : $json.source}\n\nSOURCE NOTES:\n${Array.isArray($json.sources) && $json.sources.length\n  ? $json.sources\n      .map((source, index) => `${index + 1}. ${source.name}${source.title ? ` — ${source.title}` : ''}${source.snippet ? ` | ${source.snippet}` : ''}`)\n      .join('\\n')\n  : 'No extra source notes provided.'}\n\nFULL ARTICLE CONTENT:\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs\n- Short, max 6 sentences\n- No bullet points if not EXTREMELY necessary\n- Write in English regardless of the article's original language\n- If multiple sources cover the same story, merge them into one coherent summary\n- If sources highlight different opinions or angles, mention that briefly and attribute those differences to the relevant source names\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: {\n    num_gpu: parseInt($env.N8N_LLM_NUM_GPU || \"99\")\n  },\n} }}",
+        "jsonBody": "={{ {\n  model: $env.N8N_LLM_REASONING_MODEL_2,\n  prompt: `You are a news editor writing for ADHD readers. The article may be in Italian — read it, understand it, and write a concise English summary.\n\nARTICLE:\nTitle: ${$json.title}\nPrimary Source: ${$json.source}\nAll Sources: ${Array.isArray($json.sourceNames) && $json.sourceNames.length ? $json.sourceNames.join(', ') : $json.source}\n\nSOURCE NOTES:\n${Array.isArray($json.sources) && $json.sources.length\n  ? $json.sources\n      .map((source, index) => `${index + 1}. ${source.name}${source.title ? ` — ${source.title}` : ''}${source.snippet ? ` | ${source.snippet}` : ''}`)\n      .join('\\n')\n  : 'No extra source notes provided.'}\n\nFULL ARTICLE CONTENT:\n${$json.article || $json.snippet || ''}\n\n---\n\nWrite a summary following these rules:\n- No fluff, no repetition, no meta-commentary\n- Do NOT include URLs\n- Short, max 6 sentences\n- No bullet points if not EXTREMELY necessary\n- Write in English regardless of the article's original language\n- If multiple sources cover the same story, merge them into one coherent summary\n- If sources highlight different opinions or angles, mention that briefly and attribute those differences to the relevant source names\n`,\n  stream: false,\n  keep_alive: \"30m\",\n  options: $env.N8N_LLM_NUM_GPU ? { num_gpu: parseInt($env.N8N_LLM_NUM_GPU) } : {},\n} }}",
         "options": {
           "timeout": 600000
         }
       },
-      "id": "1862a8a3-63d2-4900-a8a0-63c04c3470e9",
+      "id": "5737dbb3-f835-4aab-b962-c8865ab321af",
       "name": "Ollama Translate & Summarize2",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        68720,
-        11072
+        78832,
+        13088
       ],
       "disabled": true
     },
@@ -1050,13 +1050,13 @@
       "parameters": {
         "jsCode": "return {\n  json: {\n    response: ($json.response || '').replace(/<think>[\\s\\S]*?<\\/think>/g, '').trim()\n  }\n};"
       },
-      "id": "d7e92508-e4fb-4786-809b-17b15a131792",
+      "id": "135605da-7ff1-4ee2-99cb-35b3d0d37e7c",
       "name": "Enrich with Summary2",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        68928,
-        11072
+        79040,
+        13088
       ],
       "disabled": true
     },
@@ -1068,12 +1068,86 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        68704,
-        11296
+        78816,
+        13312
       ],
       "typeVersion": 1,
-      "id": "fd03d9fd-aee3-4605-ae4a-a26d1d3a7940",
+      "id": "1f4d2886-bbc5-4e57-ac07-48c30ef94222",
       "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "jsCode": "const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst { articles } = $json;\n\nreturn articles.map(a => {\n  const sources = Array.isArray(a.sources) && a.sources.length\n    ? a.sources\n    : [{ name: a.source || 'Unknown', link: a.link || '' }];\n\n  const srcLine = sources\n    .map(s => s.link ? '<a href=\"' + esc(s.link) + '\">' + esc(s.name) + '</a>' : esc(s.name))\n    .join(', ');\n\n  const parts = [\n    '📄 <b>' + esc(a.title || 'Untitled') + '</b>',\n    '📍 ' + esc(a.place || '') + ' · ' + srcLine,\n    '',\n    esc(a.summary || '')\n  ];\n\n  const text = parts.join('\\n');\n  return { json: { telegramText: text.length > 4096 ? text.substring(0, 4090) + '…' : text } };\n});"
+      },
+      "id": "00e58517-8ded-4056-aabb-df1e5a81934e",
+      "name": "Format Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80912,
+        11984
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "={{ $json.telegramText }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "75c7209f-2eff-4891-bb11-8961d91e757d",
+      "name": "Send Articles to Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        81152,
+        11984
+      ],
+      "webhookId": "a4ae7230-de3c-4b43-9d29-6bcdeafa0b84",
+      "credentials": {
+        "telegramApi": {
+          "id": "g4Nkwu8EUASyHb3N",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst { date, globalOverview, overviewsByPlace } = $json;\n\nconst parts = [\n  '📰 <b>Daily News — ' + date + '</b>',\n  '',\n  '<b>🌍 Global Overview</b>',\n  esc(globalOverview)\n];\n\nfor (const [place, overview] of Object.entries(overviewsByPlace || {})) {\n  if (!overview) continue;\n  parts.push('');\n  parts.push('<b>📍 ' + esc(place) + '</b>');\n  parts.push(esc(overview));\n}\n\nconst text = parts.join('\\n');\nreturn [{ json: { telegramText: text.length > 4096 ? text.substring(0, 4090) + '…' : text } }];"
+      },
+      "id": "d7a892fa-a159-49ae-88eb-ffc3100dafde",
+      "name": "Format Overviews",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80912,
+        12864
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "={{ $json.telegramText }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "31996705-7bbc-4ffc-b302-35b7b71eb318",
+      "name": "Send Overviews to Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        81088,
+        12864
+      ],
+      "webhookId": "cf9b5444-24cb-4732-b000-bf7d6203b10a",
+      "credentials": {
+        "telegramApi": {
+          "id": "g4Nkwu8EUASyHb3N",
+          "name": "Telegram account"
+        }
+      }
     }
   ],
   "pinData": {
@@ -1545,6 +1619,22 @@
             "node": "Build Articles HTML",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Format Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Articles": {
+      "main": [
+        [
+          {
+            "node": "Send Articles to Telegram",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -1559,6 +1649,11 @@
           },
           {
             "node": "Build Overviews HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Overviews",
             "type": "main",
             "index": 0
           }
@@ -1695,6 +1790,17 @@
           }
         ]
       ]
+    },
+    "Format Overviews": {
+      "main": [
+        [
+          {
+            "node": "Send Overviews to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -1702,7 +1808,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "87ca2690-cced-4dc7-88c4-3023a6402d51",
+  "versionId": "10f67afb-e940-4ce0-a75b-d4f6c009ac8b",
   "meta": {
     "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
   },
