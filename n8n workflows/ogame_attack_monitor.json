@@ -1,0 +1,245 @@
+{
+  "name": "ogame_attack_monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# ogame_attack_monitor\n\nRead-only monitor for incoming OGame attacks.\n\nFlow:\n1. Cron runs every minute\n2. Code node applies configurable polling interval from env\n3. HTTP Request fetches status endpoint\n4. Code node parses and normalizes attack state\n5. Code node compares with previous state (dedup)\n6. Send Telegram alert only for new/material changes (and optional clear message)\n\nEnvironment variables:\n- OGAME_SERVER_URL\n- OGAME_STATUS_ENDPOINT (or OGAME_STATUS_URL)\n- OGAME_STATUS_AUTH_HEADER (optional)\n- OGAME_POLL_INTERVAL_MINUTES\n- OGAME_SEND_CLEAR_ALERT\n- TELEGRAM_BOT_TOKEN\n- TELEGRAM_CHAT_ID\n\n⚠️ Monitoring-only workflow: no gameplay actions are performed.",
+        "height": 420,
+        "width": 640
+      },
+      "id": "04ef5e4a-2ac4-4633-a03d-8dc901a668d9",
+      "name": "Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        -208
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "id": "0df57ad7-7e19-4152-aa72-d34f5d939f57",
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build monitor config from env and throttle checks using static state.\nconst staticData = this.getWorkflowStaticData('global');\nconst now = new Date();\n\nconst DEFAULT_POLL_INTERVAL_MINUTES = 2;\nconst pollMinutes = Math.max(\n  1,\n  parseInt($env.OGAME_POLL_INTERVAL_MINUTES || String(DEFAULT_POLL_INTERVAL_MINUTES), 10)\n);\nconst pollMs = pollMinutes * 60 * 1000;\nconst lastPollMs = Number(staticData.lastPollMs || 0);\n\n// Skip this execution if we are still inside the configured polling interval.\nif (lastPollMs && (now.getTime() - lastPollMs) < pollMs) {\n  return [];\n}\n\nconst serverUrl = String($env.OGAME_SERVER_URL || '').trim().replace(/\\/$/, '');\nconst statusEndpoint = String($env.OGAME_STATUS_ENDPOINT || '/api/status').trim();\nconst explicitStatusUrl = String($env.OGAME_STATUS_URL || '').trim();\n\nconst statusUrl = explicitStatusUrl || (serverUrl + (statusEndpoint.startsWith('/') ? '' : '/') + statusEndpoint);\nif (!statusUrl) {\n  throw new Error('Missing OGAME_STATUS_URL or OGAME_SERVER_URL + OGAME_STATUS_ENDPOINT');\n}\n\nreturn [{\n  json: {\n    statusUrl,\n    authHeader: String($env.OGAME_STATUS_AUTH_HEADER || '').trim(),\n    sendClearAlert: String($env.OGAME_SEND_CLEAR_ALERT || 'true').toLowerCase() === 'true',\n    checkedAt: now.toISOString()\n  }\n}];"
+      },
+      "id": "8de58be7-73b6-427a-8917-bf0bc4ed6a4a",
+      "name": "Build Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -704,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.statusUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.authHeader }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "string"
+            }
+          },
+          "timeout": 20000
+        }
+      },
+      "id": "fbcf553e-61ff-4d8a-90f4-3c8f7dd4d4a1",
+      "name": "Fetch Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -496,
+        80
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse API/HTML payload into a normalized attack snapshot.\nconst source = $json;\nconst checkedAt = source.checkedAt || new Date().toISOString();\n\nconst rawBody = typeof source.body === 'string'\n  ? source.body\n  : (typeof source.data === 'string' ? source.data : JSON.stringify(source.data || source));\n\nlet parsedJson = null;\ntry {\n  parsedJson = JSON.parse(rawBody);\n} catch (_) {}\n\nconst toBool = (value) => {\n  if (typeof value === 'boolean') return value;\n  if (typeof value === 'number') return value > 0;\n  const text = String(value || '').trim().toLowerCase();\n  return ['1', 'true', 'yes', 'attack', 'hostile'].includes(text);\n};\n\nconst pickString = (...values) => values.find(v => String(v || '').trim()) || '';\n\nconst detectFromJson = (obj) => {\n  if (!obj || typeof obj !== 'object') return null;\n\n  const hostileFleets = Number(\n    obj.hostileFleets ?? obj.hostile_fleets ?? obj.hostiles ?? obj.attacks ?? 0\n  ) || 0;\n\n  const attackDetected =\n    toBool(obj.attackDetected ?? obj.attack_detected ?? obj.underAttack ?? obj.hostile) ||\n    hostileFleets > 0;\n\n  return {\n    attackDetected,\n    hostileFleets,\n    attacker: pickString(obj.attacker, obj.attackerName, obj.enemy, obj.player),\n    target: pickString(obj.target, obj.planet, obj.moon),\n    arrivalTime: pickString(obj.arrivalTime, obj.arrival, obj.eta),\n    serverTime: pickString(obj.serverTime, obj.time),\n    rawSummary: pickString(obj.rawSummary, obj.summary, obj.message)\n  };\n};\n\nconst detectFromText = (text) => {\n  const normalized = String(text || '').replace(/\\s+/g, ' ').trim();\n\n  const attackDetected = /(under attack|incoming attack|hostile fleet|hostile fleets|attacco in arrivo|attacco)/i.test(normalized);\n  const hostileMatch = normalized.match(/(\\d+)\\s+(hostile|incoming|enemy)\\s+fleets?/i) || normalized.match(/hostile\\s*[:=]\\s*(\\d+)/i);\n  const arrivalMatch = normalized.match(/(?:arrival|eta|arrives?)\\s*[:=]?\\s*([0-2]?\\d:[0-5]\\d(?::[0-5]\\d)?)/i);\n\n  return {\n    attackDetected,\n    hostileFleets: hostileMatch ? Number(hostileMatch[1]) : 0,\n    attacker: '',\n    target: '',\n    arrivalTime: arrivalMatch ? arrivalMatch[1] : '',\n    serverTime: '',\n    rawSummary: normalized ? normalized.slice(0, 280) : ''\n  };\n};\n\nconst normalized = detectFromJson(parsedJson) || detectFromJson(source) || detectFromText(rawBody);\nconst normalizedAttacker = String(normalized.attacker || '').toLowerCase();\nconst normalizedTarget = String(normalized.target || '').toLowerCase();\nconst normalizedSummary = String(normalized.rawSummary || '').toLowerCase();\n\nconst stateKey = [\n  normalized.attackDetected ? '1' : '0',\n  normalized.hostileFleets || 0,\n  normalizedAttacker,\n  normalizedTarget,\n  normalized.arrivalTime || '',\n  normalizedSummary\n].join('|');\n\nreturn [{\n  json: {\n    ...normalized,\n    checkedAt,\n    stateKey,\n    sendClearAlert: Boolean(source.sendClearAlert),\n    statusUrl: source.statusUrl\n  }\n}];"
+      },
+      "id": "fd27d6df-c544-4472-906f-a4f74df9cb48",
+      "name": "Parse & Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compare with previous state to avoid duplicate alerts.\nconst staticData = this.getWorkflowStaticData('global');\nconst previous = staticData.lastAttackState || { attackDetected: false, stateKey: '' };\nconst current = $json;\n\nconst isNewAttack = Boolean(current.attackDetected) && !Boolean(previous.attackDetected);\nconst isMaterialUpdate = Boolean(current.attackDetected) && Boolean(previous.attackDetected) && current.stateKey !== previous.stateKey;\nconst isCleared = !Boolean(current.attackDetected) && Boolean(previous.attackDetected);\n\nconst shouldAlert = isNewAttack || isMaterialUpdate || (Boolean(current.sendClearAlert) && isCleared);\n\nconst title = isCleared\n  ? '✅ OGame attack cleared'\n  : (isNewAttack ? '🚨 OGame attack detected' : '⚠️ OGame attack update');\n\nconst lines = [\n  title,\n  'Checked at: ' + current.checkedAt,\n  current.serverTime ? 'Server time: ' + current.serverTime : '',\n  current.arrivalTime ? 'Arrival: ' + current.arrivalTime : '',\n  current.attacker ? 'Attacker: ' + current.attacker : '',\n  current.target ? 'Target: ' + current.target : '',\n  Number.isFinite(current.hostileFleets) ? 'Hostile fleets: ' + current.hostileFleets : '',\n  current.rawSummary ? 'Summary: ' + current.rawSummary : ''\n].filter(Boolean);\n\n// Persist latest state for next run dedup/comparison.\nstaticData.lastAttackState = {\n  attackDetected: Boolean(current.attackDetected),\n  stateKey: current.stateKey || '',\n  hostileFleets: Number(current.hostileFleets) || 0,\n  attacker: current.attacker || '',\n  target: current.target || '',\n  arrivalTime: current.arrivalTime || '',\n  checkedAt: current.checkedAt || ''\n};\nstaticData.lastPollMs = Date.now();\n\nreturn [{\n  json: {\n    ...current,\n    shouldAlert,\n    telegramText: lines.join('\\n')\n  }\n}];"
+      },
+      "id": "99624ccb-ae4f-45e8-bb48-ac0f2f32f5f0",
+      "name": "State Compare",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9dcb1f58-a80d-4dbb-92d2-f42e93c8fdbf",
+              "leftValue": "={{ $json.shouldAlert }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "11a21189-1f4e-4442-b95b-8c7d07f69a83",
+      "name": "Should Notify?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://api.telegram.org/bot' + $env.TELEGRAM_BOT_TOKEN + '/sendMessage' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { chat_id: $env.TELEGRAM_CHAT_ID, text: $json.telegramText, disable_web_page_preview: true } }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "7168098f-96ba-4384-9eb6-f1e6f8ec0c65",
+      "name": "Telegram Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        416,
+        32
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Build Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Config": {
+      "main": [
+        [
+          {
+            "node": "Fetch Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Status": {
+      "main": [
+        [
+          {
+            "node": "Parse & Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Normalize": {
+      "main": [
+        [
+          {
+            "node": "State Compare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "State Compare": {
+      "main": [
+        [
+          {
+            "node": "Should Notify?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Notify?": {
+      "main": [
+        [
+          {
+            "node": "Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b5aa0f8b-ef6f-4dfa-b7de-293ed2a6b20f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "489c0ac3ce6e53f9315978d34fb157bf3c72489f5dc2b1c3e34fd3d580703404"
+  },
+  "id": "6K3h3dPj0A4P8U8Q",
+  "tags": []
+}
